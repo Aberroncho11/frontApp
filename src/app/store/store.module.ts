@@ -1,14 +1,14 @@
 import { NgModule } from '@angular/core';
-import { SharedModule } from '../shared/shared.module';
 import { LandingPageComponent } from './pages/landing-page/landing-page.component';
-import { MaterialModule } from '../material/material.module';
+import { CommonModule } from '@angular/common';
+import { StoreRoutingModule } from './store-routing.module';
 
 
 
 @NgModule({
   imports: [
-    SharedModule,
-    MaterialModule
+    CommonModule,
+    StoreRoutingModule
   ],
     declarations: [
     LandingPageComponent

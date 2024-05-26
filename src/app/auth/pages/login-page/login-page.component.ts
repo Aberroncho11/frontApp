@@ -2,9 +2,9 @@ import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import Swal from 'sweetalert2';
 
 @Component({
-  selector: 'app-login-page',
   templateUrl: './login-page.component.html',
   styleUrls: ['./login-page.component.css']
 })
@@ -24,11 +24,15 @@ export class LoginPageComponent {
 
     this.authService.login(email, password)
       .subscribe({
-        next: () => this.router.navigateByUrl('/dashboard'),
+        next: () => this.router.navigateByUrl('/store'),
         error: (message) => {
           Swal.fire('Error', message, 'error')
         }
       })
+  }
+
+  register(){
+    this.router.navigateByUrl('/auth/register');
   }
 
 }

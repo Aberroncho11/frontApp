@@ -1,10 +1,9 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, inject, computed, signal} from '@angular/core';
 import { Observable, catchError, map, of, throwError } from 'rxjs';
-import { User } from '../interfaces/user.interface';
-import { AuthStatus } from '../interfaces/auth-status.enum';
-import { LoginResponse } from '../interfaces/login-response.interface';
-import { CheckTokenResponse } from '../interfaces/check-token.response';
+import { AuthStatus, CheckTokenResponse, LoginResponse, User } from '../interfaces';
+import { environment } from '../../environments/environments';
+
 
 @Injectable({
   providedIn: 'root'

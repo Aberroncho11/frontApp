@@ -21,27 +21,25 @@
 
         <div class="card bg-glass">
           <div class="card-body px-4 py-5 px-md-5">
-            <form>
+            <form autocomplete="off"
+            [formGroup]="myForm"
+            (ngSubmit)="login()">
 
               <div data-mdb-input-init class="form-outline mb-4">
-                <input type="email" id="form3Example3" class="form-control" />
+                <input type="email" id="form3Example3" class="form-control" formControlName="email"/>
                 <label class="form-label" for="form3Example3">Email</label>
               </div>
 
               <div data-mdb-input-init class="form-outline mb-4">
-                <input type="password" id="form3Example4" class="form-control" />
+                <input type="password" id="form3Example4" class="form-control" formControlName="password"/>
                 <label class="form-label" for="form3Example4">Password</label>
               </div>
 
-              <!-- <div class="form-check d-flex justify-content-center mb-4">
-                <input class="form-check-input me-2" type="checkbox" value="" id="form2Example33" checked />
-                <label class="form-check-label" for="form2Example33">
-                  Subscribe to our newsletter
-                </label>
-              </div> -->
-
-              <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-danger btn-block mb-4">
+              <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-danger btn-block mb-4" [disabled]="myForm.invalid">
                 Iniciar sesión
+              </button>
+              <button data-mdb-button-init data-mdb-ripple-init class="btn btn-danger btn-block mb-4 ms-3" (click)="register()">
+                Registrarse
               </button>
 
               <div class="text-center">
@@ -62,6 +60,7 @@
                   <i class="fab fa-github text-danger"></i>
                 </button>
               </div>
+
             </form>
           </div>
         </div>
