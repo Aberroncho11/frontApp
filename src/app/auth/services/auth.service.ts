@@ -5,6 +5,7 @@ import { AuthStatus, CheckTokenResponse, LoginResponse, User } from '../interfac
 import { environment } from '../../environments/environments';
 
 
+
 @Injectable({
   providedIn: 'root'
 })
@@ -35,8 +36,8 @@ export class AuthService {
 
   login( email: string, password: string): Observable<boolean> {
 
-    const url = `${this.baseUrl}/auth/login`;
-    const body = { email, password};
+    const url = `${this.baseUrl}/Login`;
+    const body = { email, password };
 
     return this.http.post<LoginResponse>(url, body)
     .pipe(
@@ -49,7 +50,7 @@ export class AuthService {
   }
 
   checkAuthStatus(): Observable<boolean>{
-    const url = `${this.baseUrl}/auth/check-token`;
+    const url = `${this.baseUrl}/CheckToken`;
     const token = localStorage.getItem('token');
 
     if(!token){
@@ -60,9 +61,10 @@ export class AuthService {
     const headers = new HttpHeaders()
     .set('Authorization', `Bearer ${token}`);
 
+
     return this.http.get<CheckTokenResponse>(url, {headers: headers})
     .pipe(
-      map( ({token, user}) => this.setAuthentication(user, token)),
+      map( ({user, token}) => this.setAuthentication(user, token)),
       //error
       catchError(() => {
         this._authStatus.set(AuthStatus.notAuthenticated);

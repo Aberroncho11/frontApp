@@ -3,21 +3,21 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
-import { AuthLayoutComponent } from './auth-layout.component';
+import { LayoutAuthComponent } from './layout-auth.component';
 
-describe('AuthLayoutComponent', () => {
-  let component: AuthLayoutComponent;
-  let fixture: ComponentFixture<AuthLayoutComponent>;
+describe('LayoutAuthComponent', () => {
+  let component: LayoutAuthComponent;
+  let fixture: ComponentFixture<LayoutAuthComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AuthLayoutComponent ]
+      declarations: [ LayoutAuthComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AuthLayoutComponent);
+    fixture = TestBed.createComponent(LayoutAuthComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
