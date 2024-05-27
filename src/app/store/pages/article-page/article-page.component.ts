@@ -1,15 +1,32 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ArticleService } from '../../services/articles.service';
 
 @Component({
-  selector: 'app-article-page',
   templateUrl: './article-page.component.html',
-  styleUrls: ['./article-page.component.scss']
+  styleUrls: ['./article-page.component.css']
 })
-export class ArticlePageComponent implements OnInit {
+export class ArticlePageComponent {
 
-  constructor() { }
+  private fb          = inject( FormBuilder );
+  private articleService = inject( ArticleService );
 
-  ngOnInit() {
-  }
+  public articleForm: FormGroup = this.fb.group({
+    description:    ['fernando@google.com', [ Validators.required, Validators.email ]],
+    maker: ['123456', [ Validators.required, Validators.minLength(6) ]],
+    weight: [0, [Validators.required]],
+    height: [0, [Validators.required]],
+    width: [0, [Validators.required]],
+    price: [0, [Validators.required]],
+    foto: [''],
+    status: ['', [Validators.required]],
+    stocks: [[], [Validators.required]]
+  });
+
+  // get() {
+  //   const {email} = this.myForm.value;
+
+  // }
+
 
 }

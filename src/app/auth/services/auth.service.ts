@@ -21,7 +21,7 @@ export class AuthService {
   public authStatus = computed( () => this._authStatus() )
 
   constructor() {
-    this.checkAuthStatus().subscribe();
+    // this.checkAuthStatus().subscribe();
    }
 
   private setAuthentication(user: User, token: string): boolean {
@@ -35,7 +35,7 @@ export class AuthService {
 
   login( email: string, password: string): Observable<boolean> {
 
-    const url = `${this.baseUrl}/auth/login`;
+    const url = `${this.baseUrl}/login`;
     const body = { email, password};
 
     return this.http.post<LoginResponse>(url, body)
@@ -48,28 +48,28 @@ export class AuthService {
     );
   }
 
-  checkAuthStatus(): Observable<boolean>{
-    const url = `${this.baseUrl}/auth/check-token`;
-    const token = localStorage.getItem('token');
+  // checkAuthStatus(): Observable<boolean>{
+  //   const url = `${this.baseUrl}/checkToken`;
+  //   const token = localStorage.getItem('token');
 
-    if(!token){
-      this.logout();
-      return of(false);
-    }
+  //   if(!token){
+  //     this.logout();
+  //     return of(false);
+  //   }
 
-    const headers = new HttpHeaders()
-    .set('Authorization', `Bearer ${token}`);
+  //   const headers = new HttpHeaders()
+  //   .set('Authorization', `Bearer ${token}`);
 
-    return this.http.get<CheckTokenResponse>(url, {headers: headers})
-    .pipe(
-      map( ({token, user}) => this.setAuthentication(user, token)),
-      //error
-      catchError(() => {
-        this._authStatus.set(AuthStatus.notAuthenticated);
-        return of(false);
-      })
-    )
-  }
+  //   return this.http.get<CheckTokenResponse>(url, {headers: headers})
+  //   .pipe(
+  //     map( ({token, user}) => this.setAuthentication(user, token)),
+  //     //error
+  //     catchError(() => {
+  //       this._authStatus.set(AuthStatus.notAuthenticated);
+  //       return of(false);
+  //     })
+  //   )
+  // }
 
   logout(){
     localStorage.removeItem('token');

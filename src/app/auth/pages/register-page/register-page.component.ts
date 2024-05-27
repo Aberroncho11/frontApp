@@ -34,7 +34,7 @@ export class RegisterPageComponent {
       })
   }
 
-  login(){
+  goLogin(){
     this.router.navigateByUrl('/auth/login');
   }
 
