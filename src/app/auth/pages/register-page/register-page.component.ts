@@ -16,24 +16,26 @@ export class RegisterPageComponent {
   private router = inject (Router);
 
   public myForm : FormGroup = this.fb.group({
+    perfil: ['fernando@google.com', [Validators.required, Validators.email]],
+    nickname: ['123456', [Validators.required, Validators.minLength(6)]],
     email: ['fernando@google.com', [Validators.required, Validators.email]],
     password: ['123456', [Validators.required, Validators.minLength(6)]]
   });
 
-  login(){
+  register(){
     const {email, password} = this.myForm.value;
 
     this.authService.login(email, password)
       .subscribe({
-        next: () => this.router.navigateByUrl('/store'),
+        next: () => this.router.navigateByUrl('/auth/login'),
         error: (message) => {
           Swal.fire('Error', message, 'error')
         }
       })
   }
 
-  register(){
-    this.router.navigateByUrl('/auth/register');
+  login(){
+    this.router.navigateByUrl('/auth/login');
   }
 
 }
