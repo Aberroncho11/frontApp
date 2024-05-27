@@ -35,21 +35,11 @@ export class AppComponent {
   //       this.router.navigateByUrl('/store');
   //       return;
 
-<<<<<<< HEAD
+
   //     case AuthStatus.notAuthenticated:
   //       this.router.navigateByUrl('/auth/login');
   //       return;
   //   }
   // });
-=======
-      case AuthStatus.notAuthenticated:
-        this.router.navigateByUrl('/auth/login');
-        return;
-
-    }
-
-  });
->>>>>>> 59b1aa5a8531a6d4723640726cdc489bae39059b
-
 
 }
