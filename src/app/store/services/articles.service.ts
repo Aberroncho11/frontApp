@@ -15,6 +15,7 @@ export class ArticleService {
   constructor(private http: HttpClient) { }
 
   getArticles():Observable<ArticleDTO[]> {
+<<<<<<< HEAD
     return this.http.get<ArticleDTO[]>(`${ this.baseUrl }/verArticulos`);
   }
 
@@ -28,6 +29,21 @@ export class ArticleService {
 
   deleteArticle( idArticle: number ): Observable<boolean> {
     return this.http.delete(`${ this.baseUrl }/eliminarArticulos/${ idArticle }`)
+=======
+    return this.http.get<ArticleDTO[]>(`${ this.baseUrl }/VerArticulos`);
+  }
+
+  addArticle( article: ArticleCreacionDTO ): Observable<ArticleCreacionDTO> {
+    return this.http.post<ArticleCreacionDTO>(`${ this.baseUrl }/CrearArticulos`, article );
+  }
+
+  updateArticle( article: ArticleCreacionDTO, idArticle: number ): Observable<ArticleCreacionDTO> {
+    return this.http.put<ArticleCreacionDTO>(`${ this.baseUrl }/ModificarArticulos/${ idArticle }`, article );
+  }
+
+  deleteArticle( idArticle: number ): Observable<boolean> {
+    return this.http.delete(`${ this.baseUrl }/EliminarArticulos/${ idArticle }`)
+>>>>>>> 59b1aa5a8531a6d4723640726cdc489bae39059b
       .pipe(
         map( resp => true ),
         catchError( err => of(false) ),

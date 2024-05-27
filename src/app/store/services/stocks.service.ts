@@ -14,7 +14,11 @@ export class UsersService {
   constructor(private http: HttpClient) { }
 
   addStock( stock: StockDTO): Observable<StockDTO>{
+<<<<<<< HEAD
     return this.http.patch<StockDTO>(`${ this.baseUrl }/añadirStock`, stock );
+=======
+    return this.http.patch<StockDTO>(`${ this.baseUrl }/AddStock`, stock );
+>>>>>>> 59b1aa5a8531a6d4723640726cdc489bae39059b
   }
 
 }

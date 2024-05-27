@@ -5,6 +5,7 @@ import { AuthStatus, CheckTokenResponse, LoginResponse, User } from '../interfac
 import { environment } from '../../environments/environments';
 
 
+
 @Injectable({
   providedIn: 'root'
 })
@@ -35,8 +36,13 @@ export class AuthService {
 
   login( email: string, password: string): Observable<boolean> {
 
+<<<<<<< HEAD
     const url = `${this.baseUrl}/login`;
     const body = { email, password};
+=======
+    const url = `${this.baseUrl}/Login`;
+    const body = { email, password };
+>>>>>>> 59b1aa5a8531a6d4723640726cdc489bae39059b
 
     return this.http.post<LoginResponse>(url, body)
     .pipe(
@@ -48,9 +54,15 @@ export class AuthService {
     );
   }
 
+<<<<<<< HEAD
   // checkAuthStatus(): Observable<boolean>{
   //   const url = `${this.baseUrl}/checkToken`;
   //   const token = localStorage.getItem('token');
+=======
+  checkAuthStatus(): Observable<boolean>{
+    const url = `${this.baseUrl}/CheckToken`;
+    const token = localStorage.getItem('token');
+>>>>>>> 59b1aa5a8531a6d4723640726cdc489bae39059b
 
   //   if(!token){
   //     this.logout();
@@ -60,6 +72,7 @@ export class AuthService {
   //   const headers = new HttpHeaders()
   //   .set('Authorization', `Bearer ${token}`);
 
+<<<<<<< HEAD
   //   return this.http.get<CheckTokenResponse>(url, {headers: headers})
   //   .pipe(
   //     map( ({token, user}) => this.setAuthentication(user, token)),
@@ -70,6 +83,19 @@ export class AuthService {
   //     })
   //   )
   // }
+=======
+
+    return this.http.get<CheckTokenResponse>(url, {headers: headers})
+    .pipe(
+      map( ({user, token}) => this.setAuthentication(user, token)),
+      //error
+      catchError(() => {
+        this._authStatus.set(AuthStatus.notAuthenticated);
+        return of(false);
+      })
+    )
+  }
+>>>>>>> 59b1aa5a8531a6d4723640726cdc489bae39059b
 
   logout(){
     localStorage.removeItem('token');
