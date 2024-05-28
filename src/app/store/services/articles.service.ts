@@ -4,6 +4,7 @@ import { Observable, catchError, map, of } from 'rxjs';
 import { environment } from '../../environments/environments';
 import { ArticleDTO } from '../interfaces/article/articleDTO.interface';
 import { ArticleCreacionDTO } from '../interfaces/article/articleCreacionDTO.interface';
+import { ArticleIdDTO } from '../interfaces/article/articleIdDTO.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -15,35 +16,48 @@ export class ArticleService {
   constructor(private http: HttpClient) { }
 
   getArticles():Observable<ArticleDTO[]> {
-<<<<<<< HEAD
+
     return this.http.get<ArticleDTO[]>(`${ this.baseUrl }/verArticulos`);
   }
 
-  addArticle( article: ArticleCreacionDTO ): Observable<ArticleCreacionDTO> {
-    return this.http.post<ArticleCreacionDTO>(`${ this.baseUrl }/crearArticulo`, article );
+  getArticlesPorId(idArticle: number):Observable<ArticleIdDTO> {
+    return this.http.get<ArticleIdDTO>(`${this.baseUrl}/verArticulosPorId/${idArticle}`);
+  }
+
+  addArticle( article: ArticleCreacionDTO): Observable<any> {
+
+    const formData: FormData = new FormData();
+    formData.append('Description', article.description);
+    formData.append('Maker', article.maker);
+    formData.append('Weight', article.weight.toString());
+    formData.append('Height', article.height.toString());
+    formData.append('Width', article.width.toString());
+    formData.append('Price', article.price.toString());
+    if (article.foto) {
+      formData.append('Foto', article.foto, article.foto.name);
+    }
+
+    return this.http.post<any>(`${ this.baseUrl }/crearArticulo`, formData );
   }
 
   updateArticle( article: ArticleCreacionDTO, idArticle: number ): Observable<ArticleCreacionDTO> {
-    return this.http.put<ArticleCreacionDTO>(`${ this.baseUrl }/modificarArticulo/${ idArticle }`, article );
+
+    const formData: FormData = new FormData();
+    formData.append('Description', article.description);
+    formData.append('Maker', article.maker);
+    formData.append('Weight', article.weight.toString());
+    formData.append('Height', article.height.toString());
+    formData.append('Width', article.width.toString());
+    formData.append('Price', article.price.toString());
+    if (article.foto) {
+      formData.append('Foto', article.foto, article.foto.name);
+    }
+
+    return this.http.put<ArticleCreacionDTO>(`${ this.baseUrl }/modificarArticulo/${ idArticle }`, formData );
   }
 
   deleteArticle( idArticle: number ): Observable<boolean> {
-    return this.http.delete(`${ this.baseUrl }/eliminarArticulos/${ idArticle }`)
-=======
-    return this.http.get<ArticleDTO[]>(`${ this.baseUrl }/VerArticulos`);
-  }
-
-  addArticle( article: ArticleCreacionDTO ): Observable<ArticleCreacionDTO> {
-    return this.http.post<ArticleCreacionDTO>(`${ this.baseUrl }/CrearArticulos`, article );
-  }
-
-  updateArticle( article: ArticleCreacionDTO, idArticle: number ): Observable<ArticleCreacionDTO> {
-    return this.http.put<ArticleCreacionDTO>(`${ this.baseUrl }/ModificarArticulos/${ idArticle }`, article );
-  }
-
-  deleteArticle( idArticle: number ): Observable<boolean> {
-    return this.http.delete(`${ this.baseUrl }/EliminarArticulos/${ idArticle }`)
->>>>>>> 59b1aa5a8531a6d4723640726cdc489bae39059b
+    return this.http.delete(`${ this.baseUrl }/eliminarArticulo/${ idArticle }`)
       .pipe(
         map( resp => true ),
         catchError( err => of(false) ),

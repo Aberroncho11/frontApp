@@ -1,6 +1,7 @@
 import { StockDTO } from "../stock/stockDTO.interface";
 
 export interface ArticleDTO {
+  idArticle:     number;
   description:   string;
   maker:         string;
   weight:        number;

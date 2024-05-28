@@ -2,70 +2,68 @@
   <div class="px-5">
     <div class="row gx-4 justify-content-center">
       <div class="col-lg-8">
-        <h2>CREAR ARTÍCULO</h2>
+        <h2>CREAR PEDIDO</h2>
         <p class="lead">Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae distinctio soluta, aliquam sed quae ab molestias, illo ipsum accusamus eligendi placeat quos molestiae possimus cum! Repellat natus ullam placeat sunt!
           Cum facere illo eius hic dolorem dignissimos reprehenderit natus commodi, molestiae corporis saepe ipsam voluptatem sit itaque qui ut dicta, laborum esse aspernatur velit doloribus voluptas. Nam corrupti maiores soluta?</p>
           <div class=" mt-4">
-            <form [formGroup]="articleForm" (ngSubmit)="crearArticulo()">
+            <form [formGroup]="pedidoForm" (ngSubmit)="crearPedido()" autocomplete="off">
               <div class="mb-3">
-                <label for="description" class="form-label">Descripción</label>
+                <label for="idUser" class="form-label">Id usuario</label>
                 <input
                   type="text"
-                  id="description"
-                  formControlName="description"
-                  class="form-control"
-                  placeholder="Descripción">
-                <span *ngIf="isValidField('description')" class="form-text text-danger">
+                  id="idUser"
+                  formControlName="idUser"
+                  class="form-control">
+                <span *ngIf="isValidField('idUser')" class="form-text text-danger">
                   {{getFieldError('description')}}
                 </span>
               </div>
 
               <div class="mb-3">
-                <label for="maker" class="form-label">Fabricante</label>
+                <label for="postalCode" class="form-label">Codigo postal</label>
                 <input
                   type="text"
-                  id="maker"
-                  formControlName="maker"
-                  class="form-control"
-                  placeholder="Fabricante">
-                <span *ngIf="isValidField('maker')" class="form-text text-danger">
-                  {{getFieldError('maker')}}
-                </span>
-              </div>
-
-              <div class="mb-3">
-                <label for="weight" class="form-label">Peso</label>
-                <input
-                  type="number"
-                  id="weight"
-                  formControlName="weight"
+                  id="postalCode"
+                  formControlName="postalCode"
                   class="form-control">
-                <span *ngIf="isValidField('weight')" class="form-text text-danger">
-                  {{getFieldError('weight')}}
+                <span *ngIf="isValidField('postalCode')" class="form-text text-danger">
+                  {{getFieldError('postalCode')}}
                 </span>
               </div>
 
               <div class="mb-3">
-                <label for="height" class="form-label">Altura</label>
+                <label for="town" class="form-label">Town</label>
                 <input
-                type="number"
-                id="height"
-                formControlName="height"
-                class="form-control">
-                <span *ngIf="isValidField('height')" class="form-text text-danger">
-                  {{getFieldError('height')}}
+                  type="string"
+                  id="town"
+                  formControlName="town"
+                  class="form-control">
+                <span *ngIf="isValidField('town')" class="form-text text-danger">
+                  {{getFieldError('town')}}
                 </span>
               </div>
 
               <div class="mb-3">
-                <label for="width" class="form-label">Ancho</label>
+                <label for="phoneNumber" class="form-label">Telefono</label>
                 <input
                 type="number"
-                id="width"
-                formControlName="width"
+                id="phoneNumber"
+                formControlName="phoneNumber"
                 class="form-control">
-                <span *ngIf="isValidField('width')" class="form-text text-danger">
-                  {{getFieldError('width')}}
+                <span *ngIf="isValidField('phoneNumber')" class="form-text text-danger">
+                  {{getFieldError('phoneNumber')}}
+                </span>
+              </div>
+
+              <div class="mb-3">
+                <label for="personalContact" class="form-label">Contacto personal</label>
+                <input
+                type="number"
+                id="personalContact"
+                formControlName="personalContact"
+                class="form-control">
+                <span *ngIf="isValidField('personalContact')" class="form-text text-danger">
+                  {{getFieldError('personalContact')}}
                 </span>
               </div>
 

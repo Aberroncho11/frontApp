@@ -1,3 +1,5 @@
+import { ItemDTO } from "../item/itemDTO.interface";
+
 export interface OrderDTO {
   idOrder:           number;
   idUser:            number;
@@ -8,4 +10,5 @@ export interface OrderDTO {
   address:           string;
   province:          string;
   status:            string;
+  items:              ItemDTO[]
 }

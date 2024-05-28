@@ -15,31 +15,10 @@ export class OrderService {
   constructor(private http: HttpClient) { }
 
   getPedidos():Observable<OrderDTO[]> {
-<<<<<<< HEAD
     return this.http.get<OrderDTO[]>(`${ this.baseUrl }/verPedidos`);
   }
 
   addPedido( order: OrderCreacionDTO ): Observable<OrderCreacionDTO> {
     return this.http.post<OrderCreacionDTO>(`${ this.baseUrl }/crearPedido`, order );
   }
-=======
-    return this.http.get<OrderDTO[]>(`${ this.baseUrl }/VerPedidos`);
-  }
-
-  addPedido( order: OrderCreacionDTO ): Observable<OrderCreacionDTO> {
-    return this.http.post<OrderCreacionDTO>(`${ this.baseUrl }/CrearPedidos`, order );
-  }
-
-  // updatePedido( order: OrderCreacionDTO, idOrder: number ): Observable<OrderCreacionDTO> {
-  //   return this.http.put<OrderCreacionDTO>(`${ this.baseUrl }/ModificarPedidos/${ idOrder }`, order );
-  // }
-
-  // deletePedido( idOrder: number ): Observable<boolean> {
-  //   return this.http.delete(`${ this.baseUrl }/EliminarPedidos/${ idOrder }`)
-  //     .pipe(
-  //       map( resp => true ),
-  //       catchError( err => of(false) ),
-  //     );
-  // }
->>>>>>> 59b1aa5a8531a6d4723640726cdc489bae39059b
 }

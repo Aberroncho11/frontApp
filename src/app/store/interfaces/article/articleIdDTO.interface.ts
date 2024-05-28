@@ -1,5 +1,5 @@
 
-export interface ArticleCreacionDTO {
+export interface ArticleIdDTO {
   description:   string;
   maker:         string;
   weight:        number;
@@ -7,4 +7,5 @@ export interface ArticleCreacionDTO {
   width:         number;
   price:         number;
   foto?:          File;
+  status:        string;
 }

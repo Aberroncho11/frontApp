@@ -1,0 +1,63 @@
+<section id="contact">
+  <div class="px-5">
+    <div class="row gx-4 justify-content-center">
+      <div class="col-lg-8">
+        <h2>VER PEDIDOS</h2>
+        <p class="lead">Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae distinctio soluta, aliquam sed quae ab molestias, illo ipsum accusamus eligendi placeat quos molestiae possimus cum! Repellat natus ullam placeat sunt!
+          Cum facere illo eius hic dolorem dignissimos reprehenderit natus commodi, molestiae corporis saepe ipsam voluptatem sit itaque qui ut dicta, laborum esse aspernatur velit doloribus voluptas. Nam corrupti maiores soluta?</p>
+        <button class="btn btn-dark" (click)="verPedidos()">Ver pedidos</button>
+
+        <div class=" mt-4">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Id pedido</th>
+                <th>Id usuario</th>
+                <th>Código postal</th>
+                <th>Town</th>
+                <th>Teléfono</th>
+                <th>Dirección</th>
+                <th>Contactor personal</th>
+                <!-- <th>Foto</th> -->
+                <th>Provincia</th>
+                <th>Estado</th>
+                <th>Items</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let pedido of pedidos">
+                 <td class="align-middle">{{ pedido.idOrder }}</td>
+                 <td class="align-middle">{{ pedido.idUser }}</td>
+                 <td class="align-middle">{{ pedido.postalCode }}</td>
+                 <td class="align-middle">{{ pedido.town }}</td>
+                 <td class="align-middle">{{ pedido.phoneNumber }}</td>
+                 <td class="align-middle">{{ pedido.address }}</td>
+                 <td class="align-middle">{{ pedido.personalContact }}</td>
+                 <td class="align-middle">{{ pedido.province }}</td>
+                 <td class="align-middle">{{ pedido.status }}</td>
+                 <td class="align-middle">
+                  <table class="table table-sm">
+                    <thead>
+                      <tr>
+                        <th>Id articulo</th>
+                        <th>Cantidad</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let item of pedido.items">
+                        <td>{{ item.articleId }}</td>
+                        <td>{{ item.quantity }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+</section>

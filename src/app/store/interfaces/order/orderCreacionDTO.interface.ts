@@ -5,7 +5,7 @@ export interface OrderCreacionDTO {
   postalCode:        number;
   town:              string;
   phoneNumber:       number;
-  personalContact:   number;
+  personalContact:   string;
   address:           string;
   province:          string;
   status:            string;

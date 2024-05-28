@@ -1,15 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { ArticleDTO } from '../../../interfaces/article/articleDTO.interface';
+import { ArticleService } from '../../../services/articles.service';
 
 @Component({
   selector: 'ver-articulos',
   templateUrl: './ver-articulos.component.html',
   styleUrls: ['./ver-articulos.component.css']
 })
-export class VerArticulosComponent implements OnInit {
+export class VerArticulosComponent {
 
-  constructor() { }
+  public articulos: ArticleDTO[] = [];
 
-  ngOnInit() {
+  constructor(private articleService: ArticleService) { }
+
+  verArticulos(): void {
+    this.articleService.getArticles()
+    .subscribe( articulos => this.articulos = articulos);
   }
 
 }
