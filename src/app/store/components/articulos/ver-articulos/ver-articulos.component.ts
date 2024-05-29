@@ -10,12 +10,20 @@ import { ArticleService } from '../../../services/articles.service';
 export class VerArticulosComponent {
 
   public articulos: ArticleDTO[] = [];
+  public mostrarTabla: boolean = false;
 
   constructor(private articleService: ArticleService) { }
 
   verArticulos(): void {
-    this.articleService.getArticles()
-    .subscribe( articulos => this.articulos = articulos);
+    this.articleService.getArticles().subscribe(
+      articulos => {
+        this.articulos = articulos;
+        this.mostrarTabla = true;
+      }
+    );
   }
 
+  ocultarTabla(): void {
+    this.mostrarTabla = false;
+  }
 }

@@ -3,12 +3,12 @@ import { ItemDTO } from "../item/itemDTO.interface";
 export interface OrderDTO {
   idOrder:           number;
   idUser:            number;
-  postalCode:        number;
+  postalCode:        string;
   town:              string;
-  phoneNumber:       number;
-  personalContact:   number;
+  phoneNumber:       string;
+  personalContact:   string;
   address:           string;
   province:          string;
   status:            string;
-  items:              ItemDTO[]
+  items:             ItemDTO[]
 }

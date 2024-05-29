@@ -7,7 +7,10 @@ import { StockDTO } from '../interfaces/stock/stockDTO.interface';
 @Injectable({
   providedIn: 'root'
 })
-export class UsersService {
+export class StockService {
+  getUsers() {
+    throw new Error('Method not implemented.');
+  }
 
   private baseUrl: string = environment.baseUrl;
 

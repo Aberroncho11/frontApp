@@ -2,12 +2,11 @@ import { ArticleDTO } from "../article/articleDTO.interface";
 
 export interface OrderCreacionDTO {
   idUser:            number;
-  postalCode:        number;
+  postalCode:        string;
   town:              string;
-  phoneNumber:       number;
+  phoneNumber:       string;
   personalContact:   string;
   address:           string;
   province:          string;
-  status:            string;
   articles:          ArticleDTO[]
 }

@@ -10,12 +10,22 @@ import { OrderService } from '../../../services/orders.service';
 export class VerPedidosComponent {
 
   public pedidos: OrderDTO[] = [];
+  public mostrarTabla: boolean = false;
 
   constructor(private orderService: OrderService) { }
 
   verPedidos(): void {
+
     this.orderService.getPedidos()
-    .subscribe( pedidos => this.pedidos = pedidos);
+      .subscribe(pedidos => {
+        this.pedidos = pedidos;
+        this.mostrarTabla = true;
+      });
+  }
+
+  ocultarTabla(): void {
+
+    this.mostrarTabla = false;
   }
 
 }

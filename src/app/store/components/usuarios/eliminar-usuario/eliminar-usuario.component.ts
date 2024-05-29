@@ -1,31 +1,27 @@
 import { Component } from '@angular/core';
-import { ArticleService } from '../../../services/articles.service';
-import { ArticleIdDTO } from '../../../interfaces/article/articleIdDTO.interface';
 import Swal from 'sweetalert2';
+import { UserGetPorIdDTO } from '../../../interfaces/user/usuarioGetPorIdDTO.interface';
+import { UserService } from '../../../services/users.service';
 
 @Component({
-  selector: 'eliminar-articulo',
-  templateUrl: './eliminar-articulo.component.html',
-  styleUrls: ['./eliminar-articulo.component.css']
+  selector: 'eliminar-usuario',
+  templateUrl: './eliminar-usuario.component.html',
+  styleUrls: ['./eliminar-usuario.component.css']
 })
-export class EliminarArticuloComponent {
+export class EliminarUsuarioComponent {
 
-  public file: File | null = null;
-
+  public usuario: UserGetPorIdDTO | null = null;
   public mostrarTabla: boolean = false;
-
-  public articulo: ArticleIdDTO | null = null;
-
-  public idArticulo: number = 0;
+  public idUsuario: number = 0;
 
   // CONSTRUCTOR
-  constructor(private articleService: ArticleService) {}
+  constructor(private userService: UserService) {}
 
   // VER ARTÍCULO POR ID
-  verArticulosPorId(): void {
-    this.articleService.getArticlesPorId(this.idArticulo).subscribe(
-      articulo => {
-        this.articulo = articulo;
+  verUsuariosPorId(): void {
+    this.userService.getUserPorId(this.idUsuario).subscribe(
+      usuario => {
+        this.usuario = usuario;
         this.mostrarTabla = true;
       },
       error => {
@@ -42,8 +38,8 @@ export class EliminarArticuloComponent {
   }
 
   // ELIMINAR ARTÍCULO
-  eliminarArticulo(): void {
-    this.articleService.deleteArticle(this.idArticulo).subscribe(
+  eliminarUsuario(): void {
+    this.userService.deleteUser(this.idUsuario).subscribe(
       response => {
         Swal.fire({
           position: "center",
@@ -52,8 +48,8 @@ export class EliminarArticuloComponent {
           showConfirmButton: false,
           timer: 1500
         });
-        this.idArticulo = 0;
-        this.articulo = null;
+        this.idUsuario = 0;
+        this.usuario = null;
         this.mostrarTabla = false;
       },
       error => {

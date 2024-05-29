@@ -14,6 +14,13 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { VerPedidosComponent } from './components/pedidos/ver-pedidos/ver-pedidos.component';
 import { CrearPedidoComponent } from './components/pedidos/crear-pedido/crear-pedido.component';
 import { PedidosComponent } from './pages/pedidos-page/pedidos-page.component';
+import { CrearUsuarioComponent } from './components/usuarios/crear-usuario/crear-usuario.component';
+import { VerUsuariosComponent } from './components/usuarios/ver-usuarios/ver-usuarios.component';
+import { EliminarUsuarioComponent } from './components/usuarios/eliminar-usuario/eliminar-usuario.component';
+import { ModificarUsuarioComponent } from './components/usuarios/modificar-usuario/modificar-usuario.component';
+import { UsuariosPageComponent } from './pages/usuarios-page/usuarios-page.component';
+import { StockPageComponent } from './pages/stock-page/stock-page.component';
+import { AddStockComponent } from './components/stocks/add-stock/add-stock.component';
 
 
 
@@ -27,7 +34,8 @@ import { PedidosComponent } from './pages/pedidos-page/pedidos-page.component';
 
     ReactiveFormsModule,
 
-    FormsModule
+    FormsModule,
+
   ],
     declarations: [
 
@@ -52,6 +60,21 @@ import { PedidosComponent } from './pages/pedidos-page/pedidos-page.component';
     VerPedidosComponent,
 
     CrearPedidoComponent,
+
+    CrearUsuarioComponent,
+
+    VerUsuariosComponent,
+
+    EliminarUsuarioComponent,
+
+    ModificarUsuarioComponent,
+
+    UsuariosPageComponent,
+
+    StockPageComponent,
+
+    AddStockComponent,
+
 
   ],
   providers: [],

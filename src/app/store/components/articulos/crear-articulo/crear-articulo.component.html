@@ -6,7 +6,7 @@
         <p class="lead">Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae distinctio soluta, aliquam sed quae ab molestias, illo ipsum accusamus eligendi placeat quos molestiae possimus cum! Repellat natus ullam placeat sunt!
           Cum facere illo eius hic dolorem dignissimos reprehenderit natus commodi, molestiae corporis saepe ipsam voluptatem sit itaque qui ut dicta, laborum esse aspernatur velit doloribus voluptas. Nam corrupti maiores soluta?</p>
           <div class=" mt-4">
-            <form [formGroup]="articleForm" (ngSubmit)="crearArticulo()">
+            <form [formGroup]="articlePostForm" (ngSubmit)="crearArticulo()">
               <div class="mb-3">
                 <label for="description" class="form-label">Descripción</label>
                 <input
@@ -93,7 +93,7 @@
                 </span>
               </div>
 
-              <button type="submit" class="btn btn-primary" [disabled]="articleForm.invalid">Crear Artículo</button>
+              <button type="submit" class="btn btn-primary" [disabled]="articlePostForm.invalid">Crear Artículo</button>
             </form>
           </div>
 

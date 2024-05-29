@@ -13,7 +13,7 @@ import Swal from 'sweetalert2';
 export class CrearArticuloComponent {
 
   // CREACIÓN DEL FORM PARA CREAR ARTÍCULO
-  public articleForm: FormGroup = this.fb.group({
+  public articlePostForm: FormGroup = this.fb.group({
     description:    ['', [ Validators.required, Validators.minLength(20) ]],
     maker: ['', [ Validators.required, Validators.minLength(6) ]],
     weight: [0, [Validators.required]],
@@ -27,22 +27,13 @@ export class CrearArticuloComponent {
 
   // CONSTRUCTOR
   constructor(private articleService: ArticleService,
-    private fb: FormBuilder,
-    /*private snackbar: MatSnackBar*/) {}
+    private fb: FormBuilder) {}
 
-  // MOSTRAR SNACK BAR
-  // showSnackbar(message: string): void{
-
-  //   this.snackbar.open(message, 'done', {
-  //     duration: 2500,
-  //   })
-
-  // }
 
    // COGER ARTÍCULO DEL FORM
    get currentArticle(): ArticleCreacionDTO {
 
-    const article = this.articleForm.value as ArticleCreacionDTO;
+    const article = this.articlePostForm.value as ArticleCreacionDTO;
     return article;
 
   }
@@ -54,8 +45,8 @@ export class CrearArticuloComponent {
   // CREAR ARTÍCULO
   crearArticulo(): void {
 
-    if(this.articleForm.invalid){
-      this.articleForm.markAllAsTouched();
+    if(this.articlePostForm.invalid){
+      this.articlePostForm.markAllAsTouched();
       return;
     }
 
@@ -68,8 +59,8 @@ export class CrearArticuloComponent {
         showConfirmButton: false,
         timer: 1500
       });
-      this.articleForm.reset();
-      this.articleForm.patchValue({
+      this.articlePostForm.reset();
+      this.articlePostForm.patchValue({
         weight: 0,
         height: 0,
         width: 0,
@@ -88,15 +79,15 @@ export class CrearArticuloComponent {
 
   // VERIFICAR CAMPO VÁLIDO
   isValidField( field: string): boolean | null{
-    return this.articleForm.controls[field].errors
-    && this.articleForm.controls[field].touched
+    return this.articlePostForm.controls[field].errors
+    && this.articlePostForm.controls[field].touched
   }
 
   // OBTENER ERROR DEL CAMPO
   getFieldError(field: string): string | null{
-    if(!this.articleForm.controls[field]) return null;
+    if(!this.articlePostForm.controls[field]) return null;
 
-    const errors = this.articleForm.controls[field].errors || {};
+    const errors = this.articlePostForm.controls[field].errors || {};
 
     for (const key of Object.keys(errors)) {
       switch(key) {

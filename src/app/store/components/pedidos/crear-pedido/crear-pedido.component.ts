@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
-import { ArticleCreacionDTO } from '../../../interfaces/article/articleCreacionDTO.interface';
-import { ArticleService } from '../../../services/articles.service';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
+import { Observable, of } from 'rxjs';
+import { catchError, debounceTime, switchMap, map, first } from 'rxjs/operators';
 import Swal from 'sweetalert2';
 import { OrderService } from '../../../services/orders.service';
+import { UserService } from '../../../services/users.service';
+import { ArticleService } from '../../../services/articles.service';
 import { OrderCreacionDTO } from '../../../interfaces/order/orderCreacionDTO.interface';
-// import { MatSnackBar } from '@angular/material/snack-bar';
+import { CustomValidators } from '../../../validators/custom-validators';
 
 @Component({
   selector: 'crear-pedido',
@@ -14,115 +16,179 @@ import { OrderCreacionDTO } from '../../../interfaces/order/orderCreacionDTO.int
 })
 export class CrearPedidoComponent {
 
-  // CREACION DEL FORM PARA CREAR ARTICULO
-  public pedidoForm: FormGroup = this.fb.group({
-    idUser:    ['', [ Validators.required, Validators.minLength(20) ]],
-    postalCode: ['', [ Validators.required, Validators.minLength(6) ]],
-    town: ['', [Validators.required]],
-    phoneNumber: ['', [Validators.required]],
-    personalContact: ['', [Validators.required]],
-    address: ['', [Validators.required]],
-    province: ['', [Validators.required]],
-    status: ['', [Validators.required]],
-    articles: [[], [Validators.required]],
-  });
+  public pedidoForm: FormGroup;
+  public newArticulo: FormGroup;
 
-  public newArticulo: FormControl = new FormControl('', Validators.required);
+  constructor(
+    private orderService: OrderService,
+    private userService: UserService,
+    private articleService: ArticleService,
+    private fb: FormBuilder
+  ) {
+    this.pedidoForm = this.fb.group({
+      idUser: ['', [Validators.required]],
+      postalCode: ['', [Validators.required, CustomValidators.postalCodeValidator]],
+      town: ['', [Validators.required]],
+      phoneNumber: ['', [Validators.required, CustomValidators.phoneNumberValidator]],
+      personalContact: ['', [Validators.required]],
+      address: ['', [Validators.required]],
+      province: ['', [Validators.required]],
+      articles: this.fb.array([], Validators.required)
+    });
 
-  // CONSTRUCTOR
-  constructor(private orderService: OrderService,
-    private fb: FormBuilder) {}
-
-   // COGER ARTICULO DEL FORM
-   get currentPedido(): OrderCreacionDTO {
-
-    const pedido = this.pedidoForm.value as OrderCreacionDTO;
-    return pedido;
-
+    this.newArticulo = this.fb.group({
+      idArticle: ['', [Validators.required], [this.articleExistsValidator()]],
+      quantity: ['', Validators.required]
+    });
   }
 
-  // COGER ARTICULOS
-  get articulos() {
-    return this.pedidoForm.get('articulos') as FormArray;
+  get currentPedido(): OrderCreacionDTO {
+    return this.pedidoForm.value as OrderCreacionDTO;
   }
 
-  // CREAR ARTICULO
-  crearArticulo(): void {
+  get articles(): FormArray {
+    return this.pedidoForm.get('articles') as FormArray;
+  }
 
-    if(this.pedidoForm.invalid){
+  crearPedido(): void {
+    if (this.pedidoForm.invalid) {
       this.pedidoForm.markAllAsTouched();
       return;
     }
 
     this.orderService.addPedido(this.currentPedido)
-    .subscribe(response => {
-      Swal.fire({
-        position: "center",
-        icon: "success",
-        title: "Artículo correctamente creado",
-        showConfirmButton: false,
-        timer: 1500
+      .subscribe(response => {
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Pedido correctamente creado",
+          showConfirmButton: false,
+          timer: 1500
+        });
+        this.pedidoForm.reset();
+        this.pedidoForm.patchValue({
+          idUser: '',
+          postalCode: '',
+          phoneNumber: ''
+        });
+        this.articles.clear();
+
+      }, error => {
+        console.error('Error al crear pedido:', error);
       });
-      this.pedidoForm.reset();
-      this.pedidoForm.patchValue({
-        idUser: 0,
-        postalCode: 0,
-        phoneNumber: 0
-      });
-    }, error => {
-      console.error('Error al crear artículo:', error);
-    });
   }
 
-  // AÑADIR ARTICULOS AL ARRAY
-  odAddToArticulos():void {
-    if(this.articulos.invalid) return;
+  odAddToArticulos(): void {
+    if (this.newArticulo.invalid) {
+      this.newArticulo.markAllAsTouched();
+      return;
+    }
 
-    const newArticulo = this.articulos.value;
+    const idArticle = this.newArticulo.get('idArticle')?.value;
+    const quantity = this.newArticulo.get('quantity')?.value;
 
-    // this.favoriteGames.push( new FormControl(newGame, Validators.required))
-
-    this.articulos.push(this.fb.control(newArticulo, Validators.required));
-
-    this.articulos.reset();
+    this.articleService.getArticlesPorId(idArticle).subscribe(
+      article => {
+        if (article) {
+          this.articles.push(this.fb.group({
+            idArticle: [idArticle, Validators.required],
+            quantity: [quantity, Validators.required]
+          }));
+          this.newArticulo.reset();
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No existe ningún artículo con este ID',
+          });
+        }
+      },
+      error => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No existe ningún artículo con este ID',
+        });
+      }
+    );
   }
 
-  // ELIMINAR ARTICULO DEL ARRAY
-  onDeleteArticulo( index: number):void {
-    this.articulos.removeAt(index);
+  onDeleteArticulo(index: number): void {
+    this.articles.removeAt(index);
   }
 
-  // VERIFICAR CAMPO VALIDO
-  isValidField( field: string): boolean | null{
-
-    return this.pedidoForm.controls[field].errors
-    && this.pedidoForm.controls[field].touched
+  isValidField(field: string): boolean | null {
+    const control = this.pedidoForm.get(field);
+    return control?.errors && control.touched ? true : null;
   }
 
-  // VERIFICAR ARRAY VALIDO
-  isValidFieldInArray(formArray: FormArray, index: number){
-
-    return formArray.controls[index].errors
-    && formArray.controls[index].touched
+  isValidFieldInArray(formArray: FormArray, index: number): boolean | null {
+    const control = formArray.at(index);
+    return control?.errors && control.touched ? true : null;
   }
 
-  // OBTENER ERROR DEL CAMPO
-  getFieldError(field: string): string | null{
+  getFieldError(field: string): string | null {
+    const control = this.pedidoForm.get(field);
+    if (!control) return null;
 
-    if(!this.pedidoForm.controls[field]) return null;
-
-    const errors = this.pedidoForm.controls[field].errors || {};
-
+    const errors = control.errors || {};
     for (const key of Object.keys(errors)) {
-      switch(key) {
+      switch (key) {
         case 'required':
           return 'Este campo es requerido';
         case 'minlength':
           return `Mínimo ${errors['minlength'].requiredLength} caracteres`;
+        case 'userNotFound':
+          return 'No existe ningún usuario con este id';
       }
     }
-
     return null;
+  }
+
+  getArticleFieldError(field: string): string | null {
+    const control = this.newArticulo.get(field);
+    if (!control) return null;
+
+    const errors = control.errors || {};
+    for (const key of Object.keys(errors)) {
+      switch (key) {
+        case 'required':
+          return 'Este campo es requerido';
+        case 'articleNotFound':
+          return `No existe ningún usuario con el id ${this.currentPedido.idUser}`;
+      }
+    }
+    return null;
+  }
+
+  userExistsValidator(): (control: AbstractControl) => Observable<ValidationErrors | null> {
+    return (control: AbstractControl): Observable<ValidationErrors | null> => {
+      if (!control.value) {
+        return of(null);
+      }
+
+      return control.valueChanges.pipe(
+        debounceTime(1000),
+        first(),
+        switchMap(value => this.userService.getUserPorId(value).pipe(
+          map(user => (user ? null : { userNotFound: true })),
+          catchError(() => of({ userNotFound: true }))
+        ))
+      );
+    };
+  }
+
+  articleExistsValidator(): (control: AbstractControl) => Observable<ValidationErrors | null> {
+    return (control: AbstractControl): Observable<ValidationErrors | null> => {
+      if (!control.value) {
+        return of(null);
+      }
+
+      return this.articleService.getArticlesPorId(control.value).pipe(
+        map(article => (article ? null : { articleNotFound: true })),
+        catchError(() => of({ articleNotFound: true }))
+      );
+    };
   }
 
 }

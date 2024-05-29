@@ -4,6 +4,7 @@ import { ArticleService } from '../../../services/articles.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { ArticleIdDTO } from '../../../interfaces/article/articleIdDTO.interface';
+import { ArticlePutDTO } from '../../../interfaces/article/articlePutDTO.interface';
 // import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
@@ -36,9 +37,9 @@ export class ModificarArticuloComponent {
     private fb: FormBuilder) {}
 
   // COGER ARTÍCULO DEL FORM
-  get currentArticle(): ArticleCreacionDTO {
+  get currentArticle(): ArticlePutDTO {
 
-    const article = this.articleForm.value as ArticleCreacionDTO;
+    const article = this.articleForm.value as ArticlePutDTO;
     if (this.file) {
       article.foto = this.file;
     }
@@ -53,9 +54,9 @@ export class ModificarArticuloComponent {
 
   // VER ARTÍCULO POR ID
   verArticulosPorId(): void {
+
     this.articleService.getArticlesPorId(this.idArticulo)
     .subscribe(articulo => {
-      console.log({articulo});
       this.articulo = articulo;
       this.articleForm.patchValue({
         description: articulo.description,
