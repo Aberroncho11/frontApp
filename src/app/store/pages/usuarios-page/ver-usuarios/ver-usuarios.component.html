@@ -1,0 +1,32 @@
+<header-component></header-component>
+<section id="contact">
+  <div class="overlay">
+    <div class="container-lg">
+      <div class="row justify-content-center">
+        <div class="col-lg-10">
+          <h2 class="text-center mb-4">VER USUARIOS</h2>
+          <p class="lead text-center">Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae distinctio soluta, aliquam sed quae ab molestias, illo ipsum accusamus eligendi placeat quos molestiae possimus cum! Repellat natus ullam placeat sunt!
+            Cum facere illo eius hic dolorem dignissimos reprehenderit natus commodi, molestiae corporis saepe ipsam voluptatem sit itaque qui ut dicta, laborum esse aspernatur velit doloribus voluptas. Nam corrupti maiores soluta?</p>
+          <button class="btn btn-dark d-block mx-auto mb-3" *ngIf="!mostrarTabla" (click)="verUsuarios()">Ver usuarios</button>
+          <button class="btn btn-dark d-block mx-auto mb-3" *ngIf="mostrarTabla" (click)="ocultarTabla()">Ocultar</button>
+          <div class="mt-4 table-container" [class.show]="mostrarTabla">
+            <div class="row">
+              <div class="col-md-4" *ngFor="let usuario of usuarios">
+                <div class="card mb-3 animate__animated animate__fadeIn">
+                  <div class="card-body">
+                    <h5 class="card-title">Usuario #{{ usuario.idUsuario }}</h5>
+                    <p class="card-text"><strong>Perfil:</strong> {{ usuario.perfil }}</p>
+                    <p class="card-text"><strong>Password:</strong> {{ usuario.password }}</p>
+                    <p class="card-text"><strong>Email:</strong> {{ usuario.email }}</p>
+                    <p class="card-text"><strong>Nickname:</strong> {{ usuario.nickname }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<footer-component></footer-component>

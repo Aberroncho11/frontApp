@@ -43,9 +43,26 @@
 }
 
 .form-control:focus {
-  box-shadow: 0 0 5px #f80000; /* Cambia el color y la sombra aquí */
-  border-color: #f80000; /* Cambia el color del borde aquí */
-  outline: none; /* Quita el borde por defecto del navegador */
+  box-shadow: 0 0 5px #f80000;
+  border-color: #f80000;
+  outline: none;
+}
+
+#iniciar, #registrar{
+  background-color: #f80000;
+  color: white;
+}
+
+#iniciar:hover, #registrar:hover{
+  background-color: #6b0000;
+}
+
+i{
+  color: #f80000;
+}
+
+i:hover{
+  color: #6b0000;
 }
 
 

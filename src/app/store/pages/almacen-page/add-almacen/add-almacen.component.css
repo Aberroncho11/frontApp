@@ -1,0 +1,53 @@
+#contact {
+  background: url('/assets/images/add-almacen.jpg') no-repeat center center;
+  background-size: cover;
+  color: #fff;
+}
+
+#contact .overlay {
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 50px 0;
+}
+
+#contact h2 {
+  margin-bottom: 30px;
+  font-size: 2.5em;
+  color: #fff;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+#contact p.lead {
+  margin-bottom: 30px;
+  font-size: 1.2em;
+  color: #ddd;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+#contact .form-control {
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  background-color: rgba(255, 255, 255, 0.8);
+  color: #333;
+}
+
+#contact .btn {
+  border-radius: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font-size: 1em;
+  background-color: #007bff;
+  color: #fff;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  transition: background-color 0.3s ease;
+}
+
+#contact .btn:hover {
+  background-color: #0056b3;
+}
+
+#contact .form-control::placeholder {
+  color: #666;
+}
+
+#contact .form-text {
+  text-shadow: none;
+}

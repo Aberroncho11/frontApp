@@ -1,0 +1,58 @@
+<header-component></header-component>
+<section id="contact">
+  <div class="overlay">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-10">
+          <h2 class="text-center mb-4">ELIMINAR ARTÍCULO</h2>
+          <p class="lead text-center">Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae distinctio soluta, aliquam sed quae ab molestias, illo ipsum accusamus eligendi placeat quos molestiae possimus cum! Repellat natus ullam placeat sunt!
+            Cum facere illo eius hic dolorem dignissimos reprehenderit natus commodi, molestiae corporis saepe ipsam voluptatem sit itaque qui ut dicta, laborum esse aspernatur velit doloribus voluptas. Nam corrupti maiores soluta?</p>
+          <div class="article-box mt-4">
+            <form [formGroup]="articuloForm">
+              <div class="mb-3">
+                <label for="idArticulo" class="form-label">Id</label>
+                <input type="number" id="idArticulo" class="form-control" formControlName="idArticulo" placeholder="Id" [(ngModel)]="idArticulo">
+                <span *ngIf="isValidFieldArticuloForm('idArticulo')" class="form-text text-danger">
+                  {{getFieldErrorArticuloForm('idArticulo')}}
+                </span>
+              </div>
+              <div class="mb-3 d-grid gap-2 d-md-flex justify-content-md-end">
+                <button class="btn btn-dark me-md-2" (click)="verArticulosPorId()" [disabled]="articuloForm.invalid">Mostrar Artículo Antes de Eliminar</button>
+              </div>
+            </form>
+          </div>
+          <div class="mt-4" *ngIf="mostrarTabla">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Descripción</th>
+                  <th>Fabricante</th>
+                  <th>Peso</th>
+                  <th>Altura</th>
+                  <th>Ancho</th>
+                  <th>Precio</th>
+                  <th>Estado</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="align-middle">{{ articulo?.descripcion }}</td>
+                  <td class="align-middle">{{ articulo?.fabricante }}</td>
+                  <td class="align-middle">{{ articulo?.peso }}</td>
+                  <td class="align-middle">{{ articulo?.altura }}</td>
+                  <td class="align-middle">{{ articulo?.ancho }}</td>
+                  <td class="align-middle">{{ articulo?.precio | currency }}</td>
+                  <td class="align-middle">{{ articulo?.estadoArticulo }}</td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="mb-3 d-grid gap-2 d-md-flex justify-content-md-center">
+              <button *ngIf="articuloCargado" class="btn btn-dark" (click)="eliminarArticulo()">Eliminar Artículo</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<footer-component></footer-component>

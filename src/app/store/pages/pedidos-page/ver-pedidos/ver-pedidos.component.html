@@ -1,0 +1,44 @@
+<header-component></header-component>
+<section id="contact">
+  <div class="overlay">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-10">
+          <h2 class="text-center mb-4">VER PEDIDOS</h2>
+          <p class="lead text-center">Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae distinctio soluta, aliquam sed quae ab molestias, illo ipsum accusamus eligendi placeat quos molestiae possimus cum! Repellat natus ullam placeat sunt!
+            Cum facere illo eius hic dolorem dignissimos reprehenderit natus commodi, molestiae corporis saepe ipsam voluptatem sit itaque qui ut dicta, laborum esse aspernatur velit doloribus voluptas. Nam corrupti maiores soluta?</p>
+          <button class="btn btn-dark d-block mx-auto mb-3" *ngIf="!mostrarTabla" (click)="verPedidos()">Ver pedidos</button>
+          <button class="btn btn-dark d-block mx-auto mb-3" *ngIf="mostrarTabla" (click)="ocultarTabla()">Ocultar</button>
+          <div class="mt-4 table-container" [class.show]="mostrarTabla">
+            <div class="row">
+              <div class="col-md-4" *ngFor="let pedido of pedidos">
+                <div class="card mb-3 animate__animated animate__fadeIn">
+                  <div class="card-body">
+                    <h5 class="card-title">Pedido #{{ pedido.idPedido }}</h5>
+                    <p class="card-text"><strong>Usuario id:</strong> {{ pedido.usuarioId }}</p>
+                    <p class="card-text"><strong>Código Postal:</strong> {{ pedido.codigoPostal }}</p>
+                    <p class="card-text"><strong>Ciudad:</strong> {{ pedido.ciudad }}</p>
+                    <p class="card-text"><strong>Teléfono:</strong> {{ pedido.telefono }}</p>
+                    <p class="card-text"><strong>Dirección:</strong> {{ pedido.direccion }}</p>
+                    <p class="card-text"><strong>Contacto:</strong> {{ pedido.contacto }}</p>
+                    <p class="card-text"><strong>Provincia:</strong> {{ pedido.provincia }}</p>
+                    <p class="card-text"><strong>Estado Pedido:</strong> {{ pedido.estadoPedido }}</p>
+                    <div>
+                      <h6><strong>Productos:</strong></h6>
+                      <ul class="list-group list-group-flush">
+                        <li class="list-group-item" *ngFor="let producto of pedido.productos">
+                          <strong>Id artículo:</strong> {{ producto.articuloId }} - <strong>Cantidad:</strong> {{ producto.cantidad }}
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<footer-component></footer-component>

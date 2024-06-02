@@ -1,0 +1,77 @@
+<header-component></header-component>
+
+<div class="hero-section">
+  <div class="overlay">
+    <div class="row gx-5 align-items-center justify-content-center">
+        <div class="col-lg-8 col-xl-7 col-xxl-6">
+            <div class="my-5 text-center text-xl-start">
+              <h1 class="display-5 fw-bolder text-white mb-2">BIENVENIDO A GAP LOGÍSTICA Y TRANSPORTE</h1>
+              <p class="lead fw-normal text-white mb-4">Somos una compañía internacional de Ingeniería, Consultoría y Servicios Tecnológicos que llevamos más de 25 años aplicando nuestra metodología de trabajo en múltiples sectores.</p>
+            </div>
+        </div>
+    </div>
+  </div>
+</div>
+
+<section>
+  <div class="container px-5 my-5">
+      <div class="row gx-5">
+          <div class="col-lg-6 mb-5">
+              <div class="card h-100 shadow border-0">
+                  <img class="card-img-top" src="/assets/images/eliminar-articulo.jpg" alt="Pedidos" />
+                  <div class="card-body p-4">
+                      <h5 class="card-title mb-3">Gestiona tus pedidos</h5>
+                      <p class="card-text mb-0">Administra y realiza el seguimiento de tus pedidos de manera eficiente y en tiempo real.</p>
+                      <div class="btn-group">
+                        <a *ngIf="isAdmin" class="btn btn-primary mt-3" routerLink="/store/verPedidos">Ver pedidos</a>
+                        <a class="btn btn-primary mt-3" routerLink="/store/crearPedido">Crear pedido</a>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div class="col-lg-6 mb-5">
+            <div *ngIf="isAdminOrGestor" class="card h-100 shadow border-0">
+                <img class="card-img-top" src="/assets/images/eliminar-articulo.jpg" alt="Stock" />
+                <div class="card-body p-4">
+                    <h5 class="card-title mb-3">Administra tu stock</h5>
+                    <p class="card-text mb-0">Mantén el control de tu inventario y stock de productos de manera eficiente y organizada.</p>
+                    <a class="btn btn-primary mt-3" routerLink="/store/addAlmacen">Añadir a almacén</a>
+                </div>
+            </div>
+          </div>
+      </div>
+      <div class="row gx-5">
+          <div *ngIf="isAdmin" class="col-lg-6 mb-5">
+              <div class="card h-100 shadow border-0">
+                  <img class="card-img-top" src="/assets/images/eliminar-articulo.jpg" alt="Usuarios" />
+                  <div class="card-body p-4">
+                      <h5 class="card-title mb-3">Gestiona tus usuarios</h5>
+                      <p class="card-text mb-0">Controla y administra la información y los permisos de tus usuarios de manera sencilla.</p>
+                      <div class="btn-group">
+                        <a class="btn btn-primary mt-3" routerLink="/store/verUsuarios">Ver usuarios</a>
+                        <a class="btn btn-primary mt-3" routerLink="/store/crearUsuario">Crear usuario</a>
+                        <a class="btn btn-primary mt-3" routerLink="/store/modificarUsuario">Modificar usuario</a>
+                        <a class="btn btn-primary mt-3" routerLink="/store/eliminarUsuario">Eliminar usuario</a>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div *ngIf="isAdmin" class="col-lg-6 mb-5">
+            <div class="card h-100 shadow border-0">
+                <img class="card-img-top" src="/assets/images/eliminar-articulo.jpg" alt="Artículos" />
+                <div class="card-body p-4">
+                    <h5 class="card-title mb-3">Explora nuestros artículos</h5>
+                    <p class="card-text mb-0">Descubre una variedad de artículos sobre temas actuales y relevantes en el mundo de la logística y el transporte.</p>
+                    <div class="btn-group">
+                      <a class="btn btn-primary mt-3" routerLink="/store/verArticulos">Ver artículos</a>
+                      <a class="btn btn-primary mt-3" routerLink="/store/crearArticulo">Crear artículo</a>
+                      <a class="btn btn-primary mt-3" routerLink="/store/modificarArticulo">Modificar artículo</a>
+                      <a class="btn btn-primary mt-3" routerLink="/store/eliminarArticulo">Eliminar artículo</a>
+                    </div>
+                </div>
+            </div>
+          </div>
+      </div>
+  </div>
+</section>
+<footer-component></footer-component>

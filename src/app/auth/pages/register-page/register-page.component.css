@@ -33,8 +33,18 @@
   overflow: hidden;
 }
 
+#register{
+  background-color: #ad1fff;
+  color: white;
+}
+
+#register:hover{
+  background-color: #44006b;
+  color: white;
+}
+
 .bg-glass {
-  background-color: hsla(0, 0%, 100%, 0.9) !important;
+  background-color: hsla(0, 0%, 100%, 0.9);
   backdrop-filter: saturate(200%) blur(25px);
 }
 
@@ -43,8 +53,25 @@
 }
 
 .form-control:focus {
-  box-shadow: 0 0 5px #ad1fff; /* Cambia el color y la sombra aquí */
-  border-color: #ad1fff; /* Cambia el color del borde aquí */
-  outline: none; /* Quita el borde por defecto del navegador */
+  box-shadow: 0 0 5px #ad1fff;
+  border-color: #ad1fff;
+  outline: none;
 }
 
+.form-check{
+  transition: box-shadow 0.3s ease;
+}
+
+.form-check-input:focus {
+  box-shadow: 0 0 5px #ad1fff;
+  border-color: #ad1fff;
+  outline: none;
+}
+
+i{
+  color: #ad1fff;
+}
+
+i:hover{
+  color: #44006b;
+}

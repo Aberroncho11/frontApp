@@ -25,39 +25,39 @@
             [formGroup]="myForm"
             (ngSubmit)="login()">
 
-              <div data-mdb-input-init class="form-outline mb-4">
+              <div class="form-outline mb-4">
                 <input type="email" id="form3Example3" class="form-control" formControlName="email"/>
                 <label class="form-label" for="form3Example3">Email</label>
               </div>
 
-              <div data-mdb-input-init class="form-outline mb-4">
+              <div class="form-outline mb-4">
                 <input type="password" id="form3Example4" class="form-control" formControlName="password"/>
                 <label class="form-label" for="form3Example4">Password</label>
               </div>
 
-              <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-danger btn-block mb-4" [disabled]="myForm.invalid">
+              <button id="iniciar" type="submit" class="btn mb-4" [disabled]="myForm.invalid">
                 Iniciar sesión
               </button>
-              <button data-mdb-button-init data-mdb-ripple-init class="btn btn-danger btn-block mb-4 ms-3" (click)="register()">
+              <button id="registrar" class="btn mb-4 ms-3" (click)="register()">
                 Registrarse
               </button>
 
               <div class="text-center">
                 <p>o iniciar sesión con:</p>
-                <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-link btn-floating mx-1">
-                  <i class="fab fa-facebook-f text-danger"></i>
+                <button type="button" class="btn btn-link btn-floating mx-1">
+                  <i class="fab fa-facebook-f"></i>
                 </button>
 
-                <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-link btn-floating mx-1">
-                  <i class="fab fa-google text-danger"></i>
+                <button type="button" class="btn btn-link btn-floating mx-1">
+                  <i class="fab fa-google"></i>
                 </button>
 
-                <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-link btn-floating mx-1">
-                  <i class="fab fa-twitter text-danger"></i>
+                <button type="button" class="btn btn-link btn-floating mx-1">
+                  <i class="fab fa-twitter"></i>
                 </button>
 
-                <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-link btn-floating mx-1">
-                  <i class="fab fa-github text-danger"></i>
+                <button type="button" class="btn btn-link btn-floating mx-1">
+                  <i class="fab fa-github"></i>
                 </button>
               </div>
 

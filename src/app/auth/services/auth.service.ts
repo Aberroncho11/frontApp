@@ -3,6 +3,7 @@ import { Injectable, inject, computed, signal} from '@angular/core';
 import { Observable, catchError, map, of, throwError } from 'rxjs';
 import { AuthStatus, CheckTokenResponse, LoginResponse, User } from '../interfaces';
 import { environment } from '../../environments/environments';
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 
 
@@ -14,6 +15,8 @@ export class AuthService {
   private readonly baseUrl: string = environment.baseUrl;
   private http = inject(HttpClient);
 
+  private jwtHelper: JwtHelperService
+
   private _currentUser = signal<User|null>(null);
   private _authStatus = signal<AuthStatus>(AuthStatus.checking);
 
@@ -22,7 +25,8 @@ export class AuthService {
   public authStatus = computed( () => this._authStatus() )
 
   constructor() {
-    // this.checkAuthStatus().subscribe();
+    this.checkAuthStatus().subscribe();
+    this.jwtHelper = new JwtHelperService();
    }
 
   private setAuthentication(user: User, token: string): boolean {
@@ -37,7 +41,7 @@ export class AuthService {
   login( email: string, password: string): Observable<boolean> {
 
     const url = `${this.baseUrl}/login`;
-    const body = { email, password};
+    const body = { email, password };
 
 
     return this.http.post<LoginResponse>(url, body)
@@ -50,35 +54,53 @@ export class AuthService {
     );
   }
 
-  // checkAuthStatus(): Observable<boolean>{
-  //   const url = `${this.baseUrl}/checkToken`;
-  //   const token = localStorage.getItem('token');
+  getRoleFromToken(): string | null{
+    const token = localStorage.getItem('token');
+    if (token) {
+      const decodedToken = this.jwtHelper.decodeToken(token);
+      return decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+    } else {
+      return null;
+    }
+  }
 
-  //   if(!token){
-  //     this.logout();
-  //     return of(false);
-  //   }
+  checkAuthStatus(): Observable<boolean> {
+    const url = `${this.baseUrl}/checkToken`;
+    const token = localStorage.getItem('token');
 
-  //   const headers = new HttpHeaders()
-  //   .set('Authorization', `Bearer ${token}`);
+    if (!token) {
+      this.logout();
+      return of(false);
+    }
+
+    const headers = new HttpHeaders()
+      .set('Authorization', `Bearer ${token}`);
+
+    return this.http.get<boolean>(url, { headers: headers })
+      .pipe(
+        map(isAuthenticated => {
+          if (isAuthenticated) {
+            this._authStatus.set(AuthStatus.authenticated);
+            return true;
+          } else {
+            this._authStatus.set(AuthStatus.notAuthenticated);
+            return false;
+          }
+        }),
+        catchError(() => {
+          this._authStatus.set(AuthStatus.notAuthenticated);
+          return of(false);
+        })
+      );
+  }
 
 
-  //   return this.http.get<CheckTokenResponse>(url, {headers: headers})
-  //   .pipe(
-  //     map( ({token, user}) => this.setAuthentication(user, token)),
-  //     //error
-  //     catchError(() => {
-  //       this._authStatus.set(AuthStatus.notAuthenticated);
-  //       return of(false);
-  //     })
-  //   )
-  // }
 
 
   logout(){
     localStorage.removeItem('token');
     this._currentUser.set(null);
-    this._authStatus.set(AuthStatus.notAuthenticated)
+    this._authStatus.set(AuthStatus.notAuthenticated);
   }
 
 }
