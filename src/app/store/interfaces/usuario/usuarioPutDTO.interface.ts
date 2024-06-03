@@ -1,4 +1,5 @@
-export interface UsuarioGetPorIdDTO {
+export interface UsuarioPutDTO {
+  idUsuario:        number;
   perfil:           number;
   password:         string;
   email:            string;

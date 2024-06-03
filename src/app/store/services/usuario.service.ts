@@ -6,6 +6,7 @@ import { environment } from '../../environments/environments';
 import { UsuarioPostDTO } from '../interfaces/usuario/usuarioPostDTO.interface';
 import { UsuarioGetPorIdDTO } from '../interfaces/usuario/usuarioGetPorIdDTO.interface';
 import { AuthService } from '../../auth/services/auth.service';
+import { UsuarioPutDTO } from '../interfaces/usuario/usuarioPutDTO.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -37,15 +38,16 @@ export class UsuarioServicio {
     return this.http.post<any>(`${ this.baseUrl }/crearUsuario`, formData );
   }
 
-  updateUsuario( usuario: UsuarioPostDTO, idUsuario: number ): Observable<UsuarioPostDTO> {
+  updateUsuario( usuario: UsuarioPutDTO, idUsuario: number ): Observable<UsuarioPutDTO> {
 
     const formData: FormData = new FormData();
     formData.append('perfil', usuario.perfil.toString());
     formData.append('password', usuario.password);
     formData.append('email', usuario.email);
+    formData.append('estadoUsuario', usuario.estadoUsuario);
     formData.append('nickname', usuario.nickname);
 
-    return this.http.put<UsuarioPostDTO>(`${ this.baseUrl }/modificarUsuario/${ idUsuario }`, formData );
+    return this.http.put<UsuarioPutDTO>(`${ this.baseUrl }/modificarUsuario/${ idUsuario }`, formData );
   }
 
   deleteUsuario( idUsuario: number ): Observable<boolean> {

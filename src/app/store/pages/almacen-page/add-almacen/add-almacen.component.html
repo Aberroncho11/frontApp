@@ -1,9 +1,9 @@
 <header-component/>
 <section id="contact">
-  <div class="overlay">
-    <div class="container px-5">
+  <div class="overlay flex justify-content-center align-content-center">
+    <div class="container">
       <div class="row justify-content-center">
-        <div class="col-lg-8">
+        <div id="div" class="col-lg-8">
           <h2 class="text-center">AÑADIR A ALMACÉN</h2>
           <p class="text-center">Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae distinctio soluta, aliquam sed quae ab molestias, illo ipsum accusamus eligendi placeat quos molestiae possimus cum! Repellat natus ullam placeat sunt!
             Cum facere illo eius hic dolorem dignissimos reprehenderit natus commodi, molestiae corporis saepe ipsam voluptatem sit itaque qui ut dicta, laborum esse aspernatur velit doloribus voluptas. Nam corrupti maiores soluta?</p>
@@ -15,7 +15,8 @@
                 type="number"
                 id="idEstanteria"
                 formControlName="idEstanteria"
-                class="form-control">
+                class="form-control"
+                placeholder="Id estanteria">
                 <span *ngIf="isValidField('idEstanteria')" class="form-text text-danger">
                   {{ getFieldError('idEstanteria') }}
                 </span>
@@ -27,7 +28,8 @@
                 type="text"
                 id="cantidad"
                 formControlName="cantidad"
-                class="form-control">
+                class="form-control"
+                placeholder="Cantidad">
                 <span *ngIf="isValidField('cantidad')" class="form-text text-danger">
                   {{ getFieldError('cantidad') }}
                 </span>

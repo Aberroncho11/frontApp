@@ -17,13 +17,10 @@ export class ArticuloServicio {
 
   constructor(private http: HttpClient) { }
 
-  getArticulos(pageNumber: number, pageSize: number): Observable<PaginacionDTO<ArticuloAlmacenDTO>> {
-    let params = new HttpParams()
-      .set('pageNumber', pageNumber.toString())
-      .set('pageSize', pageSize.toString());
+  getArticulos(): Observable<ArticuloAlmacenDTO[]> {
 
-    return this.http.get<PaginacionDTO<ArticuloAlmacenDTO>>(`${this.baseUrl}/verArticulos`, { params });
-}
+    return this.http.get<ArticuloAlmacenDTO[]>(`${this.baseUrl}/verArticulos`);
+  }
 
   getArticuloPorId(idArticulo: number):Observable<ArticuloDTO> {
 

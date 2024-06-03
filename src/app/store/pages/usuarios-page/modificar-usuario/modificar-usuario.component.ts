@@ -6,6 +6,7 @@ import { UsuarioServicio } from '../../../services/usuario.service';
 import { UsuarioGetPorIdDTO } from '../../../interfaces/usuario/usuarioGetPorIdDTO.interface';
 import { CustomValidators } from '../../../validators/validadores';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
+import { UsuarioPutDTO } from '../../../interfaces/usuario/usuarioPutDTO.interface';
 
 @Component({
   selector: 'modificar-usuario',
@@ -29,6 +30,7 @@ export class ModificarUsuarioComponent {
       perfil: [0, [Validators.required]],
       password: ['', [Validators.required]],
       email: ['', [Validators.required]],
+      estadoUsuario: ['', [Validators.required]],
       nickname: ['', [Validators.required]]
     });
 
@@ -43,9 +45,9 @@ export class ModificarUsuarioComponent {
   }
 
   // COGER USUARIO DEL FORM
-  get currentUsuario(): UsuarioPostDTO {
+  get currentUsuario(): UsuarioPutDTO {
 
-    const usuario = this.usuarioForm.value as UsuarioPostDTO;
+    const usuario = this.usuarioForm.value as UsuarioPutDTO;
     return usuario;
   }
 
@@ -59,6 +61,7 @@ export class ModificarUsuarioComponent {
         perfil: usuario.perfil,
         password: usuario.password,
         email: usuario.email,
+        estadoUsuario: usuario.estadoUsuario,
         nickname: usuario.nickname,
       });
     }, error => {

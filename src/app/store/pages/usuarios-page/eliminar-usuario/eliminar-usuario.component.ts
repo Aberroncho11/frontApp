@@ -40,6 +40,7 @@ export class EliminarUsuarioComponent {
         usuario => {
           this.usuario = usuario;
           this.mostrarTabla = true;
+          this.usuarioCargado = true;
         },
         error => {
           Swal.fire({

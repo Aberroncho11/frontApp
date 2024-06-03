@@ -3,5 +3,6 @@ export interface UsuarioDTO {
   perfil:           number;
   password:         string;
   email:            string;
+  estadoUsuario:    string;
   nickname:         string;
 }

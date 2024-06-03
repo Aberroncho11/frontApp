@@ -26,7 +26,9 @@ export class ModificarArticuloComponent {
     foto: ['']
   });
 
-  public articuloIdForm: FormGroup;
+  public articuloIdForm: FormGroup = this.fb.group({
+    idArticulo: [0, [ Validators.required ], CustomValidators.articuloExistente(this.articuloServicio)],
+  });
 
   public file: File | null = null;
 
@@ -37,10 +39,6 @@ export class ModificarArticuloComponent {
   // CONSTRUCTOR
   constructor(private articuloServicio: ArticuloServicio, private fb: FormBuilder) {
 
-    this.articuloIdForm = this.fb.group({
-      idArticulo: [0, [ Validators.required ], CustomValidators.articuloExistente(this.articuloServicio)],
-    });
-
     this.articuloIdForm.get('idArticulo')?.valueChanges.pipe(
       debounceTime(1000),
       distinctUntilChanged(),
@@ -49,14 +47,15 @@ export class ModificarArticuloComponent {
 
   // COGER ARTÍCULO DEL FORM
   get currentArticulo(): ArticuloPutDTO {
-
     const articulo = this.articuloForm.value as ArticuloPutDTO;
     if (this.file) {
       articulo.foto = this.file;
+    } else {
+      delete articulo.foto;
     }
     return articulo;
-
   }
+
 
   onFileChange(event: any) {
 
@@ -69,6 +68,9 @@ export class ModificarArticuloComponent {
     this.articuloServicio.getArticuloPorId(this.idArticulo)
     .subscribe(articulo => {
       this.articulo = articulo;
+
+      this.articuloForm.get('foto')?.setValue(articulo.foto);
+
       this.articuloForm.patchValue({
         descripcion: articulo.descripcion,
         fabricante: articulo.fabricante,
@@ -79,6 +81,7 @@ export class ModificarArticuloComponent {
         estadoArticulo: articulo.estadoArticulo,
         foto: articulo.foto
       });
+
     }, error => {
       console.error('Error al obtener el artículo:', error);
     });
@@ -91,7 +94,7 @@ export class ModificarArticuloComponent {
       this.articuloForm.markAllAsTouched();
       return;
     }
-
+    console.log(this.currentArticulo);
     this.articuloServicio.updateArticulo(this.currentArticulo, this.idArticulo)
     .subscribe(response => {
       Swal.fire({

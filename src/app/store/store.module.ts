@@ -18,6 +18,9 @@ import { CrearPedidoComponent } from './pages/pedidos-page/crear-pedido/crear-pe
 import { AddAlmacenComponent } from './pages/almacen-page/add-almacen/add-almacen.component';
 import { EliminarUsuarioComponent } from './pages/usuarios-page/eliminar-usuario/eliminar-usuario.component';
 import { HeaderComponent } from '../shared/components/header/header.component';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTableModule } from '@angular/material/table';
+
 
 @NgModule({
   imports: [
@@ -29,6 +32,10 @@ import { HeaderComponent } from '../shared/components/header/header.component';
     ReactiveFormsModule,
 
     FormsModule,
+
+    MatPaginatorModule,
+
+    MatTableModule,
 
   ],
     declarations: [

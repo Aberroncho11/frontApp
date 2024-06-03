@@ -18,7 +18,7 @@ export class PedidoServicio {
     return this.http.get<PedidoDTO[]>(`${ this.baseUrl }/verPedidos`);
   }
 
-  addPedido( order: PedidoPostDTO ): Observable<PedidoPostDTO> {
-    return this.http.post<PedidoPostDTO>(`${ this.baseUrl }/crearPedido`, order );
+  addPedido( pedido: PedidoPostDTO ): Observable<PedidoPostDTO> {
+    return this.http.post<PedidoPostDTO>(`${ this.baseUrl }/crearPedido`, pedido );
   }
 }

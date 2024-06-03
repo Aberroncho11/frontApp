@@ -1,6 +1,6 @@
 <header-component></header-component>
 <section id="contact">
-  <div class="overlay">
+  <div class="overlay flex justify-content-center align-content-center">
     <div class="container-lg">
       <div class="row justify-content-center">
         <div class="col-lg-10">
@@ -9,46 +9,33 @@
             Cum facere illo eius hic dolorem dignissimos reprehenderit natus commodi, molestiae corporis saepe ipsam voluptatem sit itaque qui ut dicta, laborum esse aspernatur velit doloribus voluptas. Nam corrupti mayores soluta?</p>
           <button class="btn btn-dark d-block mx-auto mb-3" *ngIf="!mostrarTabla" (click)="verArticulos()">Ver artículos</button>
           <button class="btn btn-dark d-block mx-auto mb-3" *ngIf="mostrarTabla" (click)="ocultarTabla()">Ocultar</button>
-          <div class="mt-4 table-container" [class.show]="mostrarTabla">
+          <div *ngIf="mostrarTabla" class="mt-4">
             <div class="row">
-              <div class="col-md-4" *ngFor="let articulo of articulos">
-                <div class="card mb-3 animate__animated animate__fadeIn">
-                  <div class="card-body">
-                    <h5 class="card-title">Articulo #{{ articulo.idArticulo }}</h5>
-                    <p class="card-text"><strong>Descripción:</strong> {{ articulo.descripcion }}</p>
-                    <p class="card-text"><strong>Fabricante:</strong> {{ articulo.fabricante }}</p>
-                    <p class="card-text"><strong>Peso:</strong> {{ articulo.peso }}</p>
-                    <p class="card-text"><strong>Altura:</strong> {{ articulo.altura }}</p>
-                    <p class="card-text"><strong>Ancho:</strong> {{ articulo.ancho }}</p>
-                    <p class="card-text"><strong>Precio:</strong> {{ articulo.precio }}</p>
-                    <p class="card-text"><strong>Estado:</strong> {{ articulo.estadoArticulo }}</p>
-                    <div>
-                      <h6><strong>Productos:</strong></h6>
+              <ng-container *ngFor="let articulo of paginatedArticulos">
+                <div class="col-lg-4 mb-4" *ngIf="articulo">
+                  <div class="card">
+                    <div class="card-body">
+                      <h5 class="card-title">ID Artículo: {{ articulo.idArticulo }}</h5>
+                      <p class="card-text"><strong>Descripción:</strong> {{ articulo.descripcion }}</p>
+                      <p class="card-text"><strong>Fabricante:</strong> {{ articulo.fabricante }}</p>
+                      <p class="card-text"><strong>Peso:</strong> {{ articulo.peso }} kg</p>
+                      <p class="card-text"><strong>Altura:</strong> {{ articulo.altura }} cm</p>
+                      <p class="card-text"><strong>Ancho:</strong> {{ articulo.ancho }} cm</p>
+                      <p class="card-text"><strong>Precio:</strong> ${{ articulo.precio }}</p>
+                      <p class="card-text"><strong>Estado:</strong> {{ articulo.estadoArticulo }}</p>
+                      <p class="card-text"><strong>Foto:</strong><img [src]="articulo.foto" class="card-img-top" alt=""></p>
                       <ul class="list-group list-group-flush">
                         <li class="list-group-item" *ngFor="let estanteria of articulo.almacen">
-                          <strong>Estanteria #</strong>{{ estanteria.idEstanteria }} - <strong>Cantidad:</strong> {{ estanteria.cantidad }}
+                          Estanteria #{{ estanteria.idEstanteria }} - Cantidad: {{ estanteria.cantidad }}
                         </li>
                       </ul>
                     </div>
                   </div>
                 </div>
-              </div>
+              </ng-container>
+              <mat-paginator [pageSize]="pageSize" [length]="totalItems" (page)="onPageChange($event)"></mat-paginator>
             </div>
           </div>
-          <nav aria-label="Page navigation" *ngIf="mostrarTabla">
-            <ul class="pagination justify-content-center">
-              <li class="page-item" [class.disabled]="pageNumber === 1">
-                <a class="page-link" (click)="onPageChange(pageNumber - 1)">Previous</a>
-              </li>
-              <li class="page-item" *ngFor="let page of [].constructor(Math.ceil(totalItems / pageSize)); let i = index"
-                  [class.active]="i + 1 === pageNumber">
-                <a class="page-link" (click)="onPageChange(i + 1)">{{ i + 1 }}</a>
-              </li>
-              <li class="page-item" [class.disabled]="pageNumber === Math.ceil(totalItems / pageSize)">
-                <a class="page-link" (click)="onPageChange(pageNumber + 1)">Next</a>
-              </li>
-            </ul>
-          </nav>
         </div>
       </div>
     </div>

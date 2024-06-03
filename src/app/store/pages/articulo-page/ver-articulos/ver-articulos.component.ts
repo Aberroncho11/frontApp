@@ -1,7 +1,6 @@
-import { Component } from '@angular/core';
-import { ArticuloAlmacenDTO } from '../../../interfaces/articulo/articuloAlmacenDTO.interface';
+import { Component, OnInit } from '@angular/core';
 import { ArticuloServicio } from '../../../services/articulo.service';
-import { PaginacionDTO } from '../../../interfaces/paginacionDTO.interface';
+import { ArticuloAlmacenDTO } from '../../../interfaces/articulo/articuloAlmacenDTO.interface';
 
 @Component({
   selector: 'ver-articulos',
@@ -9,32 +8,39 @@ import { PaginacionDTO } from '../../../interfaces/paginacionDTO.interface';
   styleUrls: ['./ver-articulos.component.css']
 })
 export class VerArticulosComponent {
-
   public articulos: ArticuloAlmacenDTO[] = [];
   public mostrarTabla: boolean = false;
-  public pageNumber: number = 1;
-  public pageSize: number = 10;
-  public totalItems: number = 0;
-  public Math = Math;
+  public pageSize = 9;
+  public totalItems = 0;
+  public currentPage = 0;
 
-  constructor(private articuloServicio: ArticuloServicio) { }
+  constructor(private articuloServicio: ArticuloServicio) {}
 
   verArticulos(): void {
-    this.articuloServicio.getArticulos(this.pageNumber, this.pageSize).subscribe(
-      (pagedResult: PaginacionDTO<ArticuloAlmacenDTO>) => {
-        this.articulos = pagedResult.items;
-        this.totalItems = pagedResult.totalItems;
-        this.mostrarTabla = true;
-      }
-    );
-  }
-
-  onPageChange(pageNumber: number): void {
-    this.pageNumber = pageNumber;
-    this.verArticulos(); // Aquí deberías actualizar la página con los nuevos datos
+    this.articuloServicio.getArticulos()
+      .subscribe(
+        (articulos: ArticuloAlmacenDTO[]) => {
+          this.articulos = articulos;
+          this.totalItems = articulos.length;
+          this.mostrarTabla = true;
+        },
+        (error) => {
+          console.error('Error al obtener los artículos:', error);
+        }
+      );
   }
 
   ocultarTabla(): void {
     this.mostrarTabla = false;
+  }
+
+  onPageChange(event: any): void {
+    this.currentPage = event.pageIndex; // Actualizar la página actual
+  }
+
+  get paginatedArticulos(): ArticuloAlmacenDTO[] {
+    const startIndex = this.currentPage * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    return this.articulos.slice(startIndex, endIndex);
   }
 }

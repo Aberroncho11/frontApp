@@ -8,7 +8,7 @@ export interface ArticuloAlmacenDTO {
   altura:         number;
   ancho:          number;
   precio:         number;
-  foto:           string;
+  foto?:           string;
   estadoArticulo: string;
   almacen:        AlmacenDTO[];
 }

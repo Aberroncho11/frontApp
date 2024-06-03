@@ -1,7 +1,7 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable, inject, computed, signal} from '@angular/core';
 import { Observable, catchError, map, of, throwError } from 'rxjs';
-import { AuthStatus, CheckTokenResponse, LoginResponse, User } from '../interfaces';
+import { AuthStatus, LoginResponse, User } from '../interfaces';
 import { environment } from '../../environments/environments';
 import { JwtHelperService } from '@auth0/angular-jwt';
 
@@ -25,8 +25,8 @@ export class AuthService {
   public authStatus = computed( () => this._authStatus() )
 
   constructor() {
-    this.checkAuthStatus().subscribe();
     this.jwtHelper = new JwtHelperService();
+    this.checkAuthStatus();
    }
 
   private setAuthentication(user: User, token: string): boolean {
@@ -64,38 +64,22 @@ export class AuthService {
     }
   }
 
-  checkAuthStatus(): Observable<boolean> {
-    const url = `${this.baseUrl}/checkToken`;
+  checkAuthStatus(): void {
     const token = localStorage.getItem('token');
 
     if (!token) {
-      this.logout();
-      return of(false);
+      this._authStatus.set(AuthStatus.notAuthenticated);
+      return;
     }
 
-    const headers = new HttpHeaders()
-      .set('Authorization', `Bearer ${token}`);
-
-    return this.http.get<boolean>(url, { headers: headers })
-      .pipe(
-        map(isAuthenticated => {
-          if (isAuthenticated) {
-            this._authStatus.set(AuthStatus.authenticated);
-            return true;
-          } else {
-            this._authStatus.set(AuthStatus.notAuthenticated);
-            return false;
-          }
-        }),
-        catchError(() => {
-          this._authStatus.set(AuthStatus.notAuthenticated);
-          return of(false);
-        })
-      );
+    try {
+      const isTokenValid = !this.jwtHelper.isTokenExpired(token);
+      this._authStatus.set(isTokenValid ? AuthStatus.authenticated : AuthStatus.notAuthenticated);
+    } catch (error) {
+      console.error('Error al validar el token:', error);
+      this._authStatus.set(AuthStatus.notAuthenticated);
+    }
   }
-
-
-
 
   logout(){
     localStorage.removeItem('token');

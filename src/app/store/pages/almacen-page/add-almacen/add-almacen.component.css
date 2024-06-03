@@ -6,7 +6,8 @@
 
 #contact .overlay {
   background-color: rgba(0, 0, 0, 0.7);
-  padding: 50px 0;
+  height: 100vh;
+
 }
 
 #contact h2 {

@@ -1,6 +1,6 @@
 <header-component/>
 <section id="contact">
-  <div class="overlay">
+  <div class="overlay flex justify-content-center align-content-center">
     <div class="container">
       <div class="row justify-content-center">
         <div class="col-lg-10">
@@ -58,7 +58,9 @@
                     type="number"
                     id="peso"
                     formControlName="peso"
-                    class="form-control">
+                    step="0.01"
+                    class="form-control"
+                    placeholder="Peso">
                   <span *ngIf="isValidFieldArticuloForm('peso')" class="form-text text-danger">
                     {{getFieldErrorArticuloForm('peso')}}
                   </span>
@@ -70,7 +72,9 @@
                   type="number"
                   id="altura"
                   formControlName="altura"
-                  class="form-control">
+                  step="0.01"
+                  class="form-control"
+                  placeholder="Altura">
                   <span *ngIf="isValidFieldArticuloForm('altura')" class="form-text text-danger">
                     {{getFieldErrorArticuloForm('altura')}}
                   </span>
@@ -82,7 +86,9 @@
                   type="number"
                   id="ancho"
                   formControlName="ancho"
-                  class="form-control">
+                  step="0.01"
+                  class="form-control"
+                  placeholder="Ancho">
                   <span *ngIf="isValidFieldArticuloForm('ancho')" class="form-text text-danger">
                     {{getFieldErrorArticuloForm('ancho')}}
                   </span>
@@ -94,7 +100,9 @@
                   type="number"
                   id="precio"
                   formControlName="precio"
-                  class="form-control">
+                  step="0.01"
+                  class="form-control"
+                  placeholder="Precio">
                   <span *ngIf="isValidFieldArticuloForm('precio')" class="form-text text-danger">
                     {{getFieldErrorArticuloForm('precio')}}
                   </span>
@@ -115,6 +123,9 @@
 
                 <div class="mb-3">
                   <label for="foto" class="form-label">Foto</label>
+                  <div class="mb-3">
+                    <img [src]="articuloForm.get('foto')?.value" class="" alt="">
+                  </div>
                   <div class="custom-file">
                     <input
                       type="file"

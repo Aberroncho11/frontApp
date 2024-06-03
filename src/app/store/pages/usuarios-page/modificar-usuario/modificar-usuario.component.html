@@ -1,6 +1,6 @@
 <header-component></header-component>
 <section id="contact">
-  <div class="overlay">
+  <div class="overlay flex justify-content-center align-content-center">
     <div class="container">
       <div class="row justify-content-center">
         <div class="col-lg-10">
@@ -62,6 +62,19 @@
                     placeholder="Email">
                   <span *ngIf="isValidField('email')" class="form-text text-danger">
                     {{getFieldError('email')}}
+                  </span>
+                </div>
+
+                <div class="mb-3">
+                  <label for="estadoUsuario" class="form-label">Estado usuario</label>
+                  <input
+                    type="text"
+                    id="estadoUsuario"
+                    formControlName="estadoUsuario"
+                    class="form-control"
+                    placeholder="estadoUsuario">
+                  <span *ngIf="isValidField('estadoUsuario')" class="form-text text-danger">
+                    {{getFieldError('estadoUsuario')}}
                   </span>
                 </div>
 
