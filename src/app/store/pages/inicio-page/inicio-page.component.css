@@ -1,32 +1,54 @@
-.hero-section {
-  background-image: url('/assets/images/eliminar-articulo.jpg');
-  background-size: cover;
-  background-position: center;
+.titulo {
+  height: 70vh;
+  position: relative;
+  overflow: hidden;
+  animation: fadeIn 1s ease-in-out;
+}
+
+.container {
+  max-width: 100%;
+  padding-left: 100px;
+  padding-right: 100px;
 }
 
 .overlay {
-  background-color: rgba(0, 0, 0, 0.7);
-  padding: 50px 0;
+  background: rgba(0, 0, 0, 0.6);
+  height: 100%;
 }
 
-
-.card img {
-  height: 200px;
-  object-fit: cover;
-}
-
-.card-title {
-  font-size: 1.5rem;
-  font-weight: bold;
-}
-
-.card-body {
-  position: relative;
-}
-
-.stretched-link::after {
+.titulo video {
   position: absolute;
-  inset: 0;
-  z-index: 1;
-  content: "";
+  top: 100%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  z-index: -1;
+}
+
+.titulo h1, .titulo p {
+  animation: fadeIn 2s ease-in-out;
+}
+
+.secciones {
+  animation: fadeIn 1s ease-in-out;
+}
+
+.card {
+  transition: transform 0.3s;
+}
+
+.card:hover {
+  transform: scale(1.03);
+}
+
+.btn-group .btn {
+  margin-right: 0.5rem;
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
 }

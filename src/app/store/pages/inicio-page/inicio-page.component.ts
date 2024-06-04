@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed } from '@angular/core';
 import { AuthService } from '../../../auth/services/auth.service';
 
 @Component({
@@ -7,11 +7,11 @@ import { AuthService } from '../../../auth/services/auth.service';
   styleUrls: ['./inicio-page.component.css']
 
 })
-export class InicioPageComponent{
+export class InicioPageComponent {
 
-  private authService = inject( AuthService );
+  public isLoading = true;
 
-  constructor() {
+  constructor(private authService: AuthService) {
     this.checkRole();
   }
 

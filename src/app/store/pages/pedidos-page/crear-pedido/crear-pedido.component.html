@@ -1,102 +1,125 @@
-<header-component></header-component>
-<section id="contact" class="">
+<header-component/>
+
+<section id="pedidos">
+
   <div class="overlay flex justify-content-center align-content-center">
+
     <div class="container px-5">
+
       <div class="row justify-content-center">
+
         <div class="col-lg-10">
+
           <h2 class="text-center mb-4">CREAR PEDIDO</h2>
+
           <p class="lead text-center">Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae distinctio soluta, aliquam sed quae ab molestias, illo ipsum accusamus eligendi placeat quos molestiae possimus cum! Repellat natus ullam placeat sunt!
             Cum facere illo eius hic dolorem dignissimos reprehenderit natus commodi, molestiae corporis saepe ipsam voluptatem sit itaque qui ut dicta, laborum esse aspernatur velit doloribus voluptas. Nam corrupti maiores soluta?</p>
+
           <form [formGroup]="pedidoForm" (ngSubmit)="crearPedido()" class="mt-4 article-form">
+
             <div class="mb-3">
               <label for="usuarioId" class="form-label">Id usuario</label>
               <input type="number" id="usuarioId" formControlName="usuarioId" class="form-control" placeholder="Id usuario">
-              <div class="text-danger" *ngIf="isValidField('usuarioId')">
+              <span class="form-text text-danger" *ngIf="isValidField('usuarioId')">
                 {{ getFieldError('usuarioId') }}
-              </div>
+              </span>
             </div>
 
             <div class="mb-3">
               <label for="codigoPostal" class="form-label">Código postal</label>
               <input type="text" id="codigoPostal" formControlName="codigoPostal" class="form-control" placeholder="Código postal">
-              <div class="text-danger" *ngIf="pedidoForm.get('codigoPostal')?.invalid && pedidoForm.get('codigoPostal')?.touched">
+              <span class="form-text text-danger" *ngIf="pedidoForm.get('codigoPostal')?.invalid && pedidoForm.get('codigoPostal')?.touched">
                 Código postal inválido
-              </div>
+              </span>
             </div>
 
             <div class="mb-3">
               <label for="ciudad" class="form-label">Ciudad</label>
               <input type="text" id="ciudad" formControlName="ciudad" class="form-control" placeholder="Ciudad">
-              <div class="text-danger" *ngIf="isValidField('ciudad')">
+              <span class="form-text text-danger" *ngIf="isValidField('ciudad')">
                 {{ getFieldError('ciudad') }}
-              </div>
+              </span>
             </div>
 
             <div class="mb-3">
               <label for="telefono" class="form-label">Teléfono</label>
               <input type="text" id="telefono" formControlName="telefono" class="form-control" placeholder="Teléfono">
-              <div class="text-danger" *ngIf="pedidoForm.get('telefono')?.invalid && pedidoForm.get('telefono')?.touched">
+              <span class="form-text text-danger" *ngIf="pedidoForm.get('telefono')?.invalid && pedidoForm.get('telefono')?.touched">
                 Número de teléfono inválido
-              </div>
+              </span>
             </div>
 
             <div class="mb-3">
               <label for="contacto" class="form-label">Contacto</label>
               <input type="text" id="contacto" formControlName="contacto" class="form-control" placeholder="Contacto personal">
-              <div class="text-danger" *ngIf="isValidField('contacto')">
+              <span class="form-text text-danger" *ngIf="isValidField('contacto')">
                 {{ getFieldError('contacto') }}
-              </div>
+              </span>
             </div>
 
             <div class="mb-3">
               <label for="direccion" class="form-label">Dirección</label>
               <input type="text" id="direccion" formControlName="direccion" class="form-control" placeholder="Dirección">
-              <div class="text-danger" *ngIf="isValidField('direccion')">
+              <span class="form-text text-danger" *ngIf="isValidField('direccion')">
                 {{ getFieldError('direccion') }}
-              </div>
+              </span>
             </div>
 
             <div class="mb-3">
               <label for="provincia" class="form-label">Provincia</label>
               <input type="text" id="provincia" formControlName="provincia" class="form-control" placeholder="Provincia">
-              <div class="text-danger" *ngIf="isValidField('provincia')">
+              <span class="form-text text-danger" *ngIf="isValidField('provincia')">
                 {{ getFieldError('provincia') }}
-              </div>
+              </span>
             </div>
 
             <div class="mb-3">
               <label class="form-label">Agregar artículo</label>
-              <div class="input-group mb-3" [formGroup]="newArticulo">
+              <div class="input-group mb-3" [formGroup]="newArticuloForm">
                 <input type="number" class="form-control me-2" formControlName="articuloId" placeholder="Id artículo">
                 <input type="number" class="form-control me-2" formControlName="cantidad" placeholder="Cantidad">
               </div>
               <button class="btn btn-dark" type="button" (click)="onAddToArticulos()">Agregar artículo</button>
 
-              <div class="text-danger" *ngIf="isValidField('articuloId')">
+              <span class="form-text text-danger" *ngIf="isValidField('articuloId')">
                 {{ getArticleFieldError('articuloId') }}
-              </div>
-              <div class="text-danger" *ngIf="isValidField('cantidad')">
+              </span>
+              <span class="form-text text-danger" *ngIf="isValidField('cantidad')">
                 {{ getArticleFieldError('cantidad') }}
-              </div>
+              </span>
             </div>
 
             <div class="mb-3">
+
               <label class="form-label">Artículos</label>
+
               <div formArrayName="articulos">
+
                 <div class="input-group mb-3" *ngFor="let articulo of articulos.controls; let i = index" [formGroupName]="i">
+
                   <input type="number" formControlName="articuloId" class="form-control me-2" placeholder="Id artículo">
                   <input type="number" formControlName="cantidad" class="form-control me-2" placeholder="Cantidad">
                   <button (click)="onDeleteArticulo(i)" class="btn btn-danger" type="button">Eliminar</button>
-                  <div class="text-danger" *ngIf="isValidFieldInArray(articulos, i)">Este campo es requerido</div>
+                  <span class="form-text text-danger" *ngIf="isValidFieldInArray(articulos, i)">Este campo es requerido</span>
+
                 </div>
+
               </div>
+
             </div>
 
             <button type="submit" class="btn btn-dark w-100" [disabled]="pedidoForm.invalid">Crear Pedido</button>
+
           </form>
+
         </div>
+
       </div>
+
     </div>
+
   </div>
+
 </section>
-<footer-component></footer-component>
+
+<footer-component/>

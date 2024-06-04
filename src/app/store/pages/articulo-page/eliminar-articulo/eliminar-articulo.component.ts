@@ -13,40 +13,53 @@ import { debounceTime, distinctUntilChanged } from 'rxjs';
 })
 export class EliminarArticuloComponent {
 
+  // VARIABLES
+
+  // Variables para el manejo de archivos
   public file: File | null = null;
 
+  // Variable para el manejo de la tabla
   public mostrarTabla: boolean = false;
 
+  // Variable para el manejo del artículo
   public articulo: ArticuloDTO | null = null;
 
+  // Variable para el manejo del id del artículo
   public idArticulo: number = 0;
 
+  // Variables para el manejo del formulario
   public articuloForm: FormGroup;
 
+  // Variable para el manejo de la carga de artículos
   public articuloCargado: boolean = false;
 
   // CONSTRUCTOR
   constructor(private articuloServicio: ArticuloServicio, private fb: FormBuilder) {
-
+    // Inicializar el formulario
     this.articuloForm = this.fb.group({
-      idArticulo: [0, [ Validators.required ], CustomValidators.articuloExistente(this.articuloServicio)],
+      idArticulo: [0, [ Validators.required,  Validators.min(1)], CustomValidators.articuloExistente(this.articuloServicio)],
     });
-
+    // Suscribirse a los cambios del campo idArticulo
     this.articuloForm.get('idArticulo')?.valueChanges.pipe(
       debounceTime(1000),
       distinctUntilChanged(),
     ).subscribe();
   }
 
-  // VER ARTÍCULO POR ID
+  // Metodo para obtener el campo idArticulo
   verArticulosPorId(): void {
     this.articuloServicio.getArticuloPorId(this.idArticulo).subscribe(
       articulo => {
+        // Asignar el artículo obtenido
         this.articulo = articulo;
+        // Mostrar la tabla
         this.mostrarTabla = true;
+        // Asignar la variable de carga de artículo
         this.articuloCargado = true;
       },
+      // Manejo de errores
       error => {
+        // Mostrar mensaje de error
         Swal.fire({
           position: "center",
           icon: "error",
@@ -54,56 +67,85 @@ export class EliminarArticuloComponent {
           showConfirmButton: false,
           timer: 1500
         });
-        this.mostrarTabla = false;
       }
     );
   }
 
-  // ELIMINAR ARTÍCULO
+  // Metodo para eliminar un artículo
   eliminarArticulo(): void {
-    this.articuloServicio.deleteArticle(this.idArticulo).subscribe(
-      response => {
-        Swal.fire({
-          position: "center",
-          icon: "success",
-          title: "Articulo eliminado correctamente",
-          showConfirmButton: false,
-          timer: 1500
-        });
-        this.idArticulo = 0;
-        this.articulo = null;
-        this.mostrarTabla = false;
-        this.articuloCargado = false;
-      },
-      error => {
-        Swal.fire({
-          position: "center",
-          icon: "error",
-          title: "Error al eliminar articulo",
-          showConfirmButton: false,
-          timer: 1500
-        });
+    // Mostrar mensaje de confirmación
+    Swal.fire({
+      title: "¿Estás seguro?",
+      text: "No podras revertir los cambios!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Si, eliminalo!"
+    }).then((result) => {
+      // Si se confirma la eliminación
+      if (result.isConfirmed) {
+        // Eliminar el artículo
+        this.articuloServicio.deleteArticle(this.idArticulo).subscribe(
+          response => {
+            // Mostrar mensaje de éxito
+            Swal.fire({
+              position: "center",
+              icon: "success",
+              title: "Articulo eliminado correctamente",
+              showConfirmButton: false,
+              timer: 1500
+            });
+            // Reiniciar las variables
+            this.idArticulo = 0;
+            this.articulo = null;
+            this.mostrarTabla = false;
+            this.articuloCargado = false;
+          },
+          // Manejo de errores
+          error => {
+            // Mostrar mensaje de error
+            Swal.fire({
+              position: "center",
+              icon: "error",
+              title: "Error al eliminar articulo",
+              showConfirmButton: false,
+              timer: 1500
+            });
+          }
+        );
       }
-    );
+    });
   }
 
-  // VERIFICAR CAMPO VÁLIDO
+  // Verificar si el campo es válido
   isValidFieldArticuloForm( field: string): boolean | null{
 
     return this.articuloForm.controls[field].errors
     && this.articuloForm.controls[field].touched
   }
 
-  // OBTENER ERROR DEL CAMPO
+  // Obtener error del campo
   getFieldErrorArticuloForm(field: string): string | null{
 
-    const control = this.articuloForm?.get(field);
-    if (!control) return null;
-
-    const errors = control.errors || {};
-
+    // Si el campo no existe
+    if(!this.articuloForm?.get(field)) return null;
+    // Obtener los errores del campo
+    const errors = this.articuloForm.controls[field].errors || {};
+    // Recorrer los errores
     if (field === 'idArticulo' && errors['articuloNotFound']) {
       return `No existe ningún artículo con ese id`;
+    }
+
+    for (const key of Object.keys(errors)) {
+      switch(key) {
+        // Si el campo es requerido
+        case 'required':
+          return 'Este campo es requerido';
+        // Si el campo es menor al mínimo
+        case 'min':
+          return 'El id del artículo debe ser mayor a 0'
+      }
     }
 
     return null;

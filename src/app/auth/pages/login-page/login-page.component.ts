@@ -10,21 +10,40 @@ import Swal from 'sweetalert2';
 })
 export class LoginPageComponent {
 
-  private fb = inject(FormBuilder);
-  private authService = inject(AuthService);
   private router = inject (Router);
 
-  public myForm : FormGroup = this.fb.group({
-    email: ['gabriel@gmail.com', [Validators.required, Validators.email]],
-    password: ['Aberroncho11', [Validators.required, Validators.minLength(6)]]
+  public Toast = Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 2000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.onmouseenter = Swal.stopTimer;
+      toast.onmouseleave = Swal.resumeTimer;
+    }
   });
 
+  public myForm : FormGroup = this.fb.group({
+    email: ['garhhhiel@gmail.com', [Validators.required, Validators.email]],
+    password: ['Aberroncho11', [Validators.required]]
+  });
+
+  constructor(private authService: AuthService, private fb: FormBuilder) {}
+
   login(){
+
     const {email, password} = this.myForm.value;
 
     this.authService.login(email, password)
       .subscribe({
-        next: () => this.router.navigateByUrl('/store'),
+        next: () => {
+          this.Toast.fire({
+            icon: 'success',
+            title: 'Loguedo correctamente'
+          });
+          this.router.navigateByUrl('/store');
+        },
         error: (message) => {
           Swal.fire('Error', message, 'error')
         }

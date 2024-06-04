@@ -1,14 +1,24 @@
-<header-component></header-component>
-<section id="contact">
+<header-component/>
+
+<section id="usuario">
+
   <div class="overlay flex justify-content-center align-content-center">
+
     <div class="container">
+
       <div class="row justify-content-center">
+
         <div class="col-lg-10">
+
           <h2 class="text-center mb-4">MODIFICAR USUARIO</h2>
+
           <p class="lead text-center">Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae distinctio soluta, aliquam sed quae ab molestias, illo ipsum accusamus eligendi placeat quos molestiae possimus cum! Repellat natus ullam placeat sunt!
             Cum facere illo eius hic dolorem dignissimos reprehenderit natus commodi, molestiae corporis saepe ipsam voluptatem sit itaque qui ut dicta, laborum esse aspernatur velit doloribus voluptas. Nam corrupti maiores soluta?</p>
+
             <div class="mt-4 article-form">
+
               <form [formGroup]="usuarioIdForm" (ngSubmit)="verUsuariosPorId()">
+
                 <div class="mb-3">
                   <label for="idUsuario" class="form-label">Id</label>
                   <input
@@ -22,11 +32,17 @@
                     {{getFieldErrorUsuarioIdForm('idUsuario')}}
                   </span>
                 </div>
+
                 <button type="submit" class="btn btn-dark btn-block" (click)="verUsuariosPorId()" [disabled]="usuarioIdForm.invalid"> Empezar a modificar</button>
+
               </form>
+
             </div>
+
             <div class="mt-4 article-form">
+
               <form [formGroup]="usuarioForm" (ngSubmit)="modificarUsuario()">
+
                 <div class="mb-3">
                   <label for="perfil" class="form-label">Perfil</label>
                   <input
@@ -92,11 +108,19 @@
                 </div>
 
                 <button type="submit" class="btn btn-dark btn-block" [disabled]="usuarioForm.invalid">Modificar Usuario</button>
+
               </form>
+
             </div>
+
         </div>
+
       </div>
+
     </div>
+
   </div>
+
 </section>
-<footer-component></footer-component>
+
+<footer-component/>

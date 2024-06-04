@@ -5,6 +5,8 @@ import { ArticuloServicio } from '../services/articulo.service';
 import { UsuarioServicio } from '../services/usuario.service';
 
 export class CustomValidators {
+
+  // VALIDADOR DE CÓDIGO POSTAL
   static postalCodeValidator: ValidatorFn = (control: AbstractControl) => {
     const postalCodePattern = /^[0-5][0-9]{4}$/;
     if (!postalCodePattern.test(control.value)) {
@@ -13,6 +15,7 @@ export class CustomValidators {
     return null;
   };
 
+  // VALIDADOR DE NÚMERO DE TELÉFONO
   static phoneNumberValidator: ValidatorFn = (control: AbstractControl) => {
     const phoneNumberPattern = /^[0-9]{9}$/;
     if (!phoneNumberPattern.test(control.value)) {
@@ -20,7 +23,9 @@ export class CustomValidators {
     }
     return null;
   };
+  static articleExistsValidator: any | string;
 
+  // VALIDADOR DE EXISTENCIA DE NÚMERO DE ESTANTERÍA
   static estanteriaExistente(almacenServicio: AlmacenServicio): (control: AbstractControl) => Observable<ValidationErrors | null> {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
       const idEstanteria = control.value;
@@ -38,6 +43,7 @@ export class CustomValidators {
     };
   }
 
+  // VALIDADOR DE EXISTENCIA DE ARTÍCULO
   static articuloExistente(articuloServicio: ArticuloServicio): (control: AbstractControl) => Observable<ValidationErrors | null> {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
       const idArticulo = control.value;
@@ -55,6 +61,7 @@ export class CustomValidators {
     };
   }
 
+  // VALIDADOR DE EXISTENCIA DE USUARIO
   static usuarioExistente(usuarioServicio: UsuarioServicio): (control: AbstractControl) => Observable<ValidationErrors | null> {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
       const idUsuario = control.value;

@@ -1,13 +1,22 @@
 <header-component/>
-<section id="contact">
+
+<section id="articulos">
+
   <div class="overlay flex justify-content-center align-content-center">
+
     <div class="container">
+
       <div class="row justify-content-center">
+
         <div class="col-lg-10">
+
           <h2 class="text-center mb-4">MODIFICAR ARTÍCULO</h2>
+
           <p class="lead text-center">Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae distinctio soluta, aliquam sed quae ab molestias, illo ipsum accusamus eligendi placeat quos molestiae possimus cum! Repellat natus ullam placeat sunt!
             Cum facere illo eius hic dolorem dignissimos reprehenderit natus commodi, molestiae corporis saepe ipsam voluptatem sit itaque qui ut dicta, laborum esse aspernatur velit doloribus voluptas. Nam corrupti maiores soluta?</p>
+            <!-- Formulario para modificar un artículo -->
             <div class="mt-4 article-form">
+
               <form [formGroup]="articuloIdForm" (ngSubmit)="verArticulosPorId()">
                 <div class="mb-3">
                   <label for="idArticulo" class="form-label">Id</label>
@@ -23,9 +32,13 @@
                 </div>
                   <button type="submit" class="btn btn-dark btn-block" [disabled]="articuloIdForm.invalid">Empezar a modificar</button>
               </form>
+
             </div>
+
             <div class="mt-4 article-form">
+
               <form [formGroup]="articuloForm" (ngSubmit)="modificarArticulo()">
+                <!-- Descripción -->
                 <div class="mb-3">
                   <label for="descripcion" class="form-label">Descripción</label>
                   <input
@@ -38,7 +51,7 @@
                     {{getFieldErrorArticuloForm('descripcion')}}
                   </span>
                 </div>
-
+                <!-- Fabricante -->
                 <div class="mb-3">
                   <label for="fabricante" class="form-label">Fabricante</label>
                   <input
@@ -51,7 +64,7 @@
                     {{getFieldErrorArticuloForm('fabricante')}}
                   </span>
                 </div>
-
+                <!-- Peso -->
                 <div class="mb-3">
                   <label for="peso" class="form-label">Peso</label>
                   <input
@@ -65,7 +78,7 @@
                     {{getFieldErrorArticuloForm('peso')}}
                   </span>
                 </div>
-
+                <!-- Altura -->
                 <div class="mb-3">
                   <label for="altura" class="form-label">Altura</label>
                   <input
@@ -79,7 +92,7 @@
                     {{getFieldErrorArticuloForm('altura')}}
                   </span>
                 </div>
-
+                <!-- Ancho -->
                 <div class="mb-3">
                   <label for="ancho" class="form-label">Ancho</label>
                   <input
@@ -93,7 +106,7 @@
                     {{getFieldErrorArticuloForm('ancho')}}
                   </span>
                 </div>
-
+                <!-- Precio -->
                 <div class="mb-3">
                   <label for="precio" class="form-label">Precio</label>
                   <input
@@ -107,7 +120,7 @@
                     {{getFieldErrorArticuloForm('precio')}}
                   </span>
                 </div>
-
+                <!-- Estado -->
                 <div class="mb-3">
                   <label for="estadoArticulo" class="form-label">Estado</label>
                   <input
@@ -120,7 +133,7 @@
                     {{getFieldErrorArticuloForm('estadoArticulo')}}
                   </span>
                 </div>
-
+                <!-- Foto -->
                 <div class="mb-3">
                   <label for="foto" class="form-label">Foto</label>
                   <div class="mb-3">
@@ -139,11 +152,19 @@
                 </div>
 
                 <button type="submit" class="btn btn-dark btn-block" [disabled]="articuloForm.invalid">Modificar Artículo</button>
+
               </form>
+
             </div>
+
         </div>
+
       </div>
+
     </div>
+
   </div>
+
 </section>
+
 <footer-component/>
