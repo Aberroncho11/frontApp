@@ -48,6 +48,7 @@ export class VerArticulosComponent {
   ocultarTabla(): void {
     // Ocultar la tabla
     this.mostrarTabla = false;
+    this.currentPage = 0;
   }
 
   // Metodo para cambiar de página

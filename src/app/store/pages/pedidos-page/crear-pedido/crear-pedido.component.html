@@ -1,5 +1,3 @@
-<header-component/>
-
 <section id="pedidos">
 
   <div class="overlay flex justify-content-center align-content-center">
@@ -77,16 +75,18 @@
               <label class="form-label">Agregar artículo</label>
               <div class="input-group mb-3" [formGroup]="newArticuloForm">
                 <input type="number" class="form-control me-2" formControlName="articuloId" placeholder="Id artículo">
+                <span class="form-text text-danger" *ngIf="isValidField('articuloId')">
+                  {{ getArticleFieldError('articuloId') }}
+                </span>
                 <input type="number" class="form-control me-2" formControlName="cantidad" placeholder="Cantidad">
+                <span class="form-text text-danger" *ngIf="isValidField('cantidad')">
+                  {{ getArticleFieldError('cantidad') }}
+                </span>
               </div>
-              <button class="btn btn-dark" type="button" (click)="onAddToArticulos()">Agregar artículo</button>
+              <button class="btn btn-dark" type="button" (click)="onAddToArticulos()" [disabled]="newArticuloForm.invalid">Agregar artículo</button>
 
-              <span class="form-text text-danger" *ngIf="isValidField('articuloId')">
-                {{ getArticleFieldError('articuloId') }}
-              </span>
-              <span class="form-text text-danger" *ngIf="isValidField('cantidad')">
-                {{ getArticleFieldError('cantidad') }}
-              </span>
+
+
             </div>
 
             <div class="mb-3">
@@ -121,5 +121,3 @@
   </div>
 
 </section>
-
-<footer-component/>

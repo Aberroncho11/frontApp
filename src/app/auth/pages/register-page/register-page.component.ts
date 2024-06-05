@@ -15,7 +15,7 @@ export class RegisterPageComponent {
   private authService = inject(AuthService);
   private router = inject (Router);
 
-  public myForm : FormGroup = this.fb.group({
+  public registerForm : FormGroup = this.fb.group({
     perfil: ['fernando@google.com', [Validators.required, Validators.email]],
     nickname: ['123456', [Validators.required, Validators.minLength(6)]],
     email: ['fernando@google.com', [Validators.required, Validators.email]],
@@ -23,7 +23,7 @@ export class RegisterPageComponent {
   });
 
   register(){
-    const {email, password} = this.myForm.value;
+    const {email, password} = this.registerForm.value;
 
     this.authService.login(email, password)
       .subscribe({

@@ -1,50 +1,84 @@
-<header-component></header-component>
-
 <section id="pedidos">
+
   <div class="overlay">
+
     <div class="container-lg">
+
       <div class="row justify-content-center">
+
         <div class="col-lg-10">
+
           <h2 class="text-center mb-4">VER PEDIDOS</h2>
+
           <p class="lead text-center">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae distinctio soluta, aliquam sed quae ab molestias, illo ipsum accusamus eligendi placeat quos molestiae possimus cum! Repellat natus ullam placeat sunt!
             Cum facere illo eius hic dolorem dignissimos reprehenderit natus commodi, molestiae corporis saepe ipsam voluptatem sit itaque qui ut dicta, laborum esse aspernatur velit doloribus voluptas. Nam corrupti maiores soluta?
           </p>
+
           <!--Botón ver pedidos-->
           <button class="btn btn-dark d-block mx-auto mb-3" *ngIf="!mostrarTabla" (click)="verPedidos()">Ver pedidos</button>
+
           <!--Botón ocultar-->
           <button class="btn btn-dark d-block mx-auto mb-3" *ngIf="mostrarTabla" (click)="ocultarTabla()">Ocultar</button>
+
           <!--Pedidos-->
           <div *ngIf="mostrarTabla" class="mt-4">
+
             <div class="row">
+
               <ng-container *ngFor="let pedido of paginatedPedidos">
+
                 <div class="col-lg-4 col-md-6 mb-4" *ngIf="pedido">
+
                   <div class="card mb-3">
+
                     <div class="card-body">
+
                       <h5 class="card-title">Pedido: {{ pedido.idPedido }}</h5>
+
                       <p class="card-text"><strong>Usuario:</strong> {{ pedido.usuarioId }}</p>
+
                       <p class="card-text"><strong>Código postal:</strong> {{ pedido.codigoPostal }}</p>
+
                       <p class="card-text"><strong>Ciudad:</strong> {{ pedido.ciudad }}</p>
+
                       <p class="card-text"><strong>Teléfono:</strong> {{ pedido.telefono }}</p>
+
                       <p class="card-text"><strong>Contacto:</strong> {{ pedido.contacto }}</p>
+
                       <p class="card-text"><strong>Dirección:</strong> {{ pedido.direccion }}</p>
+
                       <p class="card-text"><strong>Provincia:</strong> {{ pedido.provincia }}</p>
+
                       <p class="card-text"><strong>Estado pedido:</strong> {{ pedido.estadoPedido }}</p>
+
                       <ul class="list-group">
+
                         <li *ngFor="let producto of pedido.productos" class="list-group-item">Artículo #{{ producto.articuloId }} - Cantidad: {{ producto.cantidad }}</li>
+
                       </ul>
+
                     </div>
+
                   </div>
+
                 </div>
+
               </ng-container>
+
               <mat-paginator [pageSize]="pageSize" [length]="totalItems" (page)="onPageChange($event)"></mat-paginator>
+
             </div>
+
           </div>
+
         </div>
+
       </div>
+
     </div>
+
   </div>
+
 </section>
 
-
-<footer-component></footer-component>

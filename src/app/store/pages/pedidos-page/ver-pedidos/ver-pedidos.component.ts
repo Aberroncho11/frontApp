@@ -15,17 +15,24 @@ export class VerPedidosComponent {
   // Variable para mostrar la tabla
   public mostrarTabla: boolean = false;
 
-  // Variables para la paginación
   // Variable para el tamaño de la página
   public pageSize = 9;
+
   // Variable para el total de artículos
   public totalItems = 0;
+
   // Variable para la página actual
   public currentPage = 0;
 
+  // Constructor
   constructor(private pedidoServicio: PedidoServicio) {}
 
-  // Metodo para obtener los artículos
+  /**
+   * Método para obtener los pedidos
+   * @returns void
+   * @memberof VerPedidosComponent
+   * @description Método para obtener los pedidos
+   */
   verPedidos(): void {
     this.pedidoServicio.getPedidos()
       .subscribe(
@@ -44,19 +51,37 @@ export class VerPedidosComponent {
       );
   }
 
-  // Metodo para ocultar la tabla
+  /**
+   * Método para ocultar la tabla
+   * @returns void
+   * @memberof VerPedidosComponent
+   * @description Método para ocultar la tabla
+   */
   ocultarTabla(): void {
     // Ocultar la tabla
     this.mostrarTabla = false;
+    // Reiniciar la página actual
+    this.currentPage = 0;
   }
 
-  // Metodo para cambiar de página
+  /**
+   * Método para cambiar de página
+   * @param event
+   * @returns void
+   * @memberof VerPedidosComponent
+   * @description Método para cambiar de página
+   */
   onPageChange(event: any): void {
     // Actualizar la página actual
     this.currentPage = event.pageIndex;
   }
 
-  // Metodo para obtener los artículos paginados
+  /**
+   * Método para obtener los pedidos paginados
+   * @returns PedidoDTO[]
+   * @memberof VerPedidosComponent
+   * @description Método para obtener los pedidos paginados
+   */
   get paginatedPedidos(): PedidoDTO[] {
     // Calcular el índice de inicio y fin
     const startIndex = this.currentPage * this.pageSize;
