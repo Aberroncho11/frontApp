@@ -4,52 +4,52 @@
   color: #fff;
 }
 
-#articulos .overlay {
+.overlay {
   background-color: rgba(0, 0, 0, 0.7);
   padding: 50px 0;
   min-height: 100vh;
   animation: fadeIn 1s ease-in-out;
 }
 
-#articulos h2 {
+h2 {
   margin-bottom: 30px;
   font-size: 2.5em;
   color: #fff;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
 }
 
-#articulos p.lead {
+p.lead {
   margin-bottom: 30px;
   font-size: 1.2em;
   color: #ddd;
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
 }
 
-#articulos .form-control,
-#articulos .custom-file-input {
+.form-control,
+.custom-file-input {
   border-radius: 0.5rem;
   padding: 0.75rem;
   background-color: rgba(255, 255, 255, 0.8);
   color: #333;
 }
 
-#articulos .custom-file-label {
-  border-radius: 0.5rem;
-  padding: 0.75rem;
-  background-color: rgba(255, 255, 255, 0.8);
+.form-control::placeholder,
+.custom-file-label::after {
   color: #666;
 }
 
-#articulos .form-control::placeholder,
-#articulos .custom-file-label::after {
-  color: #666;
-}
-
-#articulos .form-text {
+.form-text {
   text-shadow: none;
 }
 
 @keyframes fadeIn {
   0% { opacity: 0; }
   100% { opacity: 1; }
+}
+
+@media screen and (max-width: 576px) {
+  .custom-file-input {
+    width: 100%;
+  }
+
 }

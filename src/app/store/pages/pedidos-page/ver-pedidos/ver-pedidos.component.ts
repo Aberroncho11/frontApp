@@ -1,8 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { PedidoDTO } from '../../../interfaces/pedido/pedidoDTO.interface';
 import { PedidoServicio } from '../../../services/pedido.service';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
   selector: 'ver-pedidos',
@@ -11,43 +9,59 @@ import { MatPaginator } from '@angular/material/paginator';
 })
 export class VerPedidosComponent {
 
-  public dataSource = new MatTableDataSource<PedidoDTO>([]);
+  // Array de artículos
+  public pedidos: PedidoDTO[] = [];
+
+  // Variable para mostrar la tabla
   public mostrarTabla: boolean = false;
-  public displayedColumns: string[] = ['idPedido', 'idUsuario', 'codigoPostal', 'ciudad', 'telefono', 'contacto', 'direccion', 'provincia', 'estadoPedido', 'productos'];
-  public pageSizeOptions: number[] = [5, 10, 25, 100];
-  public pageSize = 10;
+
+  // Variables para la paginación
+  // Variable para el tamaño de la página
+  public pageSize = 9;
+  // Variable para el total de artículos
   public totalItems = 0;
+  // Variable para la página actual
+  public currentPage = 0;
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  constructor(private pedidoServicio: PedidoServicio) {}
 
-  constructor(private pedidoServicio: PedidoServicio) { }
-
-  ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator;
-  }
-
+  // Metodo para obtener los artículos
   verPedidos(): void {
     this.pedidoServicio.getPedidos()
       .subscribe(
         (pedidos: PedidoDTO[]) => {
-          this.dataSource.data = pedidos;
+          // Asignar los artículos obtenidos
+          this.pedidos = pedidos;
+          // Asignar el total de artículos
           this.totalItems = pedidos.length;
-          console.log(this.dataSource.paginator);
+          // Mostrar la tabla
           this.mostrarTabla = true;
         },
+        // Manejo de errores
         (error) => {
           console.error('Error al obtener los pedidos:', error);
         }
       );
   }
 
+  // Metodo para ocultar la tabla
   ocultarTabla(): void {
+    // Ocultar la tabla
     this.mostrarTabla = false;
   }
 
+  // Metodo para cambiar de página
   onPageChange(event: any): void {
-    this.pageSize = event.pageSize;
-    this.paginator.pageIndex = event.pageIndex;
+    // Actualizar la página actual
+    this.currentPage = event.pageIndex;
   }
 
+  // Metodo para obtener los artículos paginados
+  get paginatedPedidos(): PedidoDTO[] {
+    // Calcular el índice de inicio y fin
+    const startIndex = this.currentPage * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    // Retornar los artículos paginados
+    return this.pedidos.slice(startIndex, endIndex);
+  }
 }

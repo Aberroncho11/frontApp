@@ -14,6 +14,9 @@
 .overlay {
   background: rgba(0, 0, 0, 0.6);
   height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .titulo video {
@@ -51,4 +54,64 @@
 @keyframes fadeIn {
   0% { opacity: 0; }
   100% { opacity: 1; }
+}
+
+@media screen and (max-width: 1440px) and (min-width: 1024px) {
+  .titulo video {
+    transform: translate(-50%, -80%);
+    width: 60%;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .titulo {
+    height: 60vh;
+  }
+
+  .container {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  .titulo h1 {
+    font-size: 1.8em;
+    margin-bottom: 0.5em;
+  }
+
+  .titulo p {
+    font-size: 1em;
+    margin-bottom: 1em;
+  }
+
+  .titulo video {
+    position: absolute;
+    top: 20%;
+    left: 20%;
+    transform: translate(-30%, -20%);
+    height: 70%;
+    z-index: -1;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .titulo {
+    height: 50vh;
+  }
+
+  .titulo h1 {
+    font-size: 1.5em;
+  }
+
+  .titulo p {
+    font-size: 0.9em;
+  }
+
+  .btn-group .btn {
+    margin-bottom: 0.5rem;
+  }
+
+  .btn-group {
+    align-items: center;
+    flex-wrap: wrap;
+  }
 }

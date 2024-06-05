@@ -1,99 +1,50 @@
-<header-component/>
+<header-component></header-component>
 
 <section id="pedidos">
-
-  <div class="overlay flex justify-content-center align-content-center">
-
+  <div class="overlay">
     <div class="container-lg">
-
       <div class="row justify-content-center">
-
         <div class="col-lg-10">
-
           <h2 class="text-center mb-4">VER PEDIDOS</h2>
-
-          <p class="lead text-center">Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae distinctio soluta, aliquam sed quae ab molestias, illo ipsum accusamus eligendi placeat quos molestiae possimus cum! Repellat natus ullam placeat sunt!
-            Cum facere illo eius hic dolorem dignissimos reprehenderit natus commodi, molestiae corporis saepe ipsam voluptatem sit itaque qui ut dicta, laborum esse aspernatur velit doloribus voluptas. Nam corrupti mayores soluta?</p>
-
+          <p class="lead text-center">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae distinctio soluta, aliquam sed quae ab molestias, illo ipsum accusamus eligendi placeat quos molestiae possimus cum! Repellat natus ullam placeat sunt!
+            Cum facere illo eius hic dolorem dignissimos reprehenderit natus commodi, molestiae corporis saepe ipsam voluptatem sit itaque qui ut dicta, laborum esse aspernatur velit doloribus voluptas. Nam corrupti maiores soluta?
+          </p>
+          <!--Botón ver pedidos-->
           <button class="btn btn-dark d-block mx-auto mb-3" *ngIf="!mostrarTabla" (click)="verPedidos()">Ver pedidos</button>
+          <!--Botón ocultar-->
           <button class="btn btn-dark d-block mx-auto mb-3" *ngIf="mostrarTabla" (click)="ocultarTabla()">Ocultar</button>
-
-          <div class="mt-4 table-container" [ngClass]="{'show': mostrarTabla}">
-
-            <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-              <!-- Columna Pedido -->
-              <ng-container matColumnDef="idPedido">
-                <th mat-header-cell *matHeaderCellDef> Pedido </th>
-                <td mat-cell *matCellDef="let pedido"> {{ pedido.idPedido }} </td>
+          <!--Pedidos-->
+          <div *ngIf="mostrarTabla" class="mt-4">
+            <div class="row">
+              <ng-container *ngFor="let pedido of paginatedPedidos">
+                <div class="col-lg-4 col-md-6 mb-4" *ngIf="pedido">
+                  <div class="card mb-3">
+                    <div class="card-body">
+                      <h5 class="card-title">Pedido: {{ pedido.idPedido }}</h5>
+                      <p class="card-text"><strong>Usuario:</strong> {{ pedido.usuarioId }}</p>
+                      <p class="card-text"><strong>Código postal:</strong> {{ pedido.codigoPostal }}</p>
+                      <p class="card-text"><strong>Ciudad:</strong> {{ pedido.ciudad }}</p>
+                      <p class="card-text"><strong>Teléfono:</strong> {{ pedido.telefono }}</p>
+                      <p class="card-text"><strong>Contacto:</strong> {{ pedido.contacto }}</p>
+                      <p class="card-text"><strong>Dirección:</strong> {{ pedido.direccion }}</p>
+                      <p class="card-text"><strong>Provincia:</strong> {{ pedido.provincia }}</p>
+                      <p class="card-text"><strong>Estado pedido:</strong> {{ pedido.estadoPedido }}</p>
+                      <ul class="list-group">
+                        <li *ngFor="let producto of pedido.productos" class="list-group-item">Artículo #{{ producto.articuloId }} - Cantidad: {{ producto.cantidad }}</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
               </ng-container>
-              <!-- Columna Usuario -->
-              <ng-container matColumnDef="idUsuario">
-                <th mat-header-cell *matHeaderCellDef> Usuario </th>
-                <td mat-cell *matCellDef="let pedido"> {{ pedido.idUsuario }} </td>
-              </ng-container>
-              <!-- Columna Código Postal -->
-              <ng-container matColumnDef="codigoPostal">
-                <th mat-header-cell *matHeaderCellDef> Código postal </th>
-                <td mat-cell *matCellDef="let pedido"> {{ pedido.codigoPostal }} </td>
-              </ng-container>
-              <!-- Columna Peso -->
-              <ng-container matColumnDef="ciudad">
-                <th mat-header-cell *matHeaderCellDef> Ciudad </th>
-                <td mat-cell *matCellDef="let pedido"> {{ pedido.ciudad }} </td>
-              </ng-container>
-              <!-- Columna Altura -->
-              <ng-container matColumnDef="telefono">
-                <th mat-header-cell *matHeaderCellDef> Telefono </th>
-                <td mat-cell *matCellDef="let pedido"> {{ pedido.telefono }} </td>
-              </ng-container>
-              <!-- Columna Ancho -->
-              <ng-container matColumnDef="contacto">
-                <th mat-header-cell *matHeaderCellDef> Contacto </th>
-                <td mat-cell *matCellDef="let pedido"> {{ pedido.contacto }} </td>
-              </ng-container>
-              <!-- Columna Precio -->
-              <ng-container matColumnDef="direccion">
-                <th mat-header-cell *matHeaderCellDef> Direccion </th>
-                <td mat-cell *matCellDef="let pedido"> {{ pedido.direccion }} </td>
-              </ng-container>
-              <!-- Columna Estado -->
-              <ng-container matColumnDef="provincia">
-                <th mat-header-cell *matHeaderCellDef> Provincia </th>
-                <td mat-cell *matCellDef="let pedido"> {{ pedido.provincia }} </td>
-              </ng-container>
-              <ng-container matColumnDef="estadoPedido">
-                <th mat-header-cell *matHeaderCellDef> Estado pedido </th>
-                <td mat-cell *matCellDef="let pedido"> {{ pedido.estadoPedido }} </td>
-              </ng-container>
-              <!-- Columna Productos -->
-              <ng-container matColumnDef="productos">
-                <th mat-header-cell *matHeaderCellDef> Almacén </th>
-                <td mat-cell *matCellDef="let pedido">
-                  <ul>
-                    <li *ngFor="let producto of pedido.productos">
-                      Artículo #{{ producto.articuloId }} - Cantidad: {{ producto.cantidad }}
-                    </li>
-                  </ul>
-                </td>
-              </ng-container>
-              <!-- Definir las columnas -->
-              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-
-            </table>
-
-            <mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize" [length]="totalItems" (page)="onPageChange($event)"></mat-paginator>
-
+              <mat-paginator [pageSize]="pageSize" [length]="totalItems" (page)="onPageChange($event)"></mat-paginator>
+            </div>
           </div>
-
         </div>
-
       </div>
-
     </div>
-
   </div>
-
 </section>
 
-<footer-component/>
+
+<footer-component></footer-component>

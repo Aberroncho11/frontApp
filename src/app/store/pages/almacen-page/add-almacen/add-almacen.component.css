@@ -4,38 +4,42 @@
   color: #fff;
 }
 
-#almacen .overlay {
+.overlay {
   background-color: rgba(0, 0, 0, 0.7);
   height: 100vh;
+  padding: 50px 0;
   animation: fadeIn 1s ease-in-out;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-#almacen h2 {
+h2 {
   margin-bottom: 30px;
   font-size: 2.5em;
   color: #fff;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
 }
 
-#almacen p.lead {
+p.lead {
   margin-bottom: 30px;
   font-size: 1.2em;
   color: #ddd;
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
 }
 
-#almacen .form-control {
+.form-control {
   border-radius: 0.5rem;
   padding: 0.75rem;
   background-color: rgba(255, 255, 255, 0.8);
   color: #333;
 }
 
-#almacen .form-control::placeholder {
+.form-control::placeholder {
   color: #666;
 }
 
-#almacen .form-text {
+.form-text {
   text-shadow: none;
 }
 

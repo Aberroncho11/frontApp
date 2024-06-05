@@ -4,67 +4,56 @@
   color: #fff;
 }
 
-#usuario .overlay {
+.overlay {
   background-color: rgba(0, 0, 0, 0.7);
   padding: 50px 0;
   min-height: 100vh;
   animation: fadeIn 1s ease-in-out;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-#usuario h2 {
+h2 {
   margin-bottom: 30px;
   font-size: 2.5em;
   color: #fff;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
 }
 
-#usuario p.lead {
+p.lead {
   margin-bottom: 30px;
   font-size: 1.2em;
   color: #ddd;
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
 }
 
-#usuario .form-control,
-#usuario .custom-file-input {
+.form-control,
+.custom-file-input {
   border-radius: 0.5rem;
   padding: 0.75rem;
   background-color: rgba(255, 255, 255, 0.8);
   color: #333;
 }
 
-#usuario .custom-file-label {
+.custom-file-label {
   border-radius: 0.5rem;
   padding: 0.75rem;
   background-color: rgba(255, 255, 255, 0.8);
   color: #666;
 }
 
-#usuario .form-control::placeholder,
-#usuario .custom-file-label::after {
+.form-control::placeholder,
+.custom-file-label::after {
   color: #666;
 }
 
-#usuario .form-text {
+.form-text {
   text-shadow: none;
 }
 
-#usuario .invalid-feedback {
+.invalid-feedback {
   color: #ff6b6b;
-}
-
-@media screen and (max-width: 768px) {
-  #usuario {
-    padding: 30px 0;
-  }
-
-  #usuario h2 {
-    font-size: 2em;
-  }
-
-  #usuario p.lead {
-    font-size: 1em;
-  }
 }
 
 @keyframes fadeIn {

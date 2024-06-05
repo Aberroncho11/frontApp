@@ -1,54 +1,31 @@
-#usuario {
+#usuarios {
   background: url('/assets/images/ver-usuarios.jpg') no-repeat center center;
   background-size: cover;
   color: #fff;
 }
 
-#usuario .overlay {
+.overlay {
   background-color: rgba(0, 0, 0, 0.7);
-  padding: 50px 0;
-  min-height: 100vh;
   animation: fadeIn 1s ease-in-out;
+  min-height: 100vh;
+  padding: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-#usuario h2 {
+h2 {
   margin-bottom: 30px;
   font-size: 2.5em;
   color: #fff;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
 }
 
-#usuario p.lead {
+p.lead {
   margin-bottom: 30px;
   font-size: 1.2em;
   color: #ddd;
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
-}
-
-.table-container {
-  display: none;
-  transition: all 0.3s ease-in-out;
-}
-
-.table-container.show {
-  display: block;
-}
-
-table {
-  width: 100%;
-  margin-top: 20px;
-  border-collapse: collapse;
-}
-
-th, td {
-  padding: 12px;
-  text-align: left;
-  border-bottom: 1px solid #ddd;
-}
-
-th {
-  background-color: #000000;
-  color: rgb(0, 0, 0);
 }
 
 ul {
@@ -56,25 +33,7 @@ ul {
   list-style-type: disc;
 }
 
-@media screen and (max-width: 768px) {
-  #usuario {
-    padding: 30px 0;
-  }
-
-  #usuario h2 {
-    font-size: 2em;
-  }
-
-  #usuario p.lead {
-    font-size: 1em;
-  }
-
-  .card {
-    margin-bottom: 1.5rem;
-  }
-}
-
-#usuario .invalid-feedback {
+.invalid-feedback {
   color: #ff6b6b;
   position: absolute;
   top: 100%;
@@ -83,9 +42,69 @@ ul {
   transform: translateY(5px);
 }
 
-#usuario .form-group {
+.form-group {
   position: relative;
   margin-bottom: 2.5rem;
+}
+
+.card {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
+  transform: translateY(20px);
+}
+
+.card.visible {
+  transform: translateY(0);
+}
+
+.card:hover {
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+  transform: translateY(-5px);
+}
+
+.card-title {
+  font-size: 1.4em;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.card-text {
+  font-size: 1em;
+  color: #555;
+}
+
+.card-text strong {
+  font-weight: bold;
+  color: #333;
+}
+
+img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  transition: transform 0.3s ease-in-out;
+}
+
+img:hover {
+  transform: scale(1.02);
+}
+
+.list-group-item {
+  font-size: 0.9em;
+  color: #777;
+  border: none;
+  padding: 5px 0;
+}
+
+.list-group-item:last-child {
+  border-bottom: none;
+}
+
+.list-group-item:hover {
+  background-color: rgba(0, 0, 0, 0.05);
 }
 
 @keyframes fadeIn {

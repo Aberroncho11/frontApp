@@ -11,43 +11,59 @@ import { UsuarioServicio } from '../../../services/usuario.service';
 })
 export class VerUsuariosComponent {
 
-  public dataSource = new MatTableDataSource<UsuarioDTO>([]);
-  public mostrarTabla: boolean = false;
-  public displayedColumns: string[] = ['idUsuario', 'perfil', 'password', 'email', 'estadoUsuario', 'nickname'];
-  public pageSizeOptions: number[] = [5, 10, 25, 100];
-  public pageSize = 10;
-  public totalItems = 0;
+   // Array de artículos
+   public usuarios: UsuarioDTO[] = [];
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
+   // Variable para mostrar la tabla
+   public mostrarTabla: boolean = false;
 
-  constructor(private usuarioServicio: UsuarioServicio) { }
+   // Variables para la paginación
+   // Variable para el tamaño de la página
+   public pageSize = 9;
+   // Variable para el total de artículos
+   public totalItems = 0;
+   // Variable para la página actual
+   public currentPage = 0;
 
-  ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator;
-  }
+   constructor(private usuarioServicio: UsuarioServicio) {}
 
-  verUsuarios(): void {
-    this.usuarioServicio.getUsuarios()
-      .subscribe(
-        (pedidos: UsuarioDTO[]) => {
-          this.dataSource.data = pedidos;
-          this.totalItems = pedidos.length;
-          console.log(this.dataSource.paginator);
-          this.mostrarTabla = true;
-        },
-        (error) => {
-          console.error('Error al obtener los usuarios:', error);
-        }
-      );
-  }
+   // Metodo para obtener los artículos
+   verUsuarios(): void {
+     this.usuarioServicio.getUsuarios()
+       .subscribe(
+         (usuarios: UsuarioDTO[]) => {
+           // Asignar los artículos obtenidos
+           this.usuarios = usuarios;
+           // Asignar el total de artículos
+           this.totalItems = usuarios.length;
+           // Mostrar la tabla
+           this.mostrarTabla = true;
+         },
+         // Manejo de errores
+         (error) => {
+           console.error('Error al obtener los pedidos:', error);
+         }
+       );
+   }
 
-  ocultarTabla(): void {
-    this.mostrarTabla = false;
-  }
+   // Metodo para ocultar la tabla
+   ocultarTabla(): void {
+     // Ocultar la tabla
+     this.mostrarTabla = false;
+   }
 
-  onPageChange(event: any): void {
-    this.pageSize = event.pageSize;
-    this.paginator.pageIndex = event.pageIndex;
-  }
+   // Metodo para cambiar de página
+   onPageChange(event: any): void {
+     // Actualizar la página actual
+     this.currentPage = event.pageIndex;
+   }
 
+   // Metodo para obtener los artículos paginados
+   get paginatedUsuarios(): UsuarioDTO[] {
+     // Calcular el índice de inicio y fin
+     const startIndex = this.currentPage * this.pageSize;
+     const endIndex = startIndex + this.pageSize;
+     // Retornar los artículos paginados
+     return this.usuarios.slice(startIndex, endIndex);
+   }
 }

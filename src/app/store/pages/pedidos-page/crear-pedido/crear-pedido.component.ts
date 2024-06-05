@@ -28,7 +28,7 @@ export class CrearPedidoComponent {
 
   constructor(private pedidoServicio: PedidoServicio, private usuarioServicio: UsuarioServicio, private articuloServicio: ArticuloServicio, private fb: FormBuilder) {
     this.pedidoForm = this.fb.group({
-      usuarioId: [0, [Validators.required, CustomValidators.usuarioExistente(this.usuarioServicio)]],
+      usuarioId: [0, [Validators.required]],
       codigoPostal: ['', [Validators.required, CustomValidators.postalCodeValidator]],
       ciudad: ['', [Validators.required]],
       telefono: ['', [Validators.required, CustomValidators.phoneNumberValidator]],
@@ -39,7 +39,7 @@ export class CrearPedidoComponent {
     });
 
     this.newArticuloForm = this.fb.group({
-      articuloId: ['', [Validators.required, CustomValidators.articuloExistente(this.articuloServicio)]],
+      articuloId: ['', [Validators.required]],
       cantidad: ['', Validators.required]
     });
 
@@ -47,6 +47,7 @@ export class CrearPedidoComponent {
       debounceTime(1000),
       distinctUntilChanged()
     ).subscribe();
+
   }
 
   get pedido(): PedidoPostDTO {
