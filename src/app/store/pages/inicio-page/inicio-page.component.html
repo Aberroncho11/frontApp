@@ -1,14 +1,21 @@
 <div class="titulo">
+
   <div class="overlay">
+
     <div class="container">
+
       <div class="row align-items-center justify-content-center">
+
         <div class="col-11 col-md-11 col-lg-11  text-center">
+
           <video autoplay loop muted playsinline>
             <source src="/assets/images/inicio.mp4" type="video/mp4">
           </video>
+
           <h1 class="display-5 fw-bolder text-white mb-3 fadeIn text-center">
             BIENVENIDO A GAP LOGÍSTICA Y TRANSPORTE
           </h1>
+
           <p class="lead fw-normal text-white mb-4 fadeIn text-center">
             Somos una compañía internacional de Ingeniería, Consultoría y
             Servicios Tecnológicos que llevamos más de 35 años aplicando nuestra
@@ -16,75 +23,128 @@
             logísticas innovadoras que optimicen la cadena de suministro y mejoren la eficiencia operativa
             de nuestros clientes.
           </p>
+
         </div>
+
       </div>
+
     </div>
+
   </div>
+
 </div>
 
 <section class="secciones">
+
   <div class="container my-5">
+
     <div class="row gx-5 d-flex justify-content-center align-items-center">
+
       <div class="col-lg-6 col-md-11 col-11 mb-5">
+
         <div class="card h-100 shadow border-0">
+
           <img class="card-img" src="/assets/images/inicio-pedidos.jpg" alt="Pedidos" />
+
           <div class="card-body p-4">
+
             <h5 class="card-title mb-3">GESTIONA TUS PEDIDOS</h5>
+
             <p class="card-text mb-0">
               Administra y realiza el seguimiento de tus pedidos de manera
               eficiente y en tiempo real. Nuestro sistema te permite ver el estado
               de cada pedido, desde la solicitud hasta la entrega, garantizando
               transparencia y puntualidad.
             </p>
+
             <div class="btn-group mt-3">
+
               <a *ngIf="isAdmin" class="btn btn-dark rounded-3" routerLink="/store/verPedidos">Ver pedidos</a>
+
               <a class="btn btn-dark rounded-3" routerLink="/store/crearPedido">Crear pedido</a>
+
             </div>
+
           </div>
+
         </div>
+
       </div>
+
       <div class="col-lg-6 col-md-11 col-11 mb-5" *ngIf="isAdminOrGestor">
+
         <div class="card h-100 shadow border-0">
+
           <img class="card-img" src="/assets/images/inicio-almacen.jpg" alt="Almacen" />
+
           <div class="card-body p-4">
+
             <h5 class="card-title mb-3">ADMINISTRA TU ALMACÉN</h5>
+
             <p class="card-text mb-0">
               Mantén el control de tu inventario y stock de productos de manera
               eficiente y organizada. Nuestro sistema te ayuda a gestionar el
               inventario, prever necesidades de reposición y optimizar el
               almacenamiento.
             </p>
+
             <a class="btn btn-dark rounded-3 mt-3" routerLink="/store/addAlmacen">Añadir a almacén</a>
+
           </div>
+
         </div>
+
       </div>
+
     </div>
+
     <div class="row gx-5 d-flex justify-content-center align-items-center">
+
       <div class="col-lg-6 col-md-11 col-11 mb-5" *ngIf="isAdmin">
+
         <div class="card h-100 shadow border-0">
+
           <img class="card-img" src="/assets/images/inicio-usuarios.jpg" alt="Usuarios" />
+
           <div class="card-body p-4">
+
             <h5 class="card-title mb-3">CONTROLA TUS USUARIOS</h5>
+
             <p class="card-text mb-0">
               Controla y administra la información y los permisos de tus
               usuarios de manera sencilla. Nuestro sistema permite asignar
               roles y responsabilidades, asegurando que cada usuario tenga
               acceso solo a la información necesaria para su función.
             </p>
+
             <div class="btn-group mt-3">
+
               <a class="btn btn-dark rounded-3" routerLink="/store/verUsuarios">Ver usuarios</a>
+
               <a class="btn btn-dark rounded-3" routerLink="/store/crearUsuario">Crear usuario</a>
+
               <a class="btn btn-dark rounded-3" routerLink="/store/modificarUsuario">Modificar usuario</a>
+
               <a class="btn btn-dark rounded-3" routerLink="/store/eliminarUsuario">Eliminar usuario</a>
+
             </div>
+
           </div>
+
         </div>
+
       </div>
+
       <div class="col-lg-6 col-md-11 col-11 mb-5" *ngIf="isAdmin">
+
         <div class="card h-100 shadow border-0">
+
           <img class="card-img" src="/assets/images/inicio-articulos.jpg" alt="Artículos" />
+
           <div class="card-body p-4">
+
             <h5 class="card-title mb-3">EXPLORA TUS ARTÍCULOS</h5>
+
             <p class="card-text mb-0">
               Descubre una variedad de artículos sobre temas actuales y
               relevantes en el mundo de la logística y el transporte. Nuestro
@@ -92,16 +152,28 @@
               tendencias para ayudarte a mantenerte al día y mejorar tus
               operaciones logísticas.
             </p>
+
             <div class="btn-group mt-3">
+
               <a class="btn btn-dark rounded-3" routerLink="/store/verArticulos">Ver artículos</a>
+
               <a class="btn btn-dark rounded-3" routerLink="/store/crearArticulo">Crear artículo</a>
+
               <a class="btn btn-dark rounded-3" routerLink="/store/modificarArticulo">Modificar artículo</a>
+
               <a class="btn btn-dark rounded-3" routerLink="/store/eliminarArticulo">Eliminar artículo</a>
+
             </div>
+
           </div>
+
         </div>
+
       </div>
+
     </div>
+
   </div>
+
 </section>
 

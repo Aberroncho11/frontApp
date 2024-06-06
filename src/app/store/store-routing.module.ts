@@ -14,49 +14,66 @@ import { CrearUsuarioComponent } from './pages/usuarios-page/crear-usuario/crear
 import { ModificarUsuarioComponent } from './pages/usuarios-page/modificar-usuario/modificar-usuario.component';
 import { EliminarUsuarioComponent } from './pages/usuarios-page/eliminar-usuario/eliminar-usuario.component';
 import { isAdminGuard } from '../auth/guards/is-admin.guard';
-import { isAdminOrGestorGuard } from '../auth/guards/is-adminorgestort.guard';
+import { isAdminOrGestorGuard } from '../auth/guards/is-adminorgestor.guard';
 
+// Rutas de la tienda
 const routes: Routes = [
   {
+    // Ruta principal
     path: '',
+    // Componente principal
     component: LayoutStoreComponent,
+    // Rutas hijas
     children: [
+      // Ruta de inicio
       {
         path: 'inicio', component: InicioPageComponent
       },
+      // Rutas de ver articulos
       {
         path: 'verArticulos', canActivate: [isAdminGuard], component: VerArticulosComponent
       },
+      // Rutas de crear articulo
       {
         path: 'crearArticulo', canActivate: [isAdminGuard], component: CrearArticuloComponent
       },
+      // Rutas de modificar articulo
       {
         path: 'modificarArticulo', canActivate: [isAdminGuard], component: ModificarArticuloComponent
       },
+      // Rutas de eliminar articulo
       {
         path: 'eliminarArticulo', canActivate: [isAdminGuard], component: EliminarArticuloComponent
       },
+      // Rutas de ver pedidos
       {
         path: 'verPedidos', canActivate: [isAdminGuard], component: VerPedidosComponent
       },
+      // Rutas de crear pedido
       {
         path: 'crearPedido', component: CrearPedidoComponent
       },
+      // Rutas de ver usuarios
       {
         path: 'verUsuarios', canActivate: [isAdminGuard], component: VerUsuariosComponent
       },
+      // Rutas de crear usuario
       {
         path: 'crearUsuario', canActivate: [isAdminGuard], component: CrearUsuarioComponent
       },
+      // Rutas de modificar usuario
       {
         path: 'modificarUsuario', canActivate: [isAdminGuard], component: ModificarUsuarioComponent
       },
+      // Rutas de eliminar usuario
       {
         path: 'eliminarUsuario', canActivate: [isAdminGuard], component: EliminarUsuarioComponent
       },
+      // Rutas de añadir almacén
       {
         path: 'addAlmacen', canActivate: [isAdminOrGestorGuard], component: AddAlmacenComponent
       },
+      // Ruta por defecto
       {
         path: '**', redirectTo: 'inicio'
       }

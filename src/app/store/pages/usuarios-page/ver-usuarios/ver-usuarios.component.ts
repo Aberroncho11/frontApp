@@ -1,6 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
+import { Component } from '@angular/core';
 import { UsuarioDTO } from '../../../interfaces/usuario/usuarioDTO.interface';
 import { UsuarioServicio } from '../../../services/usuario.service';
 

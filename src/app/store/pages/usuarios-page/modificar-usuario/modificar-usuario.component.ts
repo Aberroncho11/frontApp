@@ -4,7 +4,7 @@ import Swal from 'sweetalert2';
 import { UsuarioPostDTO } from '../../../interfaces/usuario/usuarioPostDTO.interface';
 import { UsuarioServicio } from '../../../services/usuario.service';
 import { UsuarioGetPorIdDTO } from '../../../interfaces/usuario/usuarioGetPorIdDTO.interface';
-import { CustomValidators } from '../../../validators/validadores';
+import { CustomValidators } from '../../../../validators/validadores';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { UsuarioPutDTO } from '../../../interfaces/usuario/usuarioPutDTO.interface';
 
@@ -15,17 +15,22 @@ import { UsuarioPutDTO } from '../../../interfaces/usuario/usuarioPutDTO.interfa
 })
 export class ModificarUsuarioComponent {
 
+  // Formulario de Usuario
   public usuarioForm: FormGroup;
 
+  // Formulario de Usuario por Id
   public usuarioIdForm: FormGroup;
 
+  // Usuario
   public usuario: UsuarioGetPorIdDTO | null = null;
 
+  // Id del Usuario
   public idUsuario: number = 0;
 
-  // CONSTRUCTOR
+  // Constructor
   constructor(private usuarioServicio: UsuarioServicio, private fb: FormBuilder) {
 
+    // Inicializar el formulario
     this.usuarioForm = this.fb.group({
       perfil: [0, [Validators.required]],
       password: ['', [Validators.required]],
@@ -34,29 +39,44 @@ export class ModificarUsuarioComponent {
       nickname: ['', [Validators.required]]
     });
 
+    // Inicializar el formulario de usuario por id
     this.usuarioIdForm = this.fb.group({
       idUsuario: [0, [ Validators.required ], CustomValidators.usuarioExistente(this.usuarioServicio)],
     });
 
+    // Suscribirse a los cambios del campo idUsuario
     this.usuarioIdForm.get('idUsuario')?.valueChanges.pipe(
       debounceTime(1000),
       distinctUntilChanged(),
     ).subscribe();
   }
 
-  // COGER USUARIO DEL FORM
+  /**
+   * Método para ver un usuario por id
+   * @returns void
+   * @memberof ModificarUsuarioComponent
+   */
   get currentUsuario(): UsuarioPutDTO {
 
+    // Obtener el usuario
     const usuario = this.usuarioForm.value as UsuarioPutDTO;
     return usuario;
   }
 
-  // VER USUARIO POR ID
+  /**
+   * Método para ver un usuario por id
+   * @returns void
+   * @memberof ModificarUsuarioComponent
+   */
   verUsuariosPorId(): void {
+    // Obtener el id del usuario
     this.usuarioServicio.getUsuarioPorId(this.idUsuario)
     .subscribe(usuario => {
-      console.log({usuario});
+
+      // Asignar el usuario
       this.usuario = usuario;
+
+      // Asignar los valores al formulario
       this.usuarioForm.patchValue({
         perfil: usuario.perfil,
         password: usuario.password,
@@ -64,22 +84,31 @@ export class ModificarUsuarioComponent {
         estadoUsuario: usuario.estadoUsuario,
         nickname: usuario.nickname,
       });
+
+    // Manejo de errores
     }, error => {
       console.error('Error al obtener el artículo:', error);
     });
   }
 
-  // MODIFICAR USUARIO
+  /**
+   * Método para modificar un usuario
+   * @returns void
+   * @memberof ModificarUsuarioComponent
+   */
   modificarUsuario(): void {
 
+    // Si el formulario es inválido
     if(this.usuarioForm.invalid){
+      // Marcar los campos como tocados
       this.usuarioForm.markAllAsTouched();
       return;
     }
 
+    // Modificar el usuario
     this.usuarioServicio.updateUsuario(this.currentUsuario, this.idUsuario)
     .subscribe(response => {
-      console.log(this.currentUsuario);
+      // Mostrar mensaje de éxito
       Swal.fire({
         position: "center",
         icon: "success",
@@ -88,35 +117,53 @@ export class ModificarUsuarioComponent {
         timer: 1500
       });
 
+      // Reiniciar el formulario
       this.usuarioForm.reset();
 
+      // Reiniciar el usuario
       this.usuarioForm.reset({
         idProfile: 0,
       });
 
+    // Manejo de errores
     }, error => {
       console.error('Error al modificar usuario:', error);
     });
   }
 
-  // VERIFICAR CAMPO VÁLIDO
+  /**
+   * Método para obtener el id del usuario
+   * @param field
+   * @returns boolean | null
+   * @memberof ModificarUsuarioComponent
+   */
   isValidField( field: string): boolean | null{
-
+    // Comprobar si el campo es inválido
     return this.usuarioForm.controls[field].errors
     && this.usuarioForm.controls[field].touched
   }
 
-  // OBTENER ERROR DEL CAMPO
+  /**
+   * Método para obtener el error del campo
+   * @param field
+   * @returns string | null
+   * @memberof ModificarUsuarioComponent
+   */
   getFieldError(field: string): string | null{
 
+    // Comprobar si el campo no existe
     if(!this.usuarioForm.controls[field]) return null;
 
+    // Obtener los errores
     const errors = this.usuarioForm.controls[field].errors || {};
 
+    // Recorrer los errores
     for (const key of Object.keys(errors)) {
       switch(key) {
+        // Si el campo es requerido
         case 'required':
           return 'Este campo es requerido';
+        // Si el campo no cumple la longitud mínima
         case 'minlength':
           return `Mínimo ${errors['minlength'].requiredLength} caracteres`;
       }
@@ -125,21 +172,33 @@ export class ModificarUsuarioComponent {
     return null;
   }
 
-  // VERIFICAR CAMPO VÁLIDO
+  /**
+   * Método para obtener el id del usuario
+   * @param field
+   * @returns boolean | null
+   * @memberof ModificarUsuarioComponent
+   */
   isValidFieldUsuarioIdForm( field: string): boolean | null{
-
+    // Comprobar si el campo es inválido
     return this.usuarioIdForm.controls[field].errors
     && this.usuarioIdForm.controls[field].touched
   }
 
-  // OBTENER ERROR DEL CAMPO
+  /**
+   * Método para obtener el error del campo
+   * @param field
+   * @returns string | null
+   * @memberof ModificarUsuarioComponent
+   */
   getFieldErrorUsuarioIdForm(field: string): string | null{
 
-    const control = this.usuarioIdForm?.get(field);
-    if (!control) return null;
+     // Comprobar si el campo no existe
+     if(!this.usuarioIdForm.controls[field]) return null;
 
-    const errors = control.errors || {};
+     // Obtener los errores
+     const errors = this.usuarioIdForm.controls[field].errors || {};
 
+    // Recorrer los errores
     if (field === 'idUsuario' && errors['usuarioNotFound']) {
       return `No existe ningún usuario con ese id`;
     }

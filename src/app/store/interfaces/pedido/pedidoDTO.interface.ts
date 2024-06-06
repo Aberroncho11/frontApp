@@ -1,5 +1,6 @@
 import { ProductoDTO } from "../producto/productoDTO.interface";
 
+// Interface para el DTO de Pedido
 export interface PedidoDTO {
   idPedido:           number;
   usuarioId:          number;

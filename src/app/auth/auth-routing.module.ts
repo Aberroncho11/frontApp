@@ -4,10 +4,14 @@ import { LoginPageComponent } from './pages/login-page/login-page.component';
 import { RegisterPageComponent } from './pages/register-page/register-page.component';
 import { LayoutAuthComponent } from './pages/layout-auth/layout-auth.component';
 
+// Define routes
 const routes: Routes = [
   {
+    // Ruta padre
     path: '',
+    // Componente padre
     component: LayoutAuthComponent,
+    // Rutas hijas
     children: [
       { path: 'login', component: LoginPageComponent},
       { path: 'register', component: RegisterPageComponent},

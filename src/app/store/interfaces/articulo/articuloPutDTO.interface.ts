@@ -1,3 +1,6 @@
+
+
+// Interface para el DTO de Put de Articulo
 export interface ArticuloPutDTO {
   descripcion:     string;
   fabricante:      string;

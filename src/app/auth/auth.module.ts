@@ -8,16 +8,24 @@ import { LayoutAuthComponent } from './pages/layout-auth/layout-auth.component';
 
 @NgModule({
   imports: [
+
     CommonModule,
+
     AuthRoutingModule,
+
     ReactiveFormsModule
+
   ],
   declarations: [
 
     LayoutAuthComponent,
+
     LoginPageComponent,
+
     RegisterPageComponent,
+
     LayoutAuthComponent
+
   ]
 })
 export class AuthModule { }

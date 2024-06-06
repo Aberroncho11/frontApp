@@ -1,11 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { ArticuloServicio } from '../../../services/articulo.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { ArticuloDTO } from '../../../interfaces/articulo/articuloDTO.interface';
 import { ArticuloPutDTO } from '../../../interfaces/articulo/articuloPutDTO.interface';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
-import { CustomValidators } from '../../../validators/validadores';
+import { CustomValidators } from '../../../../validators/validadores';
 
 @Component({
   selector: 'modificar-articulo',
@@ -14,7 +14,6 @@ import { CustomValidators } from '../../../validators/validadores';
 })
 export class ModificarArticuloComponent {
 
-  // VARIABLES
   // Formulario para el manejo de los artículos
   public articuloForm: FormGroup = this.fb.group({
     descripcion: ['', [ Validators.required, Validators.minLength(20) ]],
@@ -35,8 +34,13 @@ export class ModificarArticuloComponent {
   // Variable para el manejo de archivos
   public file: File | null = null;
 
+  // Variable para mostrar la foto solo después de modificar
+  public mostrarFoto: boolean = false;
+
   // Variable para el manejo del artículo
   public articulo: ArticuloDTO | null = null;
+
+  @ViewChild('fileInput', { static: false }) fileInput!: ElementRef;
 
   // Variable para el manejo del id del artículo
   public idArticulo: number = 0;
@@ -76,8 +80,6 @@ export class ModificarArticuloComponent {
     .subscribe(articulo => {
       // Asignar el artículo obtenido
       this.articulo = articulo;
-      // Si hay foto asignarla al formulario
-      this.articuloForm.get('foto')?.setValue(articulo.foto);
       // Cambiar los valores del formulario
       this.articuloForm.patchValue({
         descripcion: articulo.descripcion,
@@ -89,6 +91,10 @@ export class ModificarArticuloComponent {
         estadoArticulo: articulo.estadoArticulo,
         foto: articulo.foto
       });
+
+       // Mostrar la foto después de modificar
+       this.mostrarFoto = true;
+
     // Manejo de errores
     }, error => {
       console.error('Error al obtener el artículo:', error);
@@ -98,37 +104,54 @@ export class ModificarArticuloComponent {
   // Metodo para modificar un artículo
   modificarArticulo(): void {
     // Si el formulario es inválido
-    if(this.articuloForm.invalid){
+    if (this.articuloForm.invalid) {
       this.articuloForm.markAllAsTouched();
       return;
     }
+    // Obtener la foto actual del formulario
+    const fotoActual = this.articuloForm.get('foto')?.value;
+    // Si no se selecciona un nuevo archivo y hay una foto en el artículo actual
+    if (!this.file && fotoActual) {
+      // Asignar la foto actual al campo de la foto
+      this.articuloForm.get('foto')?.setValue(fotoActual);
+    }
     // Actualizar el artículo
     this.articuloServicio.updateArticulo(this.currentArticulo, this.idArticulo)
-    .subscribe(response => {
-      // Mostrar mensaje de éxito
-      Swal.fire({
-        position: "center",
-        icon: "success",
-        title: "Artículo correctamente editado",
-        showConfirmButton: false,
-        timer: 1500
+      .subscribe(response => {
+        // Mostrar mensaje de éxito
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Artículo correctamente editado",
+          showConfirmButton: false,
+          timer: 1500
+        });
+        // Reiniciar el formulario
+        this.articuloForm.reset({
+          peso: 0,
+          altura: 0,
+          ancho: 0,
+          precio: 0
+        });
+
+        this.idArticulo = 0;
+
+        if (this.fileInput && this.fileInput.nativeElement) {
+          this.fileInput.nativeElement.value = '';
+        }
+
+      // Manejo de errores
+      }, error => {
+        console.error('Error al crear artículo:', error);
       });
-      // Reiniciar el formulario
-      this.articuloForm.reset({
-        peso: 0,
-        altura: 0,
-        ancho: 0,
-        precio: 0
-      });
-      // Reiniciar la variable de archivo
-      const fotoControl = this.articuloForm.get('foto');
-      if (fotoControl) {
-        fotoControl.setValue(null);
-      }
-    // Manejo de errores
-    }, error => {
-      console.error('Error al crear artículo:', error);
-    });
+  }
+
+
+  // Método para eliminar la foto del artículo
+  eliminarFoto(): void {
+    this.articuloServicio.borrarFoto(this.idArticulo);
+    // Establecer el campo de la foto en null
+    this.articuloForm.get('foto')?.setValue(null);
   }
 
   // Verificar si el campo es válido

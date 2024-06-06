@@ -10,15 +10,30 @@ import { PedidoPostDTO } from '../interfaces/pedido/pedidoPostDTO.interface';
 })
 export class PedidoServicio {
 
+  // Url base
   private baseUrl: string = environment.baseUrl;
 
+  // Constructor
   constructor(private http: HttpClient) { }
 
+  /**
+   * Método para obtener todos los pedidos
+   * @returns Observable<PedidoDTO[]>
+   * @memberof PedidoServicio
+   */
   getPedidos():Observable<PedidoDTO[]> {
+    // Retornar pedidos
     return this.http.get<PedidoDTO[]>(`${ this.baseUrl }/verPedidos`);
   }
 
+  /**
+   * Metodo para obtener un pedido por id
+   * @param pedido
+   * @returns Observable<PedidoDTO>
+   * @memberof PedidoServicio
+   */
   addPedido( pedido: PedidoPostDTO ): Observable<PedidoPostDTO> {
+    // Retornar pedido por id
     return this.http.post<PedidoPostDTO>(`${ this.baseUrl }/crearPedido`, pedido );
   }
 }

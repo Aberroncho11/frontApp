@@ -15,7 +15,6 @@ export class VerArticulosComponent {
   // Variable para mostrar la tabla
   public mostrarTabla: boolean = false;
 
-  // Variables para la paginación
   // Variable para el tamaño de la página
   public pageSize = 9;
   // Variable para el total de artículos

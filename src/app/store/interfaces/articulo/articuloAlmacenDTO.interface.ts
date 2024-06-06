@@ -1,5 +1,6 @@
 import { AlmacenDTO } from "../almacen/almacenDTO.interface";
 
+// Interface para el DTO de ArticuloAlmacen
 export interface ArticuloAlmacenDTO {
   idArticulo:     number;
   descripcion:    string;

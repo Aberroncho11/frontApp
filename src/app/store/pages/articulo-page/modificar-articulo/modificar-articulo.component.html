@@ -135,12 +135,13 @@
                 <div class="mb-3">
                   <label for="foto" class="form-label">Foto</label>
                   <div class="mb-3">
-                    <img [src]="articuloForm.get('foto')?.value">
+                    <img *ngIf="mostrarFoto" [src]="articuloForm.get('foto')?.value">
                   </div>
                   <div class="custom-file">
                     <input
                       type="file"
                       id="foto"
+                      #fileInput
                       (change)="onFileChange($event)"
                       class="custom-file-input">
                   </div>
@@ -148,6 +149,8 @@
                     {{getFieldErrorArticuloForm('foto')}}
                   </span>
                 </div>
+                <!-- Botón para eliminar foto -->
+                <button type="button" class="btn btn-danger" *ngIf="mostrarFoto" (click)="eliminarFoto()">Eliminar Foto</button>
 
                 <button type="submit" class="btn btn-dark btn-block" [disabled]="articuloForm.invalid">Modificar Artículo</button>
 

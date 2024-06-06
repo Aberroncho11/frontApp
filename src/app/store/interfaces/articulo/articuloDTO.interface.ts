@@ -1,3 +1,6 @@
+
+
+// Interface para el DTO de Articulo
 export interface ArticuloDTO {
   descripcion:     string;
   fabricante:      string;

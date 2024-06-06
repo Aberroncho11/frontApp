@@ -5,13 +5,18 @@ import { AuthStatus } from '../interfaces';
 
 export const isAuthenticatedGuard: CanActivateFn = (route, state) => {
 
+  // Inyectamos el servicio de autenticación y el router
   const authService = inject( AuthService );
-  const router      = inject( Router );
+  const router = inject( Router );
 
+  // Si el usuario está autenticado, permitimos el acceso
   if ( authService.authStatus() === AuthStatus.authenticated ) {
     return true;
   }
+  // Si el usuario no está autenticado, redirigimos a la página de login
+  else{
+    router.navigateByUrl('/auth/login');
+    return false;
+  }
 
-  router.navigateByUrl('/auth/login');
-  return false;
 };

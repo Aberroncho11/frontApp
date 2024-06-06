@@ -3,7 +3,7 @@ import { ArticuloServicio } from '../../../services/articulo.service';
 import { ArticuloDTO } from '../../../interfaces/articulo/articuloDTO.interface';
 import Swal from 'sweetalert2';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { CustomValidators } from '../../../validators/validadores';
+import { CustomValidators } from '../../../../validators/validadores';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({
@@ -12,8 +12,6 @@ import { debounceTime, distinctUntilChanged } from 'rxjs';
   styleUrls: ['./eliminar-articulo.component.css']
 })
 export class EliminarArticuloComponent {
-
-  // VARIABLES
 
   // Variables para el manejo de archivos
   public file: File | null = null;
@@ -33,7 +31,7 @@ export class EliminarArticuloComponent {
   // Variable para el manejo de la carga de artículos
   public articuloCargado: boolean = false;
 
-  // CONSTRUCTOR
+  // Constructor
   constructor(private articuloServicio: ArticuloServicio, private fb: FormBuilder) {
     // Inicializar el formulario
     this.articuloForm = this.fb.group({

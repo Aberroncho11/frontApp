@@ -6,7 +6,7 @@ import { PedidoServicio } from '../../../services/pedido.service';
 import { UsuarioServicio } from '../../../services/usuario.service';
 import { ArticuloServicio } from '../../../services/articulo.service';
 import { PedidoPostDTO } from '../../../interfaces/pedido/pedidoPostDTO.interface';
-import { CustomValidators } from '../../../validators/validadores';
+import { CustomValidators } from '../../../../validators/validadores';
 
 @Component({
   selector: 'crear-pedido',
