@@ -12,45 +12,46 @@
 
           <p class="lead text-center">Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae distinctio soluta, aliquam sed quae ab molestias, illo ipsum accusamus eligendi placeat quos molestiae possimus cum! Repellat natus ullam placeat sunt!
             Cum facere illo eius hic dolorem dignissimos reprehenderit natus commodi, molestiae corporis saepe ipsam voluptatem sit itaque qui ut dicta, laborum esse aspernatur velit doloribus voluptas. Nam corrupti maiores soluta?</p>
-          <!--Botón ver artículos-->
+
           <button class="btn btn-dark d-block mx-auto mb-3" *ngIf="!mostrarTabla" (click)="verArticulos()">Ver artículos</button>
-          <!--Botón ocultar-->
+
           <button class="btn btn-dark d-block mx-auto mb-3" *ngIf="mostrarTabla" (click)="ocultarTabla()">Ocultar</button>
-          <!--Tabla-->
+
           <div *ngIf="mostrarTabla" class="mt-4">
 
             <div class="row">
 
               <ng-container *ngFor="let articulo of paginatedArticulos">
-                <!--Artículo-->
+
                 <div class="col-lg-4 col-md-6 mb-4" *ngIf="articulo">
 
                   <div class="card mb-3">
 
                     <div class="card-body">
 
-                      <!--Id artículo-->
                       <h5 class="card-title">ID Artículo: {{ articulo.idArticulo }}</h5>
-                      <!--Descripción-->
+
                       <p class="card-text"><strong>Descripción:</strong> {{ articulo.descripcion }}</p>
-                      <!--Fabricante-->
+
                       <p class="card-text"><strong>Fabricante:</strong> {{ articulo.fabricante }}</p>
-                      <!--Peso-->
+
                       <p class="card-text"><strong>Peso:</strong> {{ articulo.peso }} kg</p>
-                      <!--Altura-->
+
                       <p class="card-text"><strong>Altura:</strong> {{ articulo.altura }} cm</p>
-                      <!--Ancho-->
+
                       <p class="card-text"><strong>Ancho:</strong> {{ articulo.ancho }} cm</p>
-                      <!--Precio-->
+
                       <p class="card-text"><strong>Precio:</strong> {{ articulo.precio }}€</p>
-                      <!--Estado-->
+
                       <p class="card-text"><strong>Estado:</strong> {{ articulo.estadoArticulo }}</p>
-                      <!--Estantería-->
+
                       <p *ngFor="let estanteria of articulo.almacen" class="card-text"><strong>Estanteria: </strong>{{ estanteria.idEstanteria }} - <strong>Cantidad: </strong>{{ estanteria.cantidad }}</p>
-                      <!--Foto-->
+
                       <p class="card-text"><strong>Foto:</strong></p>
 
-                      <img [src]="articulo.foto" class="card-img" alt="">
+                      <div class="d-flex justify-content-center">
+                        <img [src]="articulo.foto" class="card-img align-self-center" alt="">
+                      </div>
 
                     </div>
 
@@ -59,7 +60,7 @@
                 </div>
 
               </ng-container>
-              <!--Paginador-->
+
               <mat-paginator [pageSize]="pageSize" [length]="totalItems" (page)="onPageChange($event)"></mat-paginator>
 
             </div>

@@ -33,7 +33,7 @@
 
             </div>
 
-            <div class="mt-4 article-form">
+            <div *ngIf="mostrarArticulo" class="mt-4 article-form">
 
               <form [formGroup]="articuloForm" (ngSubmit)="modificarArticulo()">
                 <!-- Descripción -->
@@ -135,7 +135,7 @@
                 <div class="mb-3">
                   <label for="foto" class="form-label">Foto</label>
                   <div class="mb-3">
-                    <img *ngIf="mostrarFoto" [src]="articuloForm.get('foto')?.value">
+                    <img *ngIf="mostrarFoto" [src]="file">
                   </div>
                   <div class="custom-file">
                     <input
@@ -150,7 +150,7 @@
                   </span>
                 </div>
                 <!-- Botón para eliminar foto -->
-                <button type="button" class="btn btn-danger" *ngIf="mostrarFoto" (click)="eliminarFoto()">Eliminar Foto</button>
+                <button type="button" class="btn btn-danger me-2" *ngIf="mostrarFoto" (click)="eliminarFoto()">Eliminar Foto</button>
 
                 <button type="submit" class="btn btn-dark btn-block" [disabled]="articuloForm.invalid">Modificar Artículo</button>
 

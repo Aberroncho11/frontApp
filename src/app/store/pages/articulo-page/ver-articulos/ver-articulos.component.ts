@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ArticuloServicio } from '../../../services/articulo.service';
 import { ArticuloAlmacenDTO } from '../../../interfaces/articulo/articuloAlmacenDTO.interface';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'ver-articulos',
@@ -9,59 +10,82 @@ import { ArticuloAlmacenDTO } from '../../../interfaces/articulo/articuloAlmacen
 })
 export class VerArticulosComponent {
 
-  // Array de artículos
   public articulos: ArticuloAlmacenDTO[] = [];
 
-  // Variable para mostrar la tabla
   public mostrarTabla: boolean = false;
 
-  // Variable para el tamaño de la página
   public pageSize = 9;
-  // Variable para el total de artículos
+
   public totalItems = 0;
-  // Variable para la página actual
+
   public currentPage = 0;
 
-  constructor(private articuloServicio: ArticuloServicio) {}
+  private articuloServicio = inject(ArticuloServicio);
 
-  // Metodo para obtener los artículos
-  verArticulos(): void {
-    this.articuloServicio.getArticulos()
-      .subscribe(
-        (articulos: ArticuloAlmacenDTO[]) => {
-          // Asignar los artículos obtenidos
-          this.articulos = articulos;
-          // Asignar el total de artículos
-          this.totalItems = articulos.length;
-          // Mostrar la tabla
-          this.mostrarTabla = true;
-        },
-        // Manejo de errores
-        (error) => {
-          console.error('Error al obtener los artículos:', error);
-        }
-      );
+  /**
+   * Método que obtiene los artículos del almacén y los muestra con cards
+   * @returns void
+   * @memberof VerArticulosComponent
+   */
+  get paginatedArticulos(): ArticuloAlmacenDTO[] {
+
+    const startIndex = this.currentPage * this.pageSize;
+
+    const endIndex = startIndex + this.pageSize;
+
+    return this.articulos.slice(startIndex, endIndex);
   }
 
-  // Metodo para ocultar la tabla
+  /**
+   * Método que obtiene los artículos del almacén y los muestra con cards
+   * @returns void
+   * @memberof VerArticulosComponent
+   */
+  verArticulos(): void {
+
+    this.articuloServicio.getArticulos()
+      .subscribe({
+        next: (articulos: ArticuloAlmacenDTO[]) => {
+
+          this.articulos = articulos;
+
+          this.totalItems = articulos.length;
+
+          this.mostrarTabla = true;
+
+        },
+        error: (errorResponse) => {
+          switch (errorResponse.error.message) {
+            case `No hay artículos`:
+              Swal.fire('Error', 'No hay artículos', 'error');
+              break;
+            default:
+              Swal.fire('Error', 'Ha ocurrido un error durante el proceso', 'error');
+          }
+        }
+      });
+  }
+
+  /**
+   * Método para ocultar la tabla de artículos
+   * @returns void
+   * @memberof VerArticulosComponent
+   */
   ocultarTabla(): void {
-    // Ocultar la tabla
+
     this.mostrarTabla = false;
     this.currentPage = 0;
   }
 
-  // Metodo para cambiar de página
+  /**
+   * Método para cambiar de página en la tabla de artículos
+   * @param event
+   * @returns void
+   * @memberof VerArticulosComponent
+   */
   onPageChange(event: any): void {
-    // Actualizar la página actual
+
     this.currentPage = event.pageIndex;
   }
 
-  // Metodo para obtener los artículos paginados
-  get paginatedArticulos(): ArticuloAlmacenDTO[] {
-    // Calcular el índice de inicio y fin
-    const startIndex = this.currentPage * this.pageSize;
-    const endIndex = startIndex + this.pageSize;
-    // Retornar los artículos paginados
-    return this.articulos.slice(startIndex, endIndex);
-  }
 }

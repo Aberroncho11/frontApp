@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
-import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import Swal from 'sweetalert2';
 import { PedidoServicio } from '../../../services/pedido.service';
 import { UsuarioServicio } from '../../../services/usuario.service';
 import { ArticuloServicio } from '../../../services/articulo.service';
 import { PedidoPostDTO } from '../../../interfaces/pedido/pedidoPostDTO.interface';
-import { CustomValidators } from '../../../../validators/validadores';
 
 @Component({
   selector: 'crear-pedido',
@@ -15,7 +14,6 @@ import { CustomValidators } from '../../../../validators/validadores';
 })
 export class CrearPedidoComponent {
 
-  // Variables
   // Formulario de pedido
   public pedidoForm: FormGroup;
 
@@ -37,9 +35,9 @@ export class CrearPedidoComponent {
     // Inicializar el formulario
     this.pedidoForm = this.fb.group({
       usuarioId: [0, [Validators.required]],
-      codigoPostal: ['', [Validators.required, CustomValidators.postalCodeValidator]],
+      codigoPostal: ['', [Validators.required, Validators.pattern(/^[0-5][0-9]{4}$/)]],
       ciudad: ['', [Validators.required]],
-      telefono: ['', [Validators.required, CustomValidators.phoneNumberValidator]],
+      telefono: ['', [Validators.required, Validators.pattern(/^[0-9]{9}$/)]],
       contacto: ['', [Validators.required]],
       direccion: ['', [Validators.required]],
       provincia: ['', [Validators.required]],
@@ -49,24 +47,27 @@ export class CrearPedidoComponent {
     // Inicializar el formulario de nuevo artículo
     this.newArticuloForm = this.fb.group({
       articuloId: ['', [Validators.required]],
-      cantidad: ['', Validators.required]
+      cantidad: ['', [Validators.required, Validators.min(1)]]
     });
 
-    // Suscribirse a los cambios del campo usuarioId
-    this.pedidoForm.get('usuarioId')?.valueChanges.pipe(
-      debounceTime(1000),
-      distinctUntilChanged()
-    ).subscribe();
+    const fieldsToWatch = ['usuarioId', 'codigoPostal', 'telefono', 'contacto', 'direccion', 'provincia', 'articulos'];
+
+    fieldsToWatch.forEach(field => {
+      this.pedidoForm.get(field)?.valueChanges.pipe(
+        debounceTime(1000),
+        distinctUntilChanged()
+      ).subscribe();
+    });
 
   }
 
   // Getters
-  get pedido(): PedidoPostDTO {
+  get currentPedido(): PedidoPostDTO {
     return this.pedidoForm.value as PedidoPostDTO;
   }
 
   // Getters
-  get articulos(): FormArray {
+  get currentArticulos(): FormArray {
     return this.pedidoForm.get('articulos') as FormArray;
   }
 
@@ -95,7 +96,7 @@ export class CrearPedidoComponent {
       // Si se confirma la acción
       if (result.isConfirmed) {
         // Llamar al servicio para crear el pedido
-        this.pedidoServicio.addPedido(this.pedido)
+        this.pedidoServicio.addPedido(this.currentPedido)
           .subscribe(response => {
             // Mostrar un mensaje de éxito
             Swal.fire({
@@ -114,7 +115,7 @@ export class CrearPedidoComponent {
               telefono: ''
             });
             // Limpiar los artículos
-            this.articulos.clear();
+            this.currentArticulos.clear();
           // Si hay un error
           }, error => {
             console.error('Error al crear pedido:', error);
@@ -156,9 +157,9 @@ export class CrearPedidoComponent {
         // Si existe el artículo
         if (articulo) {
           // Añadir el artículo al array de artículos
-          this.articulos.push(this.fb.group({
+          this.currentArticulos.push(this.fb.group({
             articuloId: [articuloId, Validators.required],
-            cantidad: [cantidad, Validators.required]
+            cantidad: [cantidad, [Validators.required, Validators.min(1)]]
           }));
           // Limpiar el formulario de nuevo artículo
           this.newArticuloForm.reset();
@@ -189,7 +190,7 @@ export class CrearPedidoComponent {
    * @memberof CrearPedidoComponent
    */
   onDeleteArticulo(index: number): void {
-    this.articulos.removeAt(index);
+    this.currentArticulos.removeAt(index);
   }
 
   /**
@@ -232,9 +233,15 @@ export class CrearPedidoComponent {
         // Si el campo es requerido
         case 'required':
           return 'Este campo es requerido';
-        // Si el campo no tiene la longitud minima
+        // Si el campo no tiene la longitud mínima
         case 'minlength':
           return `Mínimo ${errors['minlength'].requiredLength} caracteres`;
+        case 'pattern':
+          if(field === 'codigoPostal') {
+            return 'El código postal debe tener 5 dígitos';
+          } else if(field === 'telefono') {
+            return 'El teléfono debe tener 9 dígitos';
+          }
       }
     }
     // Si el campo es usuarioId y no se ha encontrado el usuario
@@ -263,6 +270,8 @@ export class CrearPedidoComponent {
         // Si el campo es requerido
         case 'required':
           return 'Este campo es requerido';
+        case 'min':
+          return 'La cantidad debe ser mayor que 0';
       }
     }
     // Si el campo es articuloId y no se ha encontrado el artículo

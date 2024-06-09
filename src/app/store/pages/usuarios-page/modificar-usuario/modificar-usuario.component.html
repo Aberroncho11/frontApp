@@ -24,8 +24,7 @@
                     id="idUsuario"
                     class="form-control"
                     placeholder="Id"
-                    formControlName="idUsuario"
-                    [(ngModel)]="idUsuario">
+                    formControlName="idUsuario">
                   <span *ngIf="isValidFieldUsuarioIdForm('idUsuario')" class="form-text text-danger">
                     {{getFieldErrorUsuarioIdForm('idUsuario')}}
                   </span>
@@ -37,7 +36,7 @@
 
             </div>
 
-            <div class="mt-4 article-form">
+            <div *ngIf="mostrarUsuario" class="mt-4 article-form">
 
               <form [formGroup]="usuarioForm" (ngSubmit)="modificarUsuario()">
 

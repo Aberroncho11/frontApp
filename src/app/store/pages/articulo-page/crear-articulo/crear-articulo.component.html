@@ -14,7 +14,7 @@
             Cum facere illo eius hic dolorem dignissimos reprehenderit natus commodi, molestiae corporis saepe ipsam voluptatem sit itaque qui ut dicta, laborum esse aspernatur velit doloribus voluptas. Nam corrupti maiores soluta?</p>
 
           <!--Formulario de crear artículo-->
-          <form [formGroup]="articuloPostForm" (ngSubmit)="crearArticulo()" class="mt-4 article-form">
+          <form [formGroup]="articuloForm" (ngSubmit)="crearArticulo()" class="mt-4 article-form">
 
             <!--Descripción-->
             <div class="mb-3">
@@ -87,7 +87,7 @@
               </div>
             </div>
 
-            <button type="submit" class="btn btn-dark w-100" [disabled]="articuloPostForm.invalid">Crear Artículo</button>
+            <button type="submit" class="btn btn-dark w-100" [disabled]="articuloForm.invalid">Crear Artículo</button>
 
           </form>
 

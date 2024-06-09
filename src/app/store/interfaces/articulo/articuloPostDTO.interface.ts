@@ -4,9 +4,9 @@
 export interface ArticuloPostDTO {
   descripcion:   string;
   fabricante:    string;
-  peso:          number;
-  altura:        number;
-  ancho:         number;
-  precio:        number;
+  peso:          string;
+  altura:        string;
+  ancho:         string;
+  precio:        string;
   foto?:         File;
 }

@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
-import { UsuarioPostDTO } from '../../../interfaces/usuario/usuarioPostDTO.interface';
 import { UsuarioServicio } from '../../../services/usuario.service';
 import { UsuarioGetPorIdDTO } from '../../../interfaces/usuario/usuarioGetPorIdDTO.interface';
 import { CustomValidators } from '../../../../validators/validadores';
@@ -24,24 +23,23 @@ export class ModificarUsuarioComponent {
   // Usuario
   public usuario: UsuarioGetPorIdDTO | null = null;
 
-  // Id del Usuario
-  public idUsuario: number = 0;
+  public mostrarUsuario = false;
 
   // Constructor
   constructor(private usuarioServicio: UsuarioServicio, private fb: FormBuilder) {
 
     // Inicializar el formulario
     this.usuarioForm = this.fb.group({
-      perfil: [0, [Validators.required]],
-      password: ['', [Validators.required]],
-      email: ['', [Validators.required]],
-      estadoUsuario: ['', [Validators.required]],
-      nickname: ['', [Validators.required]]
+      perfil: ['', [Validators.required, Validators.pattern('^[1-3]$')]],
+      password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(20)], [CustomValidators.passwordValidator]],
+      email: ['', [Validators.required, Validators.email, Validators.maxLength(30)]],
+      estadoUsuario: ['', [Validators.required, Validators.pattern('^(Disponible|Eliminado)$')]],
+      nickname: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(20)]]
     });
 
     // Inicializar el formulario de usuario por id
     this.usuarioIdForm = this.fb.group({
-      idUsuario: [0, [ Validators.required ], CustomValidators.usuarioExistente(this.usuarioServicio)],
+      idUsuario: ['', [ Validators.required ], CustomValidators.usuarioExistente(this.usuarioServicio)],
     });
 
     // Suscribirse a los cambios del campo idUsuario
@@ -49,6 +47,41 @@ export class ModificarUsuarioComponent {
       debounceTime(1000),
       distinctUntilChanged(),
     ).subscribe();
+
+    this.usuarioForm.get('perfil')?.valueChanges
+      .pipe(
+        debounceTime(1000),
+        distinctUntilChanged(),
+      )
+      .subscribe();
+
+    this.usuarioForm.get('email')?.valueChanges
+      .pipe(
+        debounceTime(1000),
+        distinctUntilChanged(),
+      )
+      .subscribe();
+
+    this.usuarioForm.get('nickname')?.valueChanges
+      .pipe(
+        debounceTime(1000),
+        distinctUntilChanged(),
+      )
+      .subscribe();
+
+    this.usuarioForm.get('password')?.valueChanges
+      .pipe(
+        debounceTime(1000),
+        distinctUntilChanged(),
+      )
+      .subscribe();
+
+    this.usuarioForm.get('estadoUsuario')?.valueChanges
+      .pipe(
+        debounceTime(1000),
+        distinctUntilChanged(),
+      )
+      .subscribe();
   }
 
   /**
@@ -70,11 +103,13 @@ export class ModificarUsuarioComponent {
    */
   verUsuariosPorId(): void {
     // Obtener el id del usuario
-    this.usuarioServicio.getUsuarioPorId(this.idUsuario)
+    this.usuarioServicio.getUsuarioPorId(this.usuarioIdForm.get('idUsuario')?.value)
     .subscribe(usuario => {
 
       // Asignar el usuario
       this.usuario = usuario;
+
+      this.mostrarUsuario = true;
 
       // Asignar los valores al formulario
       this.usuarioForm.patchValue({
@@ -106,7 +141,7 @@ export class ModificarUsuarioComponent {
     }
 
     // Modificar el usuario
-    this.usuarioServicio.updateUsuario(this.currentUsuario, this.idUsuario)
+    this.usuarioServicio.updateUsuario(this.currentUsuario, this.usuarioIdForm.get('idUsuario')?.value)
     .subscribe(response => {
       // Mostrar mensaje de éxito
       Swal.fire({
@@ -117,13 +152,12 @@ export class ModificarUsuarioComponent {
         timer: 1500
       });
 
-      // Reiniciar el formulario
-      this.usuarioForm.reset();
-
-      // Reiniciar el usuario
-      this.usuarioForm.reset({
-        idProfile: 0,
+      this.usuarioIdForm.reset({
+        idUsuario: '',
       });
+
+      this.mostrarUsuario = false;
+
 
     // Manejo de errores
     }, error => {
@@ -149,24 +183,29 @@ export class ModificarUsuarioComponent {
    * @returns string | null
    * @memberof ModificarUsuarioComponent
    */
-  getFieldError(field: string): string | null{
-
-    // Comprobar si el campo no existe
-    if(!this.usuarioForm.controls[field]) return null;
-
-    // Obtener los errores
+  getFieldError(field: string): string | null {
+    if (!this.usuarioForm.controls[field]) return null;
     const errors = this.usuarioForm.controls[field].errors || {};
-
-    // Recorrer los errores
     for (const key of Object.keys(errors)) {
-      switch(key) {
-        // Si el campo es requerido
+      switch (key) {
         case 'required':
           return 'Este campo es requerido';
-        // Si el campo no cumple la longitud mínima
         case 'minlength':
           return `Mínimo ${errors['minlength'].requiredLength} caracteres`;
+        case 'maxlength':
+          return `Máximo ${errors['maxlength'].requiredLength} caracteres`;
+        case 'email':
+          return 'El email debe ser válido';
+        case 'pattern':
+          if (field === 'perfil') {
+            return 'El perfil debe ser 1, 2 o 3';
+          } else if (field === 'estadoUsuario') {
+            return 'El estado debe ser Disponible o Eliminado';
+          }
       }
+    }
+    if (field === 'password' && errors['invalidPassword']) {
+      return `La contraseña debe contener al menos una letra mayúscula, una minúscula y un número`;
     }
 
     return null;
