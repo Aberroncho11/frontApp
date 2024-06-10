@@ -34,9 +34,9 @@ export class ArticuloServicio {
    * @returns Observable<ArticuloDTO>
    * @memberof ArticuloServicio
    */
-  getArticuloPorId(idArticulo: number):Observable<ArticuloDTO> {
+  getArticuloPorNombre(nombre: string):Observable<ArticuloDTO> {
     // Retornar articulo por id
-    return this.http.get<ArticuloDTO>(`${this.baseUrl}/verArticuloPorId/${idArticulo}`);
+    return this.http.get<ArticuloDTO>(`${this.baseUrl}/verArticuloPorNombre/${nombre}`);
   }
 
   /**
@@ -49,6 +49,7 @@ export class ArticuloServicio {
 
     // Crear un nuevo formulario
     const formData: FormData = new FormData();
+    formData.append('Nombre', articulo.nombre);
     formData.append('Descripcion', articulo.descripcion);
     formData.append('Fabricante', articulo.fabricante);
     formData.append('Peso', articulo.peso.toString());
@@ -107,13 +108,9 @@ export class ArticuloServicio {
    * @returns Observable<boolean>
    * @memberof ArticuloServicio
    */
-  deleteArticle( idArticulo: number ): Observable<boolean> {
+  deleteArticle( nombre: string ): Observable<any> {
 
     // Eliminar el articulo
-    return this.http.delete(`${ this.baseUrl }/eliminarArticulo/${ idArticulo }`)
-      .pipe(
-        map( resp => true ),
-        catchError( err => of(false) ),
-      );
+    return this.http.delete(`${ this.baseUrl }/eliminarArticulo/${ nombre }`);
   }
 }

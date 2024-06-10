@@ -15,16 +15,15 @@
             <!-- Formulario para modificar un artículo -->
             <div class="mt-4 article-form">
 
-              <form [formGroup]="articuloIdForm" (ngSubmit)="verArticulosPorId()">
+              <form [formGroup]="articuloIdForm" (ngSubmit)="verArticulosPorNombre()">
                 <div class="mb-3">
-                  <label for="idArticulo" class="form-label">Id</label>
-                    <input
-                      type="number"
-                      id="idArticulo"
-                      class="form-control"
-                      formControlName="idArticulo">
-                    <span *ngIf="isValidFieldArticuloIdForm('idArticulo')" class="form-text text-danger">
-                      {{getFieldErrorArticuloIdForm('idArticulo')}}
+                  <label for="nombre" class="form-label">Id</label>
+                  <select id="nombre" class="form-select" formControlName="nombre" aria-label="Nombre">
+                    <option value="">Selecciona un Nombre</option>
+                    <option *ngFor="let articulo of articulosLista" [value]="articulo.nombre">{{ articulo.nombre }}</option>
+                  </select>
+                    <span *ngIf="isValidFieldArticuloIdForm('nombre')" class="form-text text-danger">
+                      {{getFieldErrorArticuloNombreForm('nombre')}}
                     </span>
                 </div>
                   <button type="submit" class="btn btn-dark btn-block" [disabled]="articuloIdForm.invalid">Empezar a modificar</button>
@@ -35,7 +34,20 @@
             <div *ngIf="mostrarArticulo" class="mt-4 article-form">
 
               <form [formGroup]="articuloForm" (ngSubmit)="modificarArticulo()">
-                <!-- Descripción -->
+
+                <div class="mb-3">
+                  <label for="nombre" class="form-label">Nombre</label>
+                  <input
+                    type="text"
+                    id="nombre"
+                    class="form-control"
+                    formControlName="nombre"
+                    placeholder="Nombre">
+                  <span *ngIf="isValidFieldArticuloForm('nombre')" class="form-text text-danger">
+                    {{getFieldErrorArticuloForm('nombre')}}
+                  </span>
+                </div>
+
                 <div class="mb-3">
                   <label for="descripcion" class="form-label">Descripción</label>
                   <input
@@ -48,7 +60,7 @@
                     {{getFieldErrorArticuloForm('descripcion')}}
                   </span>
                 </div>
-                <!-- Fabricante -->
+
                 <div class="mb-3">
                   <label for="fabricante" class="form-label">Fabricante</label>
                   <input
@@ -61,7 +73,7 @@
                     {{getFieldErrorArticuloForm('fabricante')}}
                   </span>
                 </div>
-                <!-- Peso -->
+
                 <div class="mb-3">
                   <label for="peso" class="form-label">Peso</label>
                   <input
@@ -74,7 +86,7 @@
                     {{getFieldErrorArticuloForm('peso')}}
                   </span>
                 </div>
-                <!-- Altura -->
+
                 <div class="mb-3">
                   <label for="altura" class="form-label">Altura</label>
                   <input
@@ -87,21 +99,20 @@
                     {{getFieldErrorArticuloForm('altura')}}
                   </span>
                 </div>
-                <!-- Ancho -->
+
                 <div class="mb-3">
                   <label for="ancho" class="form-label">Ancho</label>
                   <input
                   type="number"
                   id="ancho"
                   formControlName="ancho"
-
                   class="form-control"
                   placeholder="Ancho">
                   <span *ngIf="isValidFieldArticuloForm('ancho')" class="form-text text-danger">
                     {{getFieldErrorArticuloForm('ancho')}}
                   </span>
                 </div>
-                <!-- Precio -->
+
                 <div class="mb-3">
                   <label for="precio" class="form-label">Precio</label>
                   <input
@@ -114,7 +125,7 @@
                     {{getFieldErrorArticuloForm('precio')}}
                   </span>
                 </div>
-                <!-- Estado -->
+
                 <div class="mb-3">
                   <label for="estadoArticulo" class="form-label">Estado</label>
                   <input
@@ -127,7 +138,7 @@
                     {{getFieldErrorArticuloForm('estadoArticulo')}}
                   </span>
                 </div>
-                <!-- Foto -->
+
                 <div class="mb-3">
                   <label for="foto" class="form-label">Foto</label>
                   <div class="mb-3">
@@ -145,9 +156,8 @@
                     {{getFieldErrorArticuloForm('foto')}}
                   </span>
                 </div>
-                <!-- Botón para eliminar foto -->
-                <button type="button" class="btn btn-danger me-2" *ngIf="mostrarFoto" (click)="eliminarFoto()">Eliminar Foto</button>
 
+                <button type="button" class="btn btn-danger me-2" *ngIf="mostrarFoto" (click)="eliminarFoto()">Eliminar Foto</button>
                 <button type="submit" class="btn btn-dark btn-block" [disabled]="articuloForm.invalid">Modificar Artículo</button>
 
               </form>

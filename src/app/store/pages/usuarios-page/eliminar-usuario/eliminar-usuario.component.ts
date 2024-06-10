@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
 import Swal from 'sweetalert2';
-import { UsuarioGetPorIdDTO } from '../../../interfaces/usuario/usuarioGetPorIdDTO.interface';
+import { UsuarioGetPorNicknameDTO } from '../../../interfaces/usuario/usuarioGetPorIdDTO.interface';
 import { UsuarioServicio } from '../../../services/usuario.service';
-import { UsuarioDTO } from '../../../interfaces/usuario/usuarioDTO.interface';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CustomValidators } from '../../../../validators/validadores';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
@@ -15,7 +14,7 @@ import { debounceTime, distinctUntilChanged } from 'rxjs';
 export class EliminarUsuarioComponent {
 
   // Usuario
-  public usuario: UsuarioGetPorIdDTO | null = null;
+  public usuario: UsuarioGetPorNicknameDTO | null = null;
 
   // Mostrar tabla
   public mostrarTabla: boolean = false;
@@ -45,13 +44,13 @@ export class EliminarUsuarioComponent {
    * @returns void
    * @memberof EliminarUsuarioComponent
    */
-  verUsuarioPorId(): void {
+  verUsuariosPorNickname(): void {
     // Obtener el id del usuario
     const idUsuario = this.usuarioForm.get('idUsuario')?.value;
     // Si existe el id del usuario
     if (idUsuario) {
       // Obtener el usuario por id
-      this.usuarioServicio.getUsuarioPorId(idUsuario).subscribe(
+      this.usuarioServicio.getUsuarioPorNickname(idUsuario).subscribe(
         usuario => {
           this.usuario = usuario;
           this.mostrarTabla = true;

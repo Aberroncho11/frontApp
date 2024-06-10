@@ -118,25 +118,21 @@ export class CustomValidators {
     };
   }
 
-  // Validador de existencia de artículo
-  static articuloExistente(articuloServicio: ArticuloServicio): (control: AbstractControl) => Observable<ValidationErrors | null> {
-    // Retornar un observable
-    return (control: AbstractControl): Observable<ValidationErrors | null> => {
-      // Obtener el id del artículo
-      const idArticulo = control.value;
-      // Si no hay id de artículo o no es un número
-      if (!idArticulo) {
-        return of(null);
+
+  /**
+   * Validador de existencia de artículo y unicidad del nombre
+   * @param articuloServicio Servicio para verificar la existencia del artículo
+   * @returns ValidatorFn Una función de validación para el formulario
+   */
+  static articuloExistente(articuloServicio: ArticuloServicio): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const nombre = control.value;
+      if (!nombre) {
+        return null;
       }
 
-      // Obtener el artículo por id
-      return articuloServicio.getArticuloPorId(idArticulo).pipe(
-        map(() => null),
-        // Si no existe el artículo
-        catchError(() => {
-          console.error(`El artículo con el id ${idArticulo} no existe`);
-          return of({ 'articuloNotFound': true })
-        })
+      return articuloServicio.getArticuloPorNombre(nombre).pipe(
+        map(() => ({ 'uniqueName': true }))
       );
     };
   }
@@ -153,7 +149,7 @@ export class CustomValidators {
       }
 
       // Obtener el usuario por id
-      return usuarioServicio.getUsuarioPorId(idUsuario).pipe(
+      return usuarioServicio.getUsuarioPorNickname(idUsuario).pipe(
         map(() => null),
         // Si no existe el usuario
         catchError(() => {

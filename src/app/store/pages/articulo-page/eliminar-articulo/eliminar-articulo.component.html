@@ -7,39 +7,33 @@
           <p class="lead text-center">Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae distinctio soluta, aliquam sed quae ab molestias, illo ipsum accusamus eligendi placeat quos molestiae possimus cum! Repellat natus ullam placeat sunt!
             Cum facere illo eius hic dolorem dignissimos reprehenderit natus commodi, molestiae corporis saepe ipsam voluptatem sit itaque qui ut dicta, laborum esse aspernatur velit doloribus voluptas. Nam corrupti maiores soluta?</p>
           <div class="article-box mt-4">
-            <!-- Formulario para eliminar un artículo -->
             <form [formGroup]="articuloForm">
               <div class="mb-3">
-                <label for="idArticulo" class="form-label">Id</label>
-                <input type="number" id="idArticulo" class="form-control" formControlName="idArticulo" placeholder="Id" [(ngModel)]="idArticulo">
-                <span *ngIf="isValidFieldArticuloForm('idArticulo')" class="form-text text-danger">
-                  {{getFieldErrorArticuloForm('idArticulo')}}
+                <label for="nombre" class="form-label">Nombre</label>
+                <select id="nombre" class="form-select" formControlName="nombre" aria-label="Id" (change)="onArticuloChange()">
+                  <option value="">Selecciona un Nombre</option>
+                  <option *ngFor="let articulo of articulosLista" [value]="articulo.nombre">{{ articulo.nombre }}</option>
+                </select>
+                <span *ngIf="isValidFieldArticuloForm('nombre')" class="form-text text-danger">
+                  {{getFieldErrorArticuloForm('nombre')}}
                 </span>
               </div>
               <div class="mb-3 d-grid gap-2 d-md-flex justify-content-md-end">
-                <button class="btn btn-dark me-md-2" (click)="verArticulosPorId()" [disabled]="articuloForm.invalid">Mostrar Artículo Antes de Eliminar</button>
+                <button class="btn btn-dark me-md-2" (click)="verArticuloPorNombre()" [disabled]="articuloForm.invalid">Mostrar Artículo Antes de Eliminar</button>
               </div>
             </form>
           </div>
-          <!-- Tabla con los datos del artículo a eliminar -->
           <div id="card" class="mt-3" *ngIf="mostrarTabla">
             <div class="card mb-3">
               <div class="card-body">
-                <!--Descripción-->
+                <p class="card-text"><strong>Nombre:</strong> {{ articulo?.nombre }}</p>
                 <p class="card-text"><strong>Descripción:</strong> {{ articulo?.descripcion }}</p>
-                <!--Fabricante-->
                 <p class="card-text"><strong>Fabricante:</strong> {{ articulo?.fabricante }}</p>
-                <!--Peso-->
                 <p class="card-text"><strong>Peso:</strong> {{ articulo?.peso }} kg</p>
-                <!--Altura-->
                 <p class="card-text"><strong>Altura:</strong> {{ articulo?.altura }} cm</p>
-                <!--Ancho-->
                 <p class="card-text"><strong>Ancho:</strong> {{ articulo?.ancho }} cm</p>
-                <!--Precio-->
                 <p class="card-text"><strong>Precio:</strong> {{ articulo?.precio }}€</p>
-                <!--Estado-->
                 <p class="card-text"><strong>Estado:</strong> {{ articulo?.estadoArticulo }}</p>
-                <!--Foto-->
                 <p class="card-text"><strong>Foto:</strong></p>
                 <img [src]="articulo?.foto" class="card-img" alt="">
               </div>

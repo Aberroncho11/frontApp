@@ -4,7 +4,7 @@ import { Observable, catchError, map, of, tap } from 'rxjs';
 import { UsuarioDTO } from '../interfaces/usuario/usuarioDTO.interface';
 import { environment } from '../../environments/environments';
 import { UsuarioPostDTO } from '../interfaces/usuario/usuarioPostDTO.interface';
-import { UsuarioGetPorIdDTO } from '../interfaces/usuario/usuarioGetPorIdDTO.interface';
+import { UsuarioGetPorNicknameDTO } from '../interfaces/usuario/usuarioGetPorIdDTO.interface';
 import { UsuarioPutDTO } from '../interfaces/usuario/usuarioPutDTO.interface';
 import { JwtHelperService } from '@auth0/angular-jwt';
 
@@ -85,9 +85,9 @@ export class UsuarioServicio{
    * @returns Observable<UsuarioGetPorIdDTO>
    * @memberof UsuarioServicio
    */
-  getUsuarioPorId(idUsuario: number):Observable<UsuarioGetPorIdDTO> {
+  getUsuarioPorNickname(nickname: string):Observable<UsuarioGetPorNicknameDTO> {
 
-    return this.http.get<UsuarioGetPorIdDTO>(`${this.baseUrl}/verUsuarioPorId/${idUsuario}`);
+    return this.http.get<UsuarioGetPorNicknameDTO>(`${this.baseUrl}/verUsuarioPorNickname/${nickname}`);
   }
 
   /**
@@ -131,7 +131,7 @@ export class UsuarioServicio{
    * @returns Observable<UsuarioPutDTO>
    * @memberof UsuarioServicio
    */
-  updateUsuario( usuario: UsuarioPutDTO, idUsuario: number ): Observable<UsuarioPutDTO> {
+  updateUsuario( usuario: UsuarioPutDTO, nickanme: string ): Observable<UsuarioPutDTO> {
 
     // Crear un nuevo formulario
     const formData: FormData = new FormData();
@@ -142,7 +142,7 @@ export class UsuarioServicio{
     formData.append('nickname', usuario.nickname);
 
     // Retornar usuario por id
-    return this.http.put<UsuarioPutDTO>(`${ this.baseUrl }/modificarUsuario/${ idUsuario }`, formData );
+    return this.http.put<UsuarioPutDTO>(`${ this.baseUrl }/modificarUsuario/${ nickanme }`, formData );
   }
 
   /**

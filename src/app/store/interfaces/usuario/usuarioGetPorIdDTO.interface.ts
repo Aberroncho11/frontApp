@@ -1,7 +1,7 @@
 
 
 // Interface para el DTO de UsuarioPorId
-export interface UsuarioGetPorIdDTO {
+export interface UsuarioGetPorNicknameDTO {
   idUsuario:        number;
   perfil:           number;
   password:         string;

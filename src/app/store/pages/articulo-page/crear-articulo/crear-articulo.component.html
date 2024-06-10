@@ -13,10 +13,16 @@
           <p class="lead text-center">Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae distinctio soluta, aliquam sed quae ab molestias, illo ipsum accusamus eligendi placeat quos molestiae possimus cum! Repellat natus ullam placeat sunt!
             Cum facere illo eius hic dolorem dignissimos reprehenderit natus commodi, molestiae corporis saepe ipsam voluptatem sit itaque qui ut dicta, laborum esse aspernatur velit doloribus voluptas. Nam corrupti maiores soluta?</p>
 
-          <!--Formulario de crear artículo-->
           <form [formGroup]="articuloForm" (ngSubmit)="crearArticulo()" class="mt-4 article-form">
 
-            <!--Descripción-->
+            <div class="mb-3">
+              <label for="nombre" class="form-label">Nombre</label>
+              <input type="text" id="nombre" formControlName="nombre" class="form-control" placeholder="Nombre">
+              <span *ngIf="isValidField('nombre')" class="form-text text-danger">
+                {{getFieldError('nombre')}}
+              </span>
+            </div>
+
             <div class="mb-3">
               <label for="descripcion" class="form-label">Descripción</label>
               <input type="text" id="descripcion" formControlName="descripcion" class="form-control" placeholder="Descripción">
@@ -25,7 +31,6 @@
               </span>
             </div>
 
-            <!--Fabricante-->
             <div class="mb-3">
               <label for="fabricante" class="form-label">Fabricante</label>
               <input type="text" id="fabricante" formControlName="fabricante" class="form-control" placeholder="Fabricante">
@@ -36,7 +41,6 @@
 
             <div class="row">
 
-              <!--Peso-->
               <div class="col-md-6 mb-3">
                 <label for="peso" class="form-label">Peso</label>
                 <input type="number" id="peso" formControlName="peso" class="form-control" placeholder="Peso">
@@ -45,7 +49,6 @@
                 </div>
               </div>
 
-              <!--Altura-->
               <div class="col-md-6 mb-3">
                 <label for="altura" class="form-label">Altura</label>
                 <input type="number" id="altura" formControlName="altura" class="form-control" placeholder="Altura">
@@ -58,7 +61,6 @@
 
             <div class="row">
 
-              <!--Ancho-->
               <div class="col-md-6 mb-3">
                 <label for="ancho" class="form-label">Ancho</label>
                 <input type="number" id="ancho" formControlName="ancho" class="form-control" placeholder="Ancho">
@@ -67,7 +69,6 @@
                 </div>
               </div>
 
-              <!--Precio-->
               <div class="col-md-6 mb-3">
                 <label for="precio" class="form-label">Precio</label>
                 <input type="number" id="precio" formControlName="precio" class="form-control" placeholder="Precio">
@@ -78,7 +79,6 @@
 
             </div>
 
-            <!--Foto-->
             <div class="mb-3">
               <label for="foto" class="form-label">Foto</label>
               <input type="file" id="foto" (change)="onFileChange($event)" #fileInput class="form-control">

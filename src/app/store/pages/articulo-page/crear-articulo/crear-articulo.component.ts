@@ -26,6 +26,7 @@ export class CrearArticuloComponent implements OnInit{
   ngOnInit() {
 
     this.articuloForm = this.fb.group({
+      nombre: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(20)]],
       descripcion: ['', [Validators.required, Validators.minLength(20), Validators.maxLength(50)]],
       fabricante: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(20)]],
       peso: ['', [Validators.required]],
@@ -35,7 +36,7 @@ export class CrearArticuloComponent implements OnInit{
       foto: [''],
     });
 
-    const campos = ['descripcion', 'fabricante', 'peso', 'altura', 'ancho', 'precio'];
+    const campos = ['nombre', 'descripcion', 'fabricante', 'peso', 'altura', 'ancho', 'precio'];
 
     campos.forEach(campo => {
 
@@ -83,6 +84,8 @@ export class CrearArticuloComponent implements OnInit{
       this.articuloForm.markAllAsTouched();
       return;
     }
+
+    console.log(this.currentArticulo)
 
     this.articuloServicio.addArticulo(this.currentArticulo)
       .subscribe(response => {

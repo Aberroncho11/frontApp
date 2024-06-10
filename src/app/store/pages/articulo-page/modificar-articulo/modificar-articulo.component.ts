@@ -30,6 +30,8 @@ export class ModificarArticuloComponent implements OnInit{
 
   public articulo: ArticuloDTO | null = null;
 
+  public articulosLista: ArticuloDTO[] = [];
+
   @ViewChild('fileInput', { static: false }) fileInput!: ElementRef;
 
   public fotoBorrar: string | undefined;
@@ -38,6 +40,7 @@ export class ModificarArticuloComponent implements OnInit{
   ngOnInit() {
 
     this.articuloForm = this.fb.group({
+      nombre: ['', [ Validators.required, Validators.minLength(4), Validators.maxLength(20), CustomValidators.articuloExistente(this.articuloServicio)]],
       descripcion: ['', [ Validators.required, Validators.minLength(20), Validators.maxLength(50) ]],
       fabricante: ['', [ Validators.required, Validators.minLength(6), Validators.maxLength(20) ]],
       peso: ['', [Validators.required]],
@@ -49,10 +52,10 @@ export class ModificarArticuloComponent implements OnInit{
     });
 
     this.articuloIdForm = this.fb.group({
-      idArticulo: ['', [ Validators.required ], CustomValidators.articuloExistente(this.articuloServicio)],
+      nombre: ['', [ Validators.required ]],
     });
 
-    const campos = ['descripcion', 'fabricante', 'peso', 'altura', 'ancho', 'precio', 'estadoArticulo'];
+    const campos = ['nombre', 'descripcion', 'fabricante', 'peso', 'altura', 'ancho', 'precio', 'estadoArticulo'];
 
     campos.forEach(campo => {
 
@@ -63,10 +66,20 @@ export class ModificarArticuloComponent implements OnInit{
 
     });
 
-    this.articuloIdForm.get('idArticulo')?.valueChanges.pipe(
+    this.articuloIdForm.get('nombre')?.valueChanges.pipe(
       debounceTime(1000),
       distinctUntilChanged(),
     ).subscribe();
+
+    this.articuloServicio.getArticulos()
+    .subscribe({
+      next: (articulos: ArticuloDTO[]) => {
+        this.articulosLista = articulos;
+      },
+      error: (error) => {
+        console.error('Error al obtener los artículos:', error);
+      }
+    });
   }
 
   // Getters
@@ -96,9 +109,9 @@ export class ModificarArticuloComponent implements OnInit{
    * Método que se encarga de buscar un artículo por su id
    * @param idArticulo
    */
-  verArticulosPorId(): void {
+  verArticulosPorNombre(): void {
 
-    this.articuloServicio.getArticuloPorId(this.articuloIdForm.get('idArticulo')?.value)
+    this.articuloServicio.getArticuloPorNombre(this.articuloIdForm.get('nombre')?.value)
     .subscribe({
       next: (articulo) => {
 
@@ -107,6 +120,7 @@ export class ModificarArticuloComponent implements OnInit{
 
         this.articuloForm.patchValue({
           descripcion: articulo.descripcion,
+          nombre: articulo.nombre,
           fabricante: articulo.fabricante,
           peso: articulo.peso,
           altura: articulo.altura,
@@ -146,7 +160,7 @@ export class ModificarArticuloComponent implements OnInit{
       return;
     }
 
-    this.articuloServicio.updateArticulo(this.currentArticulo, this.articuloIdForm.get('idArticulo')?.value)
+    this.articuloServicio.updateArticulo(this.currentArticulo, this.articuloIdForm.get('nombre')?.value)
       .subscribe(response => {
         Swal.fire({
           position: "center",
@@ -233,7 +247,12 @@ export class ModificarArticuloComponent implements OnInit{
           return `Mínimo ${errors['minlength'].requiredLength} caracteres`;
         case 'maxlength':
           return `La longitud máxima debe ser de ${errors['maxlength'].requiredLength} caracteres`;
+
       }
+    }
+
+    if (field === 'nombre' && errors['uniqueName'] === true) {
+      return `Ya existe un artículo con ese nombre`;
     }
 
     return null;
@@ -257,14 +276,17 @@ export class ModificarArticuloComponent implements OnInit{
    * @returns
    * @memberof ModificarArticuloComponent
    */
-  getFieldErrorArticuloIdForm(field: string): string | null{
+  getFieldErrorArticuloNombreForm(field: string): string | null{
 
     if(!this.articuloIdForm?.get(field)) return null;
 
     const errors = this.articuloIdForm.controls[field].errors || {};
 
-    if (field === 'idArticulo' && errors['articuloNotFound']) {
-      return `No existe ningún artículo con ese id`;
+    for (const key of Object.keys(errors)) {
+      switch(key) {
+        case 'required':
+          return 'Este campo es requerido';
+      }
     }
 
     return null;

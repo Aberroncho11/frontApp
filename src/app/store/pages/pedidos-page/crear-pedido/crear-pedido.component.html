@@ -66,18 +66,21 @@
             <div class="mb-3">
               <label class="form-label">Agregar artículo</label>
               <div class="input-group mb-3" [formGroup]="newArticuloForm">
-                <input type="number" class="form-control me-2" formControlName="articuloId" placeholder="Id artículo">
-                <span class="form-text text-danger" *ngIf="newArticuloForm.get('articuloId')?.invalid && newArticuloForm.get('articuloId')?.touched">{{ getArticleFieldError('articuloId') }}</span>
-
-                <input type="number" class="form-control me-2" formControlName="cantidad" placeholder="Cantidad">
-                <span class="form-text text-danger" *ngIf="newArticuloForm.get('cantidad')?.invalid && newArticuloForm.get('cantidad')?.touched">{{ getArticleFieldError('cantidad') }}</span>
-
+                  <div class="me-3">
+                      <select class="form-select" formControlName="articuloId" aria-label="Seleccionar artículo" (change)="onArticuloIdChange()">
+                          <option *ngFor="let articulo of articulosLista" [value]="articulo.idArticulo">{{ articulo.idArticulo }}</option>
+                      </select>
+                  </div>
+                  <div class="me-3">
+                      <select class="form-select" formControlName="cantidad" aria-label="Seleccionar cantidad">
+                          <option *ngFor="let num of cantidadOptions" [value]="num" >{{ num }}</option>
+                      </select>
+                  </div>
               </div>
               <button class="btn btn-dark" type="button" (click)="onAddToArticulos()" [disabled]="newArticuloForm.invalid">Agregar artículo</button>
-
-
-
             </div>
+
+
 
             <div class="mb-3">
 
@@ -90,7 +93,6 @@
                   <input type="number" formControlName="articuloId" class="form-control me-2" placeholder="Id artículo" readonly>
                   <input type="number" formControlName="cantidad" class="form-control me-2" placeholder="Cantidad" readonly>
                   <button (click)="onDeleteArticulo(i)" class="btn btn-danger" type="button">Eliminar</button>
-                  <span class="form-text text-danger" *ngIf="isValidFieldInArray(articulos, i)">Este campo es requerido</span>
 
                 </div>
 

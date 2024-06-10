@@ -7,6 +7,7 @@ import { UsuarioServicio } from '../../../services/usuario.service';
 import { ArticuloServicio } from '../../../services/articulo.service';
 import { PedidoPostDTO } from '../../../interfaces/pedido/pedidoPostDTO.interface';
 import { CustomValidators } from '../../../../validators/validadores';
+import { ArticuloAlmacenDTO } from '../../../interfaces/articulo/articuloAlmacenDTO.interface';
 
 @Component({
   selector: 'crear-pedido',
@@ -35,6 +36,11 @@ export class CrearPedidoComponent implements OnInit{
 
   private fb = inject(FormBuilder);
 
+  public articulosLista: ArticuloAlmacenDTO[] = [];
+
+  public cantidadOptions: number[] = [];
+
+
   // Inicializador
   ngOnInit() {
 
@@ -49,9 +55,27 @@ export class CrearPedidoComponent implements OnInit{
     });
 
     this.newArticuloForm = this.fb.group({
-      articuloId: ['', [Validators.required]],
-      cantidad: ['', Validators.required]
+      articuloId: [''],
+      cantidad: ['']
     });
+
+    this.articuloServicio.getArticulos()
+    .subscribe({
+      next: (articulos: ArticuloAlmacenDTO[]) => {
+        articulos.forEach(articulo => {
+          articulo.almacen.forEach(estanteria => {
+            if (estanteria.cantidad > 0) {
+              this.articulosLista.push(articulo);
+            }
+          });
+        });
+      },
+      error: (error) => {
+        console.error('Error al obtener los artículos:', error);
+      }
+    });
+
+
 
     const camposPedidoForm = ['codigoPostal', 'ciudad', 'telefono', 'contacto', 'direccion', 'provincia'];
 
@@ -88,12 +112,30 @@ export class CrearPedidoComponent implements OnInit{
     return this.pedidoForm.get('articulos') as FormArray;
   }
 
+  onArticuloIdChange(): void {
+    var articuloId = this.newArticuloForm.get('articuloId')?.value;
+    if (articuloId) {
+        this.updateCantidadDisponible(articuloId);
+    }
+  }
+
+  updateCantidadDisponible(idArticulo: number): void {
+    const articuloSeleccionado = this.articulosLista.find(articulo => articulo.idArticulo == idArticulo);
+    if (articuloSeleccionado) {
+        var estanteria = articuloSeleccionado.almacen;
+        estanteria.forEach(estanteria => {
+          this.cantidadOptions = Array.from({ length: estanteria.cantidad }, (_, i) => i + 1);
+        });
+    }
+  }
+
   /**
    * Método para crear un pedido
    * @returns void
    * @memberof CrearPedidoComponent
    */
   crearPedido(): void {
+
     if (this.pedidoForm.invalid) {
       this.pedidoForm.markAllAsTouched();
       return;
@@ -114,8 +156,11 @@ export class CrearPedidoComponent implements OnInit{
           confirmButtonText: "Si, crealo!",
           cancelButtonText: "No, cancelalo!",
           reverseButtons: true
+
         }).then((result) => {
+
           if (result.isConfirmed) {
+
             this.pedidoServicio.addPedido(pedidoData)
               .subscribe(response => {
                 Swal.fire({
@@ -127,6 +172,7 @@ export class CrearPedidoComponent implements OnInit{
                 });
 
                 this.pedidoForm.reset();
+
                 this.articulos.clear();
 
               }, error => {
@@ -137,14 +183,17 @@ export class CrearPedidoComponent implements OnInit{
                   text: "Error al crear el pedido",
                 });
               });
+
           } else if (result.dismiss === Swal.DismissReason.cancel) {
             this.swalWithBootstrapButtons.fire({
               title: "Cancelado",
               text: "Tu pedido no se ha creado",
               icon: "error"
             });
+
           }
         });
+
       } else {
         console.error('No se pudo obtener el ID del usuario');
         Swal.fire({
@@ -172,7 +221,7 @@ export class CrearPedidoComponent implements OnInit{
 
     const cantidad = this.newArticuloForm.get('cantidad')?.value;
 
-    this.articuloServicio.getArticuloPorId(articuloId).subscribe(
+    this.articuloServicio.getArticuloPorNombre(articuloId).subscribe(
       articulo => {
         if (articulo) {
 
@@ -256,40 +305,4 @@ export class CrearPedidoComponent implements OnInit{
 
   }
 
-  /**
-   * Método para comprobar si un campo es válido en un array
-   * @param {FormArray} formArray
-   * @param {number} index
-   * @returns {boolean | null}
-   * @memberof CrearPedidoComponent
-   */
-  isValidFieldInArray(formArray: FormArray, index: number): boolean | null {
-    const control = formArray.at(index);
-    return control?.errors && control.touched ? true : null;
-  }
-
-  /**
-   * Método para obtener el mensaje de error de un campo en un array
-   * @param {FormArray} formArray
-   * @param {number} index
-   * @returns {string | null}
-   * @memberof CrearPedidoComponent
-   */
-  getArticleFieldError(field: string): string | null {
-    const control = this.newArticuloForm.controls[field];
-    if (!control) return null;
-
-    const errors = control.errors || {};
-    for (const key of Object.keys(errors)) {
-      switch (key) {
-        case 'required':
-          return 'Este campo es requerido';
-      }
-    }
-
-    if (field === 'articuloId' && control.hasError('articuloNotFound')) {
-      return `No existe ningún artículo con ese id`;
-    }
-    return null;
-  }
 }
