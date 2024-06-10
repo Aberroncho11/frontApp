@@ -40,6 +40,15 @@
   text-shadow: none;
 }
 
+#pedidos .invalid-feedback {
+  color: #ff6b6b;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  transform: translateY(5px);
+}
+
 #pedidos .form-group {
   position: relative;
   margin-bottom: 2.5rem;
@@ -48,6 +57,7 @@
 .input-group .form-control.me-2 {
   margin-right: 0.5rem;
 }
+
 
 
 @keyframes fadeIn {

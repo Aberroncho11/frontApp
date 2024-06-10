@@ -14,7 +14,6 @@ import { CustomValidators } from '../../../../validators/validadores';
 })
 export class ModificarArticuloComponent implements OnInit{
 
-<<<<<<< HEAD
   private fb = inject(FormBuilder);
 
   private articuloServicio = inject(ArticuloServicio);
@@ -22,13 +21,6 @@ export class ModificarArticuloComponent implements OnInit{
   public articuloForm!: FormGroup;
 
   public articuloIdForm!: FormGroup;
-=======
-  // Formulario de Articulo
-  public articuloForm: FormGroup;
-
-  // Formulario de Articulo por Id
-  public articuloIdForm: FormGroup;
->>>>>>> 29c04f21e2afb9e3c515046a0b474e3637570e9b
 
   public file: File | null = null;
 
@@ -36,14 +28,7 @@ export class ModificarArticuloComponent implements OnInit{
 
   public mostrarArticulo = false;
 
-<<<<<<< HEAD
-=======
-  // Variable para el manejo del artículo
->>>>>>> 29c04f21e2afb9e3c515046a0b474e3637570e9b
   public articulo: ArticuloDTO | null = null;
-
-  // Variable para la URL de vista previa de la imagen seleccionada
-  public fotoPreviewUrl: string | null = null;
 
   @ViewChild('fileInput', { static: false }) fileInput!: ElementRef;
 
@@ -78,94 +63,13 @@ export class ModificarArticuloComponent implements OnInit{
 
     });
 
-<<<<<<< HEAD
-=======
-    // Formulario para el manejo de los artículos
-    this.articuloForm = this.fb.group({
-      descripcion: ['', [Validators.required, Validators.minLength(20), Validators.maxLength(50)]],
-      fabricante: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(20)]],
-      peso: ['', [Validators.required]],
-      altura: ['', [Validators.required]],
-      ancho: ['', [Validators.required]],
-      precio: ['', [Validators.required]],
-      estadoArticulo: ['', [Validators.required, Validators.pattern('^(Disponible|Eliminado|Pendiente de eliminar)$')]],
-      foto: ['']
-    });
-
-    // Formulario para el manejo del id del artículo
-    this.articuloIdForm = this.fb.group({
-    idArticulo: [0, [ Validators.required ], CustomValidators.articuloExistente(this.articuloServicio)],
-    });
-
-    this.articuloForm.get('descripcion')?.valueChanges
-      .pipe(
-        debounceTime(1000),
-        distinctUntilChanged(),
-      )
-      .subscribe();
-
-    this.articuloForm.get('fabricante')?.valueChanges
-      .pipe(
-        debounceTime(1000),
-        distinctUntilChanged(),
-      )
-      .subscribe();
-
-    this.articuloForm.get('peso')?.valueChanges
-      .pipe(
-        debounceTime(1000),
-        distinctUntilChanged(),
-      )
-      .subscribe();
-
-    this.articuloForm.get('altura')?.valueChanges
-      .pipe(
-        debounceTime(1000),
-        distinctUntilChanged(),
-      )
-      .subscribe();
-
-    this.articuloForm.get('ancho')?.valueChanges
-      .pipe(
-        debounceTime(1000),
-        distinctUntilChanged(),
-      )
-      .subscribe();
-
-    this.articuloForm.get('precio')?.valueChanges
-      .pipe(
-        debounceTime(1000),
-        distinctUntilChanged(),
-      )
-      .subscribe();
-
-    this.articuloForm.get('estadoArticulo')?.valueChanges
-      .pipe(
-        debounceTime(1000),
-        distinctUntilChanged(),
-      )
-      .subscribe();
-
-      // Suscribirse a los cambios del campo idArticulo
->>>>>>> 29c04f21e2afb9e3c515046a0b474e3637570e9b
     this.articuloIdForm.get('idArticulo')?.valueChanges.pipe(
       debounceTime(1000),
       distinctUntilChanged(),
     ).subscribe();
   }
 
-<<<<<<< HEAD
   // Getters
-=======
-  // Si el archivo cambia se guarda en la variable file y se genera la URL de vista previa
-  onFileChange(event: any) {
-    // Asignar el archivo
-    this.file = event.target.files[0];
-    // Generar la URL de vista previa
-  }
-
-  // Recuperar articulo del formulario
->>>>>>> 29c04f21e2afb9e3c515046a0b474e3637570e9b
   get currentArticulo(): ArticuloPutDTO {
 
     const articulo = this.articuloForm.value as ArticuloPutDTO;
@@ -179,7 +83,6 @@ export class ModificarArticuloComponent implements OnInit{
     return articulo;
   }
 
-<<<<<<< HEAD
   /**
    * Cuando el archivo cambia se carga en la variable file el nuevo archivo
    * @param event
@@ -198,39 +101,6 @@ export class ModificarArticuloComponent implements OnInit{
     this.articuloServicio.getArticuloPorId(this.articuloIdForm.get('idArticulo')?.value)
     .subscribe({
       next: (articulo) => {
-=======
-  // Metodo para obtener los artículos por id
-  verArticulosPorId(): void {
-    // Obtener el artículo por id
-    this.articuloServicio.getArticuloPorId(this.idArticulo)
-    .subscribe(articulo => {
-
-      // Asignar el artículo obtenido
-      this.articulo = articulo;
-
-      // Cambiar los valores del formulario
-      this.articuloForm.patchValue({
-        descripcion: articulo.descripcion,
-        fabricante: articulo.fabricante,
-        peso: articulo.peso,
-        altura: articulo.altura,
-        ancho: articulo.ancho,
-        precio: articulo.precio,
-        estadoArticulo: articulo.estadoArticulo,
-        foto: articulo.foto
-      });
-
-      // Mostrar la foto después de modificar
-      if(articulo.foto == null){
-        this.mostrarFoto = false;
-      }
-      else{
-        this.mostrarFoto = true;
-        this.file = articulo.foto;
-      }
-
-      this.mostrarArticulo = true;
->>>>>>> 29c04f21e2afb9e3c515046a0b474e3637570e9b
 
 
         this.articulo = articulo;
@@ -298,10 +168,6 @@ export class ModificarArticuloComponent implements OnInit{
 
         this.mostrarArticulo = false;
 
-<<<<<<< HEAD
-=======
-      // Manejo de errores
->>>>>>> 29c04f21e2afb9e3c515046a0b474e3637570e9b
       }, error => {
         console.error('Error al crear artículo:', error);
       });
@@ -314,7 +180,6 @@ export class ModificarArticuloComponent implements OnInit{
    * @memberof ModificarArticuloComponent
    */
   eliminarFoto(): void {
-<<<<<<< HEAD
 
     if (this.fotoBorrar) {
 
@@ -334,10 +199,6 @@ export class ModificarArticuloComponent implements OnInit{
     } else {
       console.error('No hay foto seleccionada para borrar');
     }
-=======
-    this.articuloForm.get('foto')?.setValue(null);
-    this.file = null;
->>>>>>> 29c04f21e2afb9e3c515046a0b474e3637570e9b
   }
 
   /**
@@ -359,7 +220,6 @@ export class ModificarArticuloComponent implements OnInit{
    * @memberof ModificarArticuloComponent
    */
   getFieldErrorArticuloForm(field: string): string | null{
-<<<<<<< HEAD
 
     if(!this.articuloForm.controls[field]) return null;
 
@@ -367,24 +227,12 @@ export class ModificarArticuloComponent implements OnInit{
 
     for (const key of Object.keys(errors)) {
       switch(key) {
-=======
-    if (!this.articuloForm.controls[field]) return null;
-    const errors = this.articuloForm.controls[field].errors || {};
-    for (const key of Object.keys(errors)) {
-      switch (key) {
->>>>>>> 29c04f21e2afb9e3c515046a0b474e3637570e9b
         case 'required':
           return 'Este campo es requerido';
         case 'minlength':
           return `Mínimo ${errors['minlength'].requiredLength} caracteres`;
         case 'maxlength':
-<<<<<<< HEAD
           return `La longitud máxima debe ser de ${errors['maxlength'].requiredLength} caracteres`;
-=======
-          return `Máximo ${errors['maxlength'].requiredLength} caracteres`;
-        case 'pattern':
-          return 'El estado debe ser Disponible, Eliminado o Pendiente de eliminar';
->>>>>>> 29c04f21e2afb9e3c515046a0b474e3637570e9b
       }
     }
 

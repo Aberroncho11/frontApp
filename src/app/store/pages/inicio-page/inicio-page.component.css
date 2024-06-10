@@ -5,6 +5,12 @@
   animation: fadeIn 1s ease-in-out;
 }
 
+.container {
+  max-width: 100%;
+  padding-left: 100px;
+  padding-right: 100px;
+}
+
 .overlay {
   background: rgba(0, 0, 0, 0.6);
   height: 100%;
@@ -15,7 +21,7 @@
 
 .titulo video {
   position: absolute;
-  top: 50%;
+  top: 100%;
   left: 50%;
   transform: translate(-50%, -50%);
   min-width: 100%;
@@ -51,9 +57,10 @@
 }
 
 @media screen and (max-width: 1440px) and (min-width: 1024px) {
+
   .titulo video {
+    transform: translate(-50%, -80%);
     width: 60%;
-    transform: translate(-50%, -40%);
   }
 }
 
@@ -61,19 +68,29 @@
   .titulo {
     height: 60vh;
   }
+
+  .container {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
   .titulo h1 {
     font-size: 1.8em;
     margin-bottom: 0.5em;
   }
+
   .titulo p {
     font-size: 1em;
     margin-bottom: 1em;
   }
+
   .titulo video {
+    position: absolute;
     top: 20%;
     left: 20%;
     transform: translate(-30%, -20%);
     height: 70%;
+    z-index: -1;
   }
 }
 
@@ -81,15 +98,19 @@
   .titulo {
     height: 50vh;
   }
+
   .titulo h1 {
     font-size: 1.5em;
   }
+
   .titulo p {
     font-size: 0.9em;
   }
+
   .btn-group .btn {
     margin-bottom: 0.5rem;
   }
+
   .btn-group {
     align-items: center;
     flex-wrap: wrap;

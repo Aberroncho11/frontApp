@@ -35,7 +35,7 @@ export class EliminarArticuloComponent {
   constructor(private articuloServicio: ArticuloServicio, private fb: FormBuilder) {
     // Inicializar el formulario
     this.articuloForm = this.fb.group({
-      idArticulo: [0, [Validators.required, Validators.min(1)], CustomValidators.articuloExistente(this.articuloServicio)],
+      idArticulo: [0, [ Validators.required,  Validators.min(1)], CustomValidators.articuloExistente(this.articuloServicio)],
     });
     // Suscribirse a los cambios del campo idArticulo
     this.articuloForm.get('idArticulo')?.valueChanges.pipe(
@@ -81,48 +81,38 @@ export class EliminarArticuloComponent {
       cancelButtonColor: "#d33",
       confirmButtonText: "Si, eliminalo!"
     }).then((result) => {
-        // Si se confirma la eliminación
-        if (result.isConfirmed) {
-          // Eliminar el artículo
-          this.articuloServicio.deleteArticle(this.idArticulo).subscribe(
-            response => {
-              // Mostrar mensaje de éxito
-              Swal.fire({
-                position: "center",
-                icon: "success",
-                title: "Articulo eliminado correctamente",
-                showConfirmButton: false,
-                timer: 1500
-              });
-              // Reiniciar las variables
-              this.idArticulo = 0;
-              this.articulo = null;
-              this.mostrarTabla = false;
-              this.articuloCargado = false;
-            },
-            // Manejo de errores
-            error => {
-              // Mostrar mensaje de error
-              Swal.fire({
-                position: "center",
-                icon: "error",
-                title: "Error al eliminar articulo",
-                showConfirmButton: false,
-                timer: 1500
-              });
-            }
-          );
-        }
-        else{
-           // Mostrar mensaje de error
-           Swal.fire({
-            position: "center",
-            icon: "error",
-            title: "Error al eliminar articulo no está disponible",
-            showConfirmButton: false,
-            timer: 1500
-          });
-        }
+      // Si se confirma la eliminación
+      if (result.isConfirmed) {
+        // Eliminar el artículo
+        this.articuloServicio.deleteArticle(this.idArticulo).subscribe(
+          response => {
+            // Mostrar mensaje de éxito
+            Swal.fire({
+              position: "center",
+              icon: "success",
+              title: "Articulo eliminado correctamente",
+              showConfirmButton: false,
+              timer: 1500
+            });
+            // Reiniciar las variables
+            this.idArticulo = 0;
+            this.articulo = null;
+            this.mostrarTabla = false;
+            this.articuloCargado = false;
+          },
+          // Manejo de errores
+          error => {
+            // Mostrar mensaje de error
+            Swal.fire({
+              position: "center",
+              icon: "error",
+              title: "Error al eliminar articulo",
+              showConfirmButton: false,
+              timer: 1500
+            });
+          }
+        );
+      }
     });
   }
 

@@ -1,17 +1,12 @@
-<<<<<<< HEAD
 import { Component, OnInit, inject } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
-=======
-import { Component } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
->>>>>>> 29c04f21e2afb9e3c515046a0b474e3637570e9b
 import Swal from 'sweetalert2';
 import { PedidoServicio } from '../../../services/pedido.service';
 import { UsuarioServicio } from '../../../services/usuario.service';
 import { ArticuloServicio } from '../../../services/articulo.service';
 import { PedidoPostDTO } from '../../../interfaces/pedido/pedidoPostDTO.interface';
+import { CustomValidators } from '../../../../validators/validadores';
 
 @Component({
   selector: 'crear-pedido',
@@ -20,12 +15,7 @@ import { PedidoPostDTO } from '../../../interfaces/pedido/pedidoPostDTO.interfac
 })
 export class CrearPedidoComponent implements OnInit{
 
-<<<<<<< HEAD
   public pedidoForm!: FormGroup;
-=======
-  // Formulario de pedido
-  public pedidoForm: FormGroup;
->>>>>>> 29c04f21e2afb9e3c515046a0b474e3637570e9b
 
   public newArticuloForm!: FormGroup;
 
@@ -49,31 +39,20 @@ export class CrearPedidoComponent implements OnInit{
   ngOnInit() {
 
     this.pedidoForm = this.fb.group({
-<<<<<<< HEAD
       codigoPostal: ['', [Validators.required, CustomValidators.postalCodeValidator]],
       ciudad: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(20)]],
       telefono: ['', [Validators.required, CustomValidators.phoneNumberValidator]],
       contacto: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(20)]],
       direccion: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(40)]],
       provincia: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(20)]],
-=======
-      usuarioId: [0, [Validators.required]],
-      codigoPostal: ['', [Validators.required, Validators.pattern(/^[0-5][0-9]{4}$/)]],
-      ciudad: ['', [Validators.required]],
-      telefono: ['', [Validators.required, Validators.pattern(/^[0-9]{9}$/)]],
-      contacto: ['', [Validators.required]],
-      direccion: ['', [Validators.required]],
-      provincia: ['', [Validators.required]],
->>>>>>> 29c04f21e2afb9e3c515046a0b474e3637570e9b
       articulos: this.fb.array([], Validators.required)
     });
 
     this.newArticuloForm = this.fb.group({
       articuloId: ['', [Validators.required]],
-      cantidad: ['', [Validators.required, Validators.min(1)]]
+      cantidad: ['', Validators.required]
     });
 
-<<<<<<< HEAD
     const camposPedidoForm = ['codigoPostal', 'ciudad', 'telefono', 'contacto', 'direccion', 'provincia'];
 
     camposPedidoForm.forEach(campo => {
@@ -94,21 +73,11 @@ export class CrearPedidoComponent implements OnInit{
         distinctUntilChanged()
       ).subscribe();
 
-=======
-    const fieldsToWatch = ['usuarioId', 'codigoPostal', 'telefono', 'contacto', 'direccion', 'provincia', 'articulos'];
-
-    fieldsToWatch.forEach(field => {
-      this.pedidoForm.get(field)?.valueChanges.pipe(
-        debounceTime(1000),
-        distinctUntilChanged()
-      ).subscribe();
->>>>>>> 29c04f21e2afb9e3c515046a0b474e3637570e9b
     });
 
   }
 
   // Getters
-<<<<<<< HEAD
   get pedido(): PedidoPostDTO {
 
     return this.pedidoForm.value as PedidoPostDTO;
@@ -116,14 +85,6 @@ export class CrearPedidoComponent implements OnInit{
 
   get articulos(): FormArray {
 
-=======
-  get currentPedido(): PedidoPostDTO {
-    return this.pedidoForm.value as PedidoPostDTO;
-  }
-
-  // Getters
-  get currentArticulos(): FormArray {
->>>>>>> 29c04f21e2afb9e3c515046a0b474e3637570e9b
     return this.pedidoForm.get('articulos') as FormArray;
   }
 
@@ -137,7 +98,6 @@ export class CrearPedidoComponent implements OnInit{
       this.pedidoForm.markAllAsTouched();
       return;
     }
-<<<<<<< HEAD
 
     this.usuarioServicio.getUserFromToken().subscribe(userId => {
       if (userId !== null) {
@@ -146,52 +106,6 @@ export class CrearPedidoComponent implements OnInit{
           usuarioId: userId
         };
 
-=======
-    // Mostrar un mensaje de confirmación
-    this.swalWithBootstrapButtons.fire({
-      title: "¿Estás seguro de crear el pedido?",
-      text: "No podrás revertirlo!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Si, crealo!",
-      cancelButtonText: "No, cancelalo!",
-      reverseButtons: true
-    }).then((result) => {
-      // Si se confirma la acción
-      if (result.isConfirmed) {
-        // Llamar al servicio para crear el pedido
-        this.pedidoServicio.addPedido(this.currentPedido)
-          .subscribe(response => {
-            // Mostrar un mensaje de éxito
-            Swal.fire({
-              position: "center",
-              icon: "success",
-              title: "Pedido correctamente creado",
-              showConfirmButton: false,
-              timer: 1500
-            });
-            // Limpiar el formulario
-            this.pedidoForm.reset();
-            // Limpiar los artículos
-            this.pedidoForm.reset({
-              usuarioId: '',
-              codigoPostal: '',
-              telefono: ''
-            });
-            // Limpiar los artículos
-            this.currentArticulos.clear();
-          // Si hay un error
-          }, error => {
-            console.error('Error al crear pedido:', error);
-            Swal.fire({
-              icon: "error",
-              title: "Oops...",
-              text: "Error al crear el pedido",
-            });
-          });
-      // Si se cancela la acción
-      } else if (result.dismiss === Swal.DismissReason.cancel) {
->>>>>>> 29c04f21e2afb9e3c515046a0b474e3637570e9b
         this.swalWithBootstrapButtons.fire({
           title: "¿Estás seguro de crear el pedido?",
           text: "No podrás revertirlo!",
@@ -261,15 +175,10 @@ export class CrearPedidoComponent implements OnInit{
     this.articuloServicio.getArticuloPorId(articuloId).subscribe(
       articulo => {
         if (articulo) {
-<<<<<<< HEAD
 
           this.articulos.push(this.fb.group({
-=======
-          // Añadir el artículo al array de artículos
-          this.currentArticulos.push(this.fb.group({
->>>>>>> 29c04f21e2afb9e3c515046a0b474e3637570e9b
             articuloId: [articuloId, Validators.required],
-            cantidad: [cantidad, [Validators.required, Validators.min(1)]]
+            cantidad: [cantidad, Validators.required]
           }));
 
           this.newArticuloForm.reset();
@@ -299,7 +208,7 @@ export class CrearPedidoComponent implements OnInit{
    * @memberof CrearPedidoComponent
    */
   onDeleteArticulo(index: number): void {
-    this.currentArticulos.removeAt(index);
+    this.articulos.removeAt(index);
   }
 
   /**
@@ -360,45 +269,6 @@ export class CrearPedidoComponent implements OnInit{
   }
 
   /**
-<<<<<<< HEAD
-=======
-   * Método para obtener el mensaje de error de un campo
-   * @param {string} field
-   * @returns {string | null}
-   * @memberof CrearPedidoComponent
-   */
-  getFieldError(field: string): string | null {
-    // Si no hay control
-    if (!this.pedidoForm.controls[field]) return null;
-    // Obtener los errores
-    const errors = this.pedidoForm.controls[field].errors || {};
-    // Obtener los errores
-    for (const key of Object.keys(errors)) {
-      switch (key) {
-        // Si el campo es requerido
-        case 'required':
-          return 'Este campo es requerido';
-        // Si el campo no tiene la longitud mínima
-        case 'minlength':
-          return `Mínimo ${errors['minlength'].requiredLength} caracteres`;
-        case 'pattern':
-          if(field === 'codigoPostal') {
-            return 'El código postal debe tener 5 dígitos';
-          } else if(field === 'telefono') {
-            return 'El teléfono debe tener 9 dígitos';
-          }
-      }
-    }
-    // Si el campo es usuarioId y no se ha encontrado el usuario
-    if (field === 'usuarioId' && errors['usuarioNotFound']) {
-      return `No existe ningún usuario con ese id`;
-    }
-
-    return null;
-  }
-
-  /**
->>>>>>> 29c04f21e2afb9e3c515046a0b474e3637570e9b
    * Método para obtener el mensaje de error de un campo en un array
    * @param {FormArray} formArray
    * @param {number} index
@@ -414,8 +284,6 @@ export class CrearPedidoComponent implements OnInit{
       switch (key) {
         case 'required':
           return 'Este campo es requerido';
-        case 'min':
-          return 'La cantidad debe ser mayor que 0';
       }
     }
 

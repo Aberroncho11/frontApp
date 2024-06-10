@@ -6,6 +6,28 @@ import { UsuarioServicio } from '../store/services/usuario.service';
 
 export class CustomValidators {
 
+  // Validador de correo electrónico
+  static postalCodeValidator: ValidatorFn = (control: AbstractControl) => {
+    // Expresión regular para validar el código postal
+    const postalCodePattern = /^[0-5][0-9]{4}$/;
+    // Si el código postal no cumple con la expresión regular
+    if (!postalCodePattern.test(control.value)) {
+      return { invalidPostalCode: true };
+    }
+    return null;
+  };
+
+  // Validador de número de teléfono
+  static phoneNumberValidator: ValidatorFn = (control: AbstractControl) => {
+    // Expresión regular para validar el número de teléfono
+    const phoneNumberPattern = /^[0-9]{9}$/;
+    // Si el número de teléfono no cumple con la expresión regular
+    if (!phoneNumberPattern.test(control.value)) {
+      return { invalidPhoneNumber: true };
+    }
+    return null;
+  };
+
   // Validador de contraseña
   static passwordValidator: ValidatorFn = (control: AbstractControl): Observable<ValidationErrors | null> => {
     // Retornar un observable
@@ -67,6 +89,21 @@ export class CustomValidators {
       );
     };
   }
+
+  static emailNotExistsValidator(usuarioServicio: UsuarioServicio): AsyncValidatorFn {
+    return (control: AbstractControl): Observable<ValidationErrors | null> => {
+      const email = control.value;
+      if (!email) {
+        return of(null);
+      }
+      return usuarioServicio.checkEmailNotExists(email).pipe(
+        map(exists => (exists ? { emailExists: true } : null)),
+        catchError(() => of(null))
+      );
+    };
+  }
+
+
 
   static nicknameExistsValidator(usuarioServicio: UsuarioServicio): AsyncValidatorFn {
     return (control: AbstractControl) => {

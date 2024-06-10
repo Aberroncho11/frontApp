@@ -131,7 +131,7 @@
                 <div class="mb-3">
                   <label for="foto" class="form-label">Foto</label>
                   <div class="mb-3">
-                    <img *ngIf="mostrarFoto" [src]="file">
+                    <img *ngIf="mostrarFoto" [src]="articuloForm.get('foto')?.value">
                   </div>
                   <div class="custom-file">
                     <input
