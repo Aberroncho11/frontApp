@@ -1,23 +1,27 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit, inject } from '@angular/core';
 import { Observable, catchError, map, of, tap } from 'rxjs';
 import { UsuarioDTO } from '../interfaces/usuario/usuarioDTO.interface';
 import { environment } from '../../environments/environments';
 import { UsuarioPostDTO } from '../interfaces/usuario/usuarioPostDTO.interface';
 import { UsuarioGetPorIdDTO } from '../interfaces/usuario/usuarioGetPorIdDTO.interface';
-import { AuthService } from '../../auth/services/auth.service';
 import { UsuarioPutDTO } from '../interfaces/usuario/usuarioPutDTO.interface';
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Injectable({
   providedIn: 'root'
 })
-export class UsuarioServicio {
+export class UsuarioServicio{
 
-  // Url base
   private baseUrl: string = environment.baseUrl;
 
-  // Constructor
-  constructor(private http: HttpClient, private authService: AuthService) { }
+  private http = inject(HttpClient);
+
+  private jwtHelper: JwtHelperService
+
+  constructor() {
+    this.jwtHelper = new JwtHelperService();
+   }
 
   /**
    * Método para verificar si el email ya existe
@@ -82,8 +86,23 @@ export class UsuarioServicio {
    * @memberof UsuarioServicio
    */
   getUsuarioPorId(idUsuario: number):Observable<UsuarioGetPorIdDTO> {
-    // Retornar usuario por id
+
     return this.http.get<UsuarioGetPorIdDTO>(`${this.baseUrl}/verUsuarioPorId/${idUsuario}`);
+  }
+
+  /**
+   * Método para obtener el usuario a partir del token
+   * @returns Observable<number | null>
+   * @memberof UsuarioServicio
+   */
+  getUserFromToken(): Observable<number | null> {
+    const token = localStorage.getItem('token');
+    if (token) {
+      const decodedToken = this.jwtHelper.decodeToken(token);
+      var idUsuario = Number(decodedToken['IdUsuario']);
+      return of(idUsuario);
+    }
+    return of(null);
   }
 
   /**

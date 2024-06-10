@@ -1,22 +1,24 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import Swal from 'sweetalert2';
-import { CustomValidators } from '../../../validators/validadores';
-import { UsuarioServicio } from '../../../store/services/usuario.service';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({
   templateUrl: './login-page.component.html',
   styleUrls: ['./login-page.component.css']
 })
-export class LoginPageComponent {
+export class LoginPageComponent implements OnInit{
 
-  // Injectamos el router
   private router = inject (Router);
 
-  // Injectamos un SweetAlert para mostrar mensajes
+  private authService = inject(AuthService);
+
+  private fb = inject(FormBuilder);
+
+  public loginForm! : FormGroup;
+
   public Toast = Swal.mixin({
     toast: true,
     position: "top-end",
@@ -29,30 +31,31 @@ export class LoginPageComponent {
     }
   });
 
-  loginForm : FormGroup;
+  ngOnInit(): void {
 
-  // Constructor
-  constructor(
-    private authService: AuthService,
-    private fb: FormBuilder,
-    private usuarioServicio: UsuarioServicio,
-    ) {
-      // Creamos un FormGroup con los campos del formulario
-      this.loginForm = this.fb.group({
-        // Definimos los campos del formulario con sus respectivas validaciones
-        email: ['', [Validators.required, Validators.email], [CustomValidators.emailNotExistsValidator(this.usuarioServicio)]],
-        password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(20)], [CustomValidators.passwordValidator]]
-      });
-    }
+    this.loginForm = this.fb.group({
 
-    ngOnInit(): void {
-      this.loginForm.get('email')?.valueChanges
-        .pipe(
-          debounceTime(1000),
-          distinctUntilChanged(),
-        )
-        .subscribe();
-    }
+      email: ['andujarpuertagabriel@gmail.com', [
+        Validators.required,
+        Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com|es)$/)]],
+
+      password: ['Aberroncho11', [
+        Validators.required,
+        Validators.minLength(6),
+        Validators.maxLength(20)]]
+    });
+
+    const campos = ['email', 'password'];
+
+    campos.forEach(campo => {
+
+      this.loginForm.get(campo)?.valueChanges.pipe(
+        debounceTime(1000),
+        distinctUntilChanged()
+      ).subscribe();
+
+    });
+  }
 
 
   /**
@@ -62,26 +65,37 @@ export class LoginPageComponent {
    */
   login(){
 
-    // Extraemos los valores del formulario
     const {email, password} = this.loginForm.value;
 
-    // Llamamos al servicio de autenticación para loguear el usuario
     this.authService.login(email, password)
-      .subscribe({
-        next: () => {
-          this.Toast.fire({
-            icon: 'success',
-            title: 'Loguedo correctamente'
-          });
-          // Redirigimos a la página de la tienda
-          this.router.navigateByUrl('/store');
-        },
-        // Si hay un error, mostramos un mensaje de error
-        error: (message) => {
-          Swal.fire('Login incorrecto, la contraseña no pertecene a ese email', message, 'error')
+
+    .subscribe({
+      next: () => {
+        this.Toast.fire({
+          icon: 'success',
+          title: 'Loguedo correctamente'
+        });
+        this.router.navigateByUrl('/store');
+      },
+
+      error: (errorResponse) => {
+        switch (errorResponse) {
+          case `No existe un usuario con el email ${email}`:
+            Swal.fire('Error de inicio de sesión', errorResponse, 'error');
+            break;
+          case "Login incorrecto, el email no coincide con la contraseña puesta o la contraseña es incorrecta":
+            Swal.fire('Error de inicio de sesión', errorResponse, 'error');
+            break;
+          case "El usuario con el que se quiere acceder está eliminado":
+            Swal.fire('Error de inicio de sesión', errorResponse, 'error');
+            break;
+          default:
+            Swal.fire('Error de inicio de sesión', 'Ha ocurrido un error durante el inicio de sesión', 'error');
         }
-      })
+      }
+    });
   }
+
 
   isValidField(field: string): boolean | null {
     return this.loginForm.controls[field].errors &&
@@ -89,8 +103,11 @@ export class LoginPageComponent {
   }
 
   getFieldError(field: string): string | null {
+
     if (!this.loginForm.controls[field]) return null;
+
     const errors = this.loginForm.controls[field].errors || {};
+
     for (const key of Object.keys(errors)) {
       switch (key) {
         case 'required':
@@ -99,17 +116,13 @@ export class LoginPageComponent {
           return `Mínimo ${errors['minlength'].requiredLength} caracteres`;
         case 'maxlength':
           return `Máximo ${errors['maxlength'].requiredLength} caracteres`;
+        case 'pattern':
+          return `El email no cumple el formato`;
       }
-    }
-
-    if (field === 'email' && errors['emailExists'] == null) {
-      return `Este email no existe`;
-    }
-    if (field === 'password' && errors['invalidPassword']) {
-      return `La contraseña debe contener al menos una letra mayúscula, una minúscula y un número`;
     }
 
     return null;
   }
+
 
 }

@@ -22,8 +22,7 @@
                       type="number"
                       id="idArticulo"
                       class="form-control"
-                      formControlName="idArticulo"
-                      [(ngModel)]="idArticulo">
+                      formControlName="idArticulo">
                     <span *ngIf="isValidFieldArticuloIdForm('idArticulo')" class="form-text text-danger">
                       {{getFieldErrorArticuloIdForm('idArticulo')}}
                     </span>
@@ -33,7 +32,7 @@
 
             </div>
 
-            <div class="mt-4 article-form">
+            <div *ngIf="mostrarArticulo" class="mt-4 article-form">
 
               <form [formGroup]="articuloForm" (ngSubmit)="modificarArticulo()">
                 <!-- Descripción -->
@@ -69,7 +68,6 @@
                     type="number"
                     id="peso"
                     formControlName="peso"
-                    step="0.01"
                     class="form-control"
                     placeholder="Peso">
                   <span *ngIf="isValidFieldArticuloForm('peso')" class="form-text text-danger">
@@ -83,7 +81,6 @@
                   type="number"
                   id="altura"
                   formControlName="altura"
-                  step="0.01"
                   class="form-control"
                   placeholder="Altura">
                   <span *ngIf="isValidFieldArticuloForm('altura')" class="form-text text-danger">
@@ -97,7 +94,7 @@
                   type="number"
                   id="ancho"
                   formControlName="ancho"
-                  step="0.01"
+
                   class="form-control"
                   placeholder="Ancho">
                   <span *ngIf="isValidFieldArticuloForm('ancho')" class="form-text text-danger">
@@ -111,7 +108,6 @@
                   type="number"
                   id="precio"
                   formControlName="precio"
-                  step="0.01"
                   class="form-control"
                   placeholder="Precio">
                   <span *ngIf="isValidFieldArticuloForm('precio')" class="form-text text-danger">
@@ -150,7 +146,7 @@
                   </span>
                 </div>
                 <!-- Botón para eliminar foto -->
-                <button type="button" class="btn btn-danger" *ngIf="mostrarFoto" (click)="eliminarFoto()">Eliminar Foto</button>
+                <button type="button" class="btn btn-danger me-2" *ngIf="mostrarFoto" (click)="eliminarFoto()">Eliminar Foto</button>
 
                 <button type="submit" class="btn btn-dark btn-block" [disabled]="articuloForm.invalid">Modificar Artículo</button>
 

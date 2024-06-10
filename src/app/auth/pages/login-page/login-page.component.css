@@ -1,37 +1,26 @@
-.background-radial-gradient {
-  background-color: hsl(22, 69%, 41%);
-  background-image: radial-gradient(650px circle at 0% 0%,
-      hsl(22, 69%, 61%) 15%,
-      hsl(22, 69%, 56%) 35%,
-      hsl(22, 69%, 46%) 75%,
-      hsl(22, 69%, 45%) 80%,
-      transparent 100%),
-    radial-gradient(1250px circle at 100% 100%,
-      hsl(22, 69%, 74%) 15%,
-      hsl(22, 69%, 61%) 35%,
-      hsl(22, 69%, 46%) 75%,
-      hsl(22, 69%, 45%) 80%,
-      transparent 100%);
-  min-height: 100vh;
+#login {
+  background: url('/assets/images/login.jpg') no-repeat center center;
+  background-size: cover;
+  color: #fff;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-#radius-shape-1 {
-  height: 220px;
-  width: 220px;
-  top: -60px;
-  left: -130px;
-  background: radial-gradient(#6b0000, #f80000);
-  overflow: hidden;
+.overlay {
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 50px 0;
+  min-height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: fadeIn 1s ease-in-out;
 }
 
-#radius-shape-2 {
-  border-radius: 38% 62% 63% 37% / 70% 33% 67% 30%;
-  bottom: -60px;
-  right: -110px;
-  width: 300px;
-  height: 300px;
-  background: radial-gradient(#6b0000, #f80000);
-  overflow: hidden;
+h1 {
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 1);
 }
 
 .bg-glass {
@@ -44,26 +33,12 @@
 }
 
 .form-control:focus {
-  box-shadow: 0 0 5px #f80000;
-  border-color: #f80000;
+  box-shadow: 0 0 5px #000000;
+  border-color: #000000;
   outline: none;
 }
 
-#iniciar, #registrar{
-  background-color: #f80000;
-  color: white;
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
 }
-
-#iniciar:hover, #registrar:hover{
-  background-color: #6b0000;
-}
-
-i{
-  color: #f80000;
-}
-
-i:hover{
-  color: #6b0000;
-}
-
-

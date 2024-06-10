@@ -78,11 +78,11 @@ export class ArticuloServicio {
     const formData: FormData = new FormData();
     formData.append('Descripcion', articulo.descripcion);
     formData.append('Fabricante', articulo.fabricante);
-    formData.append('Peso', articulo.peso.toString());
-    formData.append('Altura', articulo.altura.toString());
-    formData.append('Ancho', articulo.ancho.toString());
-    formData.append('Precio', articulo.precio.toString());
-    formData.append('EstadoArticulo', articulo.estadoArticulo.toString());
+    formData.append('Peso', articulo.peso);
+    formData.append('Altura', articulo.altura);
+    formData.append('Ancho', articulo.ancho);
+    formData.append('Precio', articulo.precio);
+    formData.append('EstadoArticulo', articulo.estadoArticulo);
 
     // Si hay foto
     if (articulo.foto) {
@@ -93,8 +93,8 @@ export class ArticuloServicio {
     return this.http.put<ArticuloPutDTO>(`${ this.baseUrl }/modificarArticulo/${ idArticulo }`, formData );
   }
 
-  borrarFoto(idArticulo: number): Observable<boolean> {
-    return this.http.delete(`${this.baseUrl}/borrarFoto/${idArticulo}`)
+  borrarFoto(foto : string): Observable<boolean> {
+    return this.http.delete(`${this.baseUrl}/borrarFoto/${foto}`)
       .pipe(
         map(resp => true),
         catchError(err => of(false)),

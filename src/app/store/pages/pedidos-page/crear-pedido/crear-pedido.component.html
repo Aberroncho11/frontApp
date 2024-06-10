@@ -16,14 +16,6 @@
           <form [formGroup]="pedidoForm" (ngSubmit)="crearPedido()" class="mt-4 article-form">
 
             <div class="mb-3">
-              <label for="usuarioId" class="form-label">Id usuario</label>
-              <input type="number" id="usuarioId" formControlName="usuarioId" class="form-control" placeholder="Id usuario">
-              <span class="form-text text-danger" *ngIf="isValidField('usuarioId')">
-                {{ getFieldError('usuarioId') }}
-              </span>
-            </div>
-
-            <div class="mb-3">
               <label for="codigoPostal" class="form-label">Código postal</label>
               <input type="text" id="codigoPostal" formControlName="codigoPostal" class="form-control" placeholder="Código postal">
               <span class="form-text text-danger" *ngIf="pedidoForm.get('codigoPostal')?.invalid && pedidoForm.get('codigoPostal')?.touched">
@@ -75,13 +67,11 @@
               <label class="form-label">Agregar artículo</label>
               <div class="input-group mb-3" [formGroup]="newArticuloForm">
                 <input type="number" class="form-control me-2" formControlName="articuloId" placeholder="Id artículo">
-                <span class="form-text text-danger" *ngIf="isValidField('articuloId')">
-                  {{ getArticleFieldError('articuloId') }}
-                </span>
+                <span class="form-text text-danger" *ngIf="newArticuloForm.get('articuloId')?.invalid && newArticuloForm.get('articuloId')?.touched">{{ getArticleFieldError('articuloId') }}</span>
+
                 <input type="number" class="form-control me-2" formControlName="cantidad" placeholder="Cantidad">
-                <span class="form-text text-danger" *ngIf="isValidField('cantidad')">
-                  {{ getArticleFieldError('cantidad') }}
-                </span>
+                <span class="form-text text-danger" *ngIf="newArticuloForm.get('cantidad')?.invalid && newArticuloForm.get('cantidad')?.touched">{{ getArticleFieldError('cantidad') }}</span>
+
               </div>
               <button class="btn btn-dark" type="button" (click)="onAddToArticulos()" [disabled]="newArticuloForm.invalid">Agregar artículo</button>
 
@@ -97,8 +87,8 @@
 
                 <div class="input-group mb-3" *ngFor="let articulo of articulos.controls; let i = index" [formGroupName]="i">
 
-                  <input type="number" formControlName="articuloId" class="form-control me-2" placeholder="Id artículo">
-                  <input type="number" formControlName="cantidad" class="form-control me-2" placeholder="Cantidad">
+                  <input type="number" formControlName="articuloId" class="form-control me-2" placeholder="Id artículo" readonly>
+                  <input type="number" formControlName="cantidad" class="form-control me-2" placeholder="Cantidad" readonly>
                   <button (click)="onDeleteArticulo(i)" class="btn btn-danger" type="button">Eliminar</button>
                   <span class="form-text text-danger" *ngIf="isValidFieldInArray(articulos, i)">Este campo es requerido</span>
 

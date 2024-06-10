@@ -4,10 +4,10 @@
 export interface ArticuloDTO {
   descripcion:     string;
   fabricante:      string;
-  peso:            number;
-  altura:          number;
-  ancho:           number;
-  precio:          number;
-  foto?:           File;
+  peso:            string;
+  altura:          string;
+  ancho:           string;
+  precio:          string;
+  foto?:           string;
   estadoArticulo:  string;
 }

@@ -5,10 +5,10 @@ export interface ArticuloAlmacenDTO {
   idArticulo:     number;
   descripcion:    string;
   fabricante:     string;
-  peso:           number;
-  altura:         number;
-  ancho:          number;
-  precio:         number;
+  peso:           string;
+  altura:         string;
+  ancho:          string;
+  precio:         string;
   foto?:           string;
   estadoArticulo: string;
   almacen:        AlmacenDTO[];

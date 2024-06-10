@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { LoginPageComponent } from './pages/login-page/login-page.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AuthRoutingModule } from './auth-routing.module';
-import { RegisterPageComponent } from './pages/register-page/register-page.component';
 import { LayoutAuthComponent } from './pages/layout-auth/layout-auth.component';
 
 @NgModule({
@@ -22,7 +21,6 @@ import { LayoutAuthComponent } from './pages/layout-auth/layout-auth.component';
 
     LoginPageComponent,
 
-    RegisterPageComponent,
 
     LayoutAuthComponent
 

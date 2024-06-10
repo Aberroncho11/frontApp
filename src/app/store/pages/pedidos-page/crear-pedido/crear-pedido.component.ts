@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import Swal from 'sweetalert2';
@@ -13,16 +13,12 @@ import { CustomValidators } from '../../../../validators/validadores';
   templateUrl: './crear-pedido.component.html',
   styleUrls: ['./crear-pedido.component.css']
 })
-export class CrearPedidoComponent {
+export class CrearPedidoComponent implements OnInit{
 
-  // Variables
-  // Formulario de pedido
-  public pedidoForm: FormGroup;
+  public pedidoForm!: FormGroup;
 
-  // Formulario de nuevo artículo
-  public newArticuloForm: FormGroup;
+  public newArticuloForm!: FormGroup;
 
-  // SweetAlert
   public swalWithBootstrapButtons = Swal.mixin({
     customClass: {
       confirmButton: "btn btn-success",
@@ -31,42 +27,64 @@ export class CrearPedidoComponent {
     buttonsStyling: false
   });
 
-  // Constructor
-  constructor(private pedidoServicio: PedidoServicio, private usuarioServicio: UsuarioServicio, private articuloServicio: ArticuloServicio, private fb: FormBuilder) {
+  private pedidoServicio = inject(PedidoServicio);
 
-    // Inicializar el formulario
+  private usuarioServicio = inject(UsuarioServicio);
+
+  private articuloServicio = inject(ArticuloServicio);
+
+  private fb = inject(FormBuilder);
+
+  // Inicializador
+  ngOnInit() {
+
     this.pedidoForm = this.fb.group({
-      usuarioId: [0, [Validators.required]],
       codigoPostal: ['', [Validators.required, CustomValidators.postalCodeValidator]],
-      ciudad: ['', [Validators.required]],
+      ciudad: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(20)]],
       telefono: ['', [Validators.required, CustomValidators.phoneNumberValidator]],
-      contacto: ['', [Validators.required]],
-      direccion: ['', [Validators.required]],
-      provincia: ['', [Validators.required]],
+      contacto: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(20)]],
+      direccion: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(40)]],
+      provincia: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(20)]],
       articulos: this.fb.array([], Validators.required)
     });
 
-    // Inicializar el formulario de nuevo artículo
     this.newArticuloForm = this.fb.group({
       articuloId: ['', [Validators.required]],
       cantidad: ['', Validators.required]
     });
 
-    // Suscribirse a los cambios del campo usuarioId
-    this.pedidoForm.get('usuarioId')?.valueChanges.pipe(
-      debounceTime(1000),
-      distinctUntilChanged()
-    ).subscribe();
+    const camposPedidoForm = ['codigoPostal', 'ciudad', 'telefono', 'contacto', 'direccion', 'provincia'];
+
+    camposPedidoForm.forEach(campo => {
+
+      this.pedidoForm.get(campo)?.valueChanges.pipe(
+        debounceTime(1000),
+        distinctUntilChanged()
+      ).subscribe();
+
+    });
+
+    const camposNewArticuloForm = ['articuloId', 'cantidad'];
+
+    camposNewArticuloForm.forEach(campo => {
+
+      this.pedidoForm.get(campo)?.valueChanges.pipe(
+        debounceTime(1000),
+        distinctUntilChanged()
+      ).subscribe();
+
+    });
 
   }
 
   // Getters
   get pedido(): PedidoPostDTO {
+
     return this.pedidoForm.value as PedidoPostDTO;
   }
 
-  // Getters
   get articulos(): FormArray {
+
     return this.pedidoForm.get('articulos') as FormArray;
   }
 
@@ -76,60 +94,63 @@ export class CrearPedidoComponent {
    * @memberof CrearPedidoComponent
    */
   crearPedido(): void {
-    // Comprobar si el formulario es válido
     if (this.pedidoForm.invalid) {
-      // Marcar todos los campos como tocados
       this.pedidoForm.markAllAsTouched();
       return;
     }
-    // Mostrar un mensaje de confirmación
-    this.swalWithBootstrapButtons.fire({
-      title: "¿Estás seguro de crear el pedido?",
-      text: "No podrás revertirlo!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Si, crealo!",
-      cancelButtonText: "No, cancelalo!",
-      reverseButtons: true
-    }).then((result) => {
-      // Si se confirma la acción
-      if (result.isConfirmed) {
-        // Llamar al servicio para crear el pedido
-        this.pedidoServicio.addPedido(this.pedido)
-          .subscribe(response => {
-            // Mostrar un mensaje de éxito
-            Swal.fire({
-              position: "center",
-              icon: "success",
-              title: "Pedido correctamente creado",
-              showConfirmButton: false,
-              timer: 1500
-            });
-            // Limpiar el formulario
-            this.pedidoForm.reset();
-            // Limpiar los artículos
-            this.pedidoForm.reset({
-              usuarioId: '',
-              codigoPostal: '',
-              telefono: ''
-            });
-            // Limpiar los artículos
-            this.articulos.clear();
-          // Si hay un error
-          }, error => {
-            console.error('Error al crear pedido:', error);
-            Swal.fire({
-              icon: "error",
-              title: "Oops...",
-              text: "Error al crear el pedido",
-            });
-          });
-      // Si se cancela la acción
-      } else if (result.dismiss === Swal.DismissReason.cancel) {
+
+    this.usuarioServicio.getUserFromToken().subscribe(userId => {
+      if (userId !== null) {
+        const pedidoData: PedidoPostDTO = {
+          ...this.pedidoForm.value,
+          usuarioId: userId
+        };
+
         this.swalWithBootstrapButtons.fire({
-          title: "Cancelado",
-          text: "Tu pedido no se ha creado",
-          icon: "error"
+          title: "¿Estás seguro de crear el pedido?",
+          text: "No podrás revertirlo!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonText: "Si, crealo!",
+          cancelButtonText: "No, cancelalo!",
+          reverseButtons: true
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.pedidoServicio.addPedido(pedidoData)
+              .subscribe(response => {
+                Swal.fire({
+                  position: "center",
+                  icon: "success",
+                  title: "Pedido correctamente creado",
+                  showConfirmButton: false,
+                  timer: 1500
+                });
+
+                this.pedidoForm.reset();
+                this.articulos.clear();
+
+              }, error => {
+                console.error('Error al crear pedido:', error);
+                Swal.fire({
+                  icon: "error",
+                  title: "Oops...",
+                  text: "Error al crear el pedido",
+                });
+              });
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            this.swalWithBootstrapButtons.fire({
+              title: "Cancelado",
+              text: "Tu pedido no se ha creado",
+              icon: "error"
+            });
+          }
+        });
+      } else {
+        console.error('No se pudo obtener el ID del usuario');
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "No se pudo obtener el ID del usuario",
         });
       }
     });
@@ -141,29 +162,28 @@ export class CrearPedidoComponent {
    * @memberof CrearPedidoComponent
    */
   onAddToArticulos(): void {
-    // Comprobar si el formulario es válido
+
     if (this.newArticuloForm.invalid) {
-      // Marcar todos los campos como tocados
       this.newArticuloForm.markAllAsTouched();
       return;
     }
-    // Obtener el id y la cantidad del artículo
+
     const articuloId = this.newArticuloForm.get('articuloId')?.value;
+
     const cantidad = this.newArticuloForm.get('cantidad')?.value;
-    // Función para comprobar si el artículo existe
+
     this.articuloServicio.getArticuloPorId(articuloId).subscribe(
       articulo => {
-        // Si existe el artículo
         if (articulo) {
-          // Añadir el artículo al array de artículos
+
           this.articulos.push(this.fb.group({
             articuloId: [articuloId, Validators.required],
             cantidad: [cantidad, Validators.required]
           }));
-          // Limpiar el formulario de nuevo artículo
+
           this.newArticuloForm.reset();
+
         } else {
-          // Mostrar un mensaje de error
           Swal.fire({
             icon: 'error',
             title: 'Error',
@@ -172,11 +192,10 @@ export class CrearPedidoComponent {
         }
       },
       error => {
-        // Mostrar un mensaje de error
         Swal.fire({
           icon: 'error',
           title: 'Error',
-          text: 'No existe ningún artículo con este ID',
+          text: `No existe ningún artículo con el id ${articuloId}`,
         });
       }
     );
@@ -199,8 +218,42 @@ export class CrearPedidoComponent {
    * @memberof CrearPedidoComponent
    */
   isValidField(field: string): boolean | null {
-    return this.pedidoForm.controls[field].errors
-    && this.pedidoForm.controls[field].touched;
+    const control = this.pedidoForm.controls[field];
+    return control?.errors !== null && control?.touched;
+  }
+
+  /**
+   * Método para obtener el mensaje de error de un campo
+   * @param {string} field
+   * @returns {string | null}
+   * @memberof CrearPedidoComponent
+   */
+  getFieldError(field: string): string | null {
+
+    const control = this.pedidoForm.controls[field];
+    if (!control) return null;
+
+    const errors = control.errors || {};
+
+    for (const key of Object.keys(errors)) {
+      switch (key) {
+        case 'required':
+          return 'Este campo es requerido';
+        case 'minlength':
+          return `Mínimo ${errors['minlength'].requiredLength} caracteres`;
+        case 'maxlength':
+          return `La longitud máxima debe ser de ${errors['maxlength'].requiredLength} caracteres`;
+      }
+    }
+
+    if (field === 'codigoPostal' && control.hasError('postalCodeValidator')) {
+      return 'Código postal inválido';
+    }
+    if (field === 'telefono' && control.hasError('phoneNumberValidator')) {
+      return 'Número de teléfono inválido';
+    }
+    return null;
+
   }
 
   /**
@@ -216,36 +269,6 @@ export class CrearPedidoComponent {
   }
 
   /**
-   * Método para obtener el mensaje de error de un campo
-   * @param {string} field
-   * @returns {string | null}
-   * @memberof CrearPedidoComponent
-   */
-  getFieldError(field: string): string | null {
-    // Si no hay control
-    if (!this.pedidoForm.controls[field]) return null;
-    // Obtener los errores
-    const errors = this.pedidoForm.controls[field].errors || {};
-    // Obtener los errores
-    for (const key of Object.keys(errors)) {
-      switch (key) {
-        // Si el campo es requerido
-        case 'required':
-          return 'Este campo es requerido';
-        // Si el campo no tiene la longitud minima
-        case 'minlength':
-          return `Mínimo ${errors['minlength'].requiredLength} caracteres`;
-      }
-    }
-    // Si el campo es usuarioId y no se ha encontrado el usuario
-    if (field === 'usuarioId' && errors['usuarioNotFound']) {
-      return `No existe ningún usuario con ese id`;
-    }
-
-    return null;
-  }
-
-  /**
    * Método para obtener el mensaje de error de un campo en un array
    * @param {FormArray} formArray
    * @param {number} index
@@ -253,23 +276,20 @@ export class CrearPedidoComponent {
    * @memberof CrearPedidoComponent
    */
   getArticleFieldError(field: string): string | null {
-    // Si no hay control
-    if (!this.newArticuloForm.controls[field]) return null;
-    // Obtener los errores
-    const errors = this.newArticuloForm.controls[field].errors || {};
-    // Recorrer los errores
+    const control = this.newArticuloForm.controls[field];
+    if (!control) return null;
+
+    const errors = control.errors || {};
     for (const key of Object.keys(errors)) {
       switch (key) {
-        // Si el campo es requerido
         case 'required':
           return 'Este campo es requerido';
       }
     }
-    // Si el campo es articuloId y no se ha encontrado el artículo
-    if (field === 'articuloId' && errors['articuloNotFound']) {
+
+    if (field === 'articuloId' && control.hasError('articuloNotFound')) {
       return `No existe ningún artículo con ese id`;
     }
-
     return null;
   }
 }
