@@ -18,33 +18,33 @@
             <div class="mb-3">
               <label for="perfil" class="form-label">Id perfil</label>
               <input type="number" id="perfil" formControlName="perfil" class="form-control" placeholder="Id perfil">
-              <div *ngIf="isValidField('perfil')" class="invalid-feedback">
-                {{ getFieldError('perfil') }}
-              </div>
+              <span *ngIf="isValidField('perfil')" class="form-text text-danger">
+                {{getFieldError('perfil')}}
+              </span>
             </div>
 
             <div class="mb-3">
               <label for="password" class="form-label">Password</label>
               <input type="text" id="password" formControlName="password" class="form-control" placeholder="Password">
-              <div *ngIf="isValidField('password')" class="invalid-feedback">
-                {{ getFieldError('password') }}
-              </div>
+              <span *ngIf="isValidField('password')" class="form-text text-danger">
+                {{getFieldError('password')}}
+              </span>
             </div>
 
             <div class="mb-3">
               <label for="email" class="form-label">Email</label>
               <input type="text" id="email" formControlName="email" class="form-control" placeholder="Email">
-              <div *ngIf="isValidField('email')" class="invalid-feedback">
-                {{ getFieldError('email') }}
-              </div>
+              <span *ngIf="isValidField('email')" class="form-text text-danger">
+                {{getFieldError('email')}}
+              </span>
             </div>
 
             <div class="mb-3">
               <label for="nickname" class="form-label">Nickname</label>
               <input type="text" id="nickname" formControlName="nickname" class="form-control" placeholder="Nickname">
-              <div *ngIf="isValidField('nickname')" class="invalid-feedback">
-                {{ getFieldError('nickname') }}
-              </div>
+              <span *ngIf="isValidField('nickname')" class="form-text text-danger">
+                {{getFieldError('nickname')}}
+              </span>
             </div>
 
             <button type="submit" class="btn btn-dark w-100" [disabled]="usuarioForm.invalid">Crear Usuario</button>

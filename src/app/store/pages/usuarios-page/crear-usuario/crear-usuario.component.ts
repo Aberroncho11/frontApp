@@ -3,6 +3,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { UsuarioServicio } from '../../../services/usuario.service';
 import { UsuarioPostDTO } from '../../../interfaces/usuario/usuarioPostDTO.interface';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
+import { CustomValidators } from '../../../../validators/validadores';
 
 @Component({
   selector: 'crear-usuario',
@@ -18,11 +20,39 @@ export class CrearUsuarioComponent {
   constructor(private usuarioServicio: UsuarioServicio, private fb: FormBuilder) {
     // Inicializar el formulario
     this.usuarioForm = this.fb.group({
-      perfil: ['', [Validators.required]],
-      password: ['', [Validators.required]],
-      email: ['', [Validators.required]],
-      nickname: ['', [Validators.required]]
+      perfil: ['', [Validators.required, Validators.pattern('^[1-3]$')]],
+      password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(20)], [CustomValidators.passwordValidator]],
+      email: ['', [Validators.required, Validators.email, Validators.maxLength(30)], [CustomValidators.emailExistsValidator(this.usuarioServicio)]],
+      nickname: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(20)], [CustomValidators.nicknameExistsValidator(this.usuarioServicio)]]
     });
+
+    this.usuarioForm.get('perfil')?.valueChanges
+      .pipe(
+        debounceTime(1000),
+        distinctUntilChanged(),
+      )
+      .subscribe();
+
+    this.usuarioForm.get('email')?.valueChanges
+      .pipe(
+        debounceTime(1000),
+        distinctUntilChanged(),
+      )
+      .subscribe();
+
+    this.usuarioForm.get('nickname')?.valueChanges
+      .pipe(
+        debounceTime(1000),
+        distinctUntilChanged(),
+      )
+      .subscribe();
+
+    this.usuarioForm.get('password')?.valueChanges
+      .pipe(
+        debounceTime(1000),
+        distinctUntilChanged(),
+      )
+      .subscribe();
   }
 
   // Getter para obtener los valores del formulario
@@ -92,22 +122,30 @@ export class CrearUsuarioComponent {
    * @returns
    */
   getFieldError(field: string): string | null {
-    // Comprobamos si el campo tiene errores
-    const control = this.usuarioForm.get(field);
-    // Si no hay control
-    if (!control) return null;
-    // Obtenemos los errores
-    const errors = control.errors || {};
-    // Recorremos los errores
+    if (!this.usuarioForm.controls[field]) return null;
+    const errors = this.usuarioForm.controls[field].errors || {};
     for (const key of Object.keys(errors)) {
       switch (key) {
-        // Comprobamos el tipo de error
         case 'required':
           return 'Este campo es requerido';
-        case 'email':
-          return 'Correo electrónico inválido';
+        case 'minlength':
+          return `Mínimo ${errors['minlength'].requiredLength} caracteres`;
+        case 'maxlength':
+          return `Máximo ${errors['maxlength'].requiredLength} caracteres`;
+        case 'pattern':
+          return 'El perfil tiene que ser un número entre 1 y 3';
       }
     }
+    if (field === 'nickname' && errors['nicknameExists']) {
+      return `Este nickname ya existe`;
+    }
+    if (field === 'email' && errors['emailExists']) {
+      return `Este email ya existe`;
+    }
+    if (field === 'password' && errors['invalidPassword']) {
+      return `La contraseña debe contener al menos una letra mayúscula, una minúscula y un número`;
+    }
+
     return null;
   }
 }

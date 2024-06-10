@@ -21,8 +21,12 @@ import { LayoutAuthComponent } from './pages/layout-auth/layout-auth.component';
 
     LoginPageComponent,
 
+<<<<<<< HEAD
 
     LayoutAuthComponent
+=======
+    LayoutAuthComponent,
+>>>>>>> 29c04f21e2afb9e3c515046a0b474e3637570e9b
 
   ]
 })

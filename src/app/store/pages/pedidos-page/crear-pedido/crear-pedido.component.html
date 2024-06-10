@@ -18,61 +18,72 @@
             <div class="mb-3">
               <label for="codigoPostal" class="form-label">Código postal</label>
               <input type="text" id="codigoPostal" formControlName="codigoPostal" class="form-control" placeholder="Código postal">
-              <span class="form-text text-danger" *ngIf="pedidoForm.get('codigoPostal')?.invalid && pedidoForm.get('codigoPostal')?.touched">
-                Código postal inválido
+              <span *ngIf="isValidField('codigoPostal')" class="form-text text-danger">
+                {{getFieldError('codigoPostal')}}
               </span>
             </div>
 
             <div class="mb-3">
               <label for="ciudad" class="form-label">Ciudad</label>
               <input type="text" id="ciudad" formControlName="ciudad" class="form-control" placeholder="Ciudad">
-              <span class="form-text text-danger" *ngIf="isValidField('ciudad')">
-                {{ getFieldError('ciudad') }}
+              <span *ngIf="isValidField('ciudad')" class="form-text text-danger">
+                {{getFieldError('ciudad')}}
               </span>
             </div>
 
             <div class="mb-3">
               <label for="telefono" class="form-label">Teléfono</label>
               <input type="text" id="telefono" formControlName="telefono" class="form-control" placeholder="Teléfono">
-              <span class="form-text text-danger" *ngIf="pedidoForm.get('telefono')?.invalid && pedidoForm.get('telefono')?.touched">
-                Número de teléfono inválido
+              <span *ngIf="isValidField('telefono')" class="form-text text-danger">
+                {{getFieldError('telefono')}}
               </span>
             </div>
 
             <div class="mb-3">
               <label for="contacto" class="form-label">Contacto</label>
               <input type="text" id="contacto" formControlName="contacto" class="form-control" placeholder="Contacto personal">
-              <span class="form-text text-danger" *ngIf="isValidField('contacto')">
-                {{ getFieldError('contacto') }}
+              <span *ngIf="isValidField('contacto')" class="form-text text-danger">
+                {{getFieldError('contacto')}}
               </span>
             </div>
 
             <div class="mb-3">
               <label for="direccion" class="form-label">Dirección</label>
               <input type="text" id="direccion" formControlName="direccion" class="form-control" placeholder="Dirección">
-              <span class="form-text text-danger" *ngIf="isValidField('direccion')">
-                {{ getFieldError('direccion') }}
+              <span *ngIf="isValidField('direccion')" class="form-text text-danger">
+                {{getFieldError('direccion')}}
               </span>
             </div>
 
             <div class="mb-3">
               <label for="provincia" class="form-label">Provincia</label>
               <input type="text" id="provincia" formControlName="provincia" class="form-control" placeholder="Provincia">
-              <span class="form-text text-danger" *ngIf="isValidField('provincia')">
-                {{ getFieldError('provincia') }}
+              <span *ngIf="isValidField('provincia')" class="form-text text-danger">
+                {{getFieldError('provincia')}}
               </span>
             </div>
 
             <div class="mb-3">
               <label class="form-label">Agregar artículo</label>
-              <div class="input-group mb-3" [formGroup]="newArticuloForm">
+              <form class="input-group mb-3" [formGroup]="newArticuloForm">
                 <input type="number" class="form-control me-2" formControlName="articuloId" placeholder="Id artículo">
+<<<<<<< HEAD
                 <span class="form-text text-danger" *ngIf="newArticuloForm.get('articuloId')?.invalid && newArticuloForm.get('articuloId')?.touched">{{ getArticleFieldError('articuloId') }}</span>
 
                 <input type="number" class="form-control me-2" formControlName="cantidad" placeholder="Cantidad">
                 <span class="form-text text-danger" *ngIf="newArticuloForm.get('cantidad')?.invalid && newArticuloForm.get('cantidad')?.touched">{{ getArticleFieldError('cantidad') }}</span>
 
               </div>
+=======
+                <span *ngIf="isValidField('articuloId')" class="form-text text-danger">
+                  {{getFieldError('articuloId')}}
+                </span>
+                <input type="number" class="form-control me-2" formControlName="cantidad" placeholder="Cantidad">
+                <span *ngIf="isValidField('cantidad')" class="form-text text-danger">
+                  {{getFieldError('cantidad')}}
+                </span>
+              </form>
+>>>>>>> 29c04f21e2afb9e3c515046a0b474e3637570e9b
               <button class="btn btn-dark" type="button" (click)="onAddToArticulos()" [disabled]="newArticuloForm.invalid">Agregar artículo</button>
 
 
@@ -85,12 +96,12 @@
 
               <div formArrayName="articulos">
 
-                <div class="input-group mb-3" *ngFor="let articulo of articulos.controls; let i = index" [formGroupName]="i">
+                <div class="input-group mb-3" *ngFor="let articulo of currentArticulos.controls; let i = index" [formGroupName]="i">
 
                   <input type="number" formControlName="articuloId" class="form-control me-2" placeholder="Id artículo" readonly>
                   <input type="number" formControlName="cantidad" class="form-control me-2" placeholder="Cantidad" readonly>
                   <button (click)="onDeleteArticulo(i)" class="btn btn-danger" type="button">Eliminar</button>
-                  <span class="form-text text-danger" *ngIf="isValidFieldInArray(articulos, i)">Este campo es requerido</span>
+                  <span class="form-text text-danger" *ngIf="isValidFieldInArray(currentArticulos, i)">Este campo es requerido</span>
 
                 </div>
 

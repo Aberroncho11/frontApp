@@ -11,14 +11,40 @@ import { debounceTime, distinctUntilChanged } from 'rxjs';
 })
 export class LoginPageComponent implements OnInit{
 
+<<<<<<< HEAD
+=======
+  // Inyectamos los servicios necesarios
+>>>>>>> 29c04f21e2afb9e3c515046a0b474e3637570e9b
   private router = inject (Router);
+  private authService = inject (AuthService);
+  private fb = inject (FormBuilder);
 
+<<<<<<< HEAD
   private authService = inject(AuthService);
 
   private fb = inject(FormBuilder);
 
   public loginForm! : FormGroup;
 
+=======
+  // Creamos el formulario de login
+  public loginForm: FormGroup = this.fb.group({
+
+    email: ['', [
+      Validators.required,
+      Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com|es)$/)],
+    ],
+
+    password: ['', [
+      Validators.required,
+      Validators.minLength(6),
+      Validators.maxLength(20)
+    ]]
+
+  });
+
+  // Creamos un toast para mostrar mensajes
+>>>>>>> 29c04f21e2afb9e3c515046a0b474e3637570e9b
   public Toast = Swal.mixin({
     toast: true,
     position: "top-end",
@@ -33,6 +59,7 @@ export class LoginPageComponent implements OnInit{
 
   ngOnInit(): void {
 
+<<<<<<< HEAD
     this.loginForm = this.fb.group({
 
       email: ['andujarpuertagabriel@gmail.com', [
@@ -47,6 +74,10 @@ export class LoginPageComponent implements OnInit{
 
     const campos = ['email', 'password'];
 
+=======
+    const campos = ['email', 'password'];
+
+>>>>>>> 29c04f21e2afb9e3c515046a0b474e3637570e9b
     campos.forEach(campo => {
 
       this.loginForm.get(campo)?.valueChanges.pipe(
@@ -55,10 +86,14 @@ export class LoginPageComponent implements OnInit{
       ).subscribe();
 
     });
+<<<<<<< HEAD
+=======
+
+>>>>>>> 29c04f21e2afb9e3c515046a0b474e3637570e9b
   }
 
 
-  /**
+    /**
    * Método para loguear un usuario
    * @returns void
    * @memberof LoginPageComponent
@@ -121,6 +156,13 @@ export class LoginPageComponent implements OnInit{
       }
     }
 
+<<<<<<< HEAD
+=======
+    // if (field === 'email' && errors['emailExists'] == null) {
+    //   return `Este email no existe`;
+    // }
+
+>>>>>>> 29c04f21e2afb9e3c515046a0b474e3637570e9b
     return null;
   }
 
