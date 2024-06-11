@@ -17,7 +17,7 @@
 
               <form [formGroup]="articuloIdForm" (ngSubmit)="verArticulosPorNombre()">
                 <div class="mb-3">
-                  <label for="nombre" class="form-label">Id</label>
+                  <label for="nombre" class="form-label">Nombre</label>
                   <select id="nombre" class="form-select" formControlName="nombre" aria-label="Nombre">
                     <option value="">Selecciona un Nombre</option>
                     <option *ngFor="let articulo of articulosLista" [value]="articulo.nombre">{{ articulo.nombre }}</option>

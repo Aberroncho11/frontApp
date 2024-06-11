@@ -55,18 +55,20 @@ export class CrearPedidoComponent implements OnInit{
     });
 
     this.newArticuloForm = this.fb.group({
-      articuloId: [''],
+      nombre: [''],
       cantidad: ['']
     });
 
     this.articuloServicio.getArticulos()
     .subscribe({
       next: (articulos: ArticuloAlmacenDTO[]) => {
+
         articulos.forEach(articulo => {
           articulo.almacen.forEach(estanteria => {
             if (estanteria.cantidad > 0) {
               this.articulosLista.push(articulo);
             }
+            console.log(this.articulosLista)
           });
         });
       },
@@ -88,7 +90,7 @@ export class CrearPedidoComponent implements OnInit{
 
     });
 
-    const camposNewArticuloForm = ['articuloId', 'cantidad'];
+    const camposNewArticuloForm = ['nombre', 'cantidad'];
 
     camposNewArticuloForm.forEach(campo => {
 
@@ -112,15 +114,15 @@ export class CrearPedidoComponent implements OnInit{
     return this.pedidoForm.get('articulos') as FormArray;
   }
 
-  onArticuloIdChange(): void {
-    var articuloId = this.newArticuloForm.get('articuloId')?.value;
-    if (articuloId) {
-        this.updateCantidadDisponible(articuloId);
+  onArticuloNombreChange(): void {
+    var nombre = this.newArticuloForm.get('nombre')?.value;
+    if (nombre) {
+        this.updateCantidadDisponible(nombre);
     }
   }
 
-  updateCantidadDisponible(idArticulo: number): void {
-    const articuloSeleccionado = this.articulosLista.find(articulo => articulo.idArticulo == idArticulo);
+  updateCantidadDisponible(nombre: string): void {
+    const articuloSeleccionado = this.articulosLista.find(articulo => articulo.nombre == nombre);
     if (articuloSeleccionado) {
         var estanteria = articuloSeleccionado.almacen;
         estanteria.forEach(estanteria => {
@@ -217,16 +219,16 @@ export class CrearPedidoComponent implements OnInit{
       return;
     }
 
-    const articuloId = this.newArticuloForm.get('articuloId')?.value;
+    const nombre = this.newArticuloForm.get('nombre')?.value;
 
     const cantidad = this.newArticuloForm.get('cantidad')?.value;
 
-    this.articuloServicio.getArticuloPorNombre(articuloId).subscribe(
+    this.articuloServicio.getArticuloPorNombre(nombre).subscribe(
       articulo => {
         if (articulo) {
 
           this.articulos.push(this.fb.group({
-            articuloId: [articuloId, Validators.required],
+            nombre: [nombre, Validators.required],
             cantidad: [cantidad, Validators.required]
           }));
 
@@ -236,7 +238,7 @@ export class CrearPedidoComponent implements OnInit{
           Swal.fire({
             icon: 'error',
             title: 'Error',
-            text: `No existe ningún artículo con el id ${articuloId}`,
+            text: `No existe ningún artículo con el nombre ${nombre}`,
           });
         }
       },
@@ -244,7 +246,7 @@ export class CrearPedidoComponent implements OnInit{
         Swal.fire({
           icon: 'error',
           title: 'Error',
-          text: `No existe ningún artículo con el id ${articuloId}`,
+          text: `No existe ningún artículo con el nombre ${nombre}`,
         });
       }
     );

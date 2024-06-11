@@ -11,10 +11,8 @@ import { AuthStatus } from './auth/interfaces';
 })
 export class AppComponent {
 
-  // Inyectar authService
   private authService = inject( AuthService );
 
-  // Inyectar router
   private router = inject( Router );
 
   /*
@@ -23,7 +21,6 @@ export class AppComponent {
     * @memberof AppComponent
   */
   public finishedAuthCheck = computed<boolean>( () => {
-    // Si la autenticación está en proceso
     if ( this.authService.authStatus() === AuthStatus.checking ) {
       return false;
     }
@@ -38,19 +35,15 @@ export class AppComponent {
   */
   public authStatusChangedEffect = effect(() => {
 
-    // Verificar estado de autenticación
     switch( this.authService.authStatus() ) {
 
-      // Si la autenticación está en proceso
       case AuthStatus.checking:
         return;
 
-      // Si el usuario está autenticado
       case AuthStatus.authenticated:
         this.router.navigateByUrl('/store');
         return;
 
-      // Si el usuario no está autenticado
       case AuthStatus.notAuthenticated:
         this.router.navigateByUrl('/auth/login');
         return;

@@ -3,8 +3,9 @@ import { CommonModule } from '@angular/common';
 
 @NgModule({
   imports: [
-
     CommonModule,
+  ],
+  declarations: [
   ]
 })
 

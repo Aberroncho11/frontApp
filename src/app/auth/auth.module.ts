@@ -12,7 +12,7 @@ import { LayoutAuthComponent } from './pages/layout-auth/layout-auth.component';
 
     AuthRoutingModule,
 
-    ReactiveFormsModule
+    ReactiveFormsModule,
 
   ],
   declarations: [
@@ -21,8 +21,7 @@ import { LayoutAuthComponent } from './pages/layout-auth/layout-auth.component';
 
     LoginPageComponent,
 
-
-    LayoutAuthComponent
+    LayoutAuthComponent,
 
   ]
 })

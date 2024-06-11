@@ -1,42 +1,53 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import Swal from 'sweetalert2';
-import { UsuarioGetPorNicknameDTO } from '../../../interfaces/usuario/usuarioGetPorIdDTO.interface';
 import { UsuarioServicio } from '../../../services/usuario.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CustomValidators } from '../../../../validators/validadores';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
+import { UsuarioDTO } from '../../../interfaces/usuario/usuarioDTO.interface';
 
 @Component({
   selector: 'eliminar-usuario',
   templateUrl: './eliminar-usuario.component.html',
   styleUrls: ['./eliminar-usuario.component.css']
 })
-export class EliminarUsuarioComponent {
+export class EliminarUsuarioComponent implements OnInit{
 
-  // Usuario
-  public usuario: UsuarioGetPorNicknameDTO | null = null;
+  public usuario: UsuarioDTO | null = null;
 
-  // Mostrar tabla
   public mostrarTabla: boolean = false;
 
-  // Formulario de Usuario
-  public usuarioForm: FormGroup;
+  public usuarioForm!: FormGroup;
 
-  // Usuario cargado
   public usuarioCargado: boolean = false;
 
-  // Constructor
-  constructor(private usuarioServicio: UsuarioServicio, private fb: FormBuilder) {
-    // Inicializar el formulario
+  private usuarioServicio = inject(UsuarioServicio);
+
+  private fb = inject(FormBuilder);
+
+  public usuariosLista: UsuarioDTO[] = [];
+
+  ngOnInit() {
+
     this.usuarioForm = this.fb.group({
-      idUsuario: [0, [ Validators.required ], CustomValidators.usuarioExistente(this.usuarioServicio)],
+      nickname: ['', [ Validators.required ], CustomValidators.usuarioExistente(this.usuarioServicio)],
     });
 
-    // Suscribirse a los cambios del campo idUsuario
-    this.usuarioForm.get('idArticulo')?.valueChanges.pipe(
+    this.usuarioForm.get('nickname')?.valueChanges.pipe(
       debounceTime(1000),
       distinctUntilChanged(),
     ).subscribe();
+
+    this.usuarioServicio.getUsuarios()
+    .subscribe({
+      next: (usuarios: UsuarioDTO[]) => {
+        this.usuariosLista = usuarios;
+      },
+      error: (error) => {
+        console.error('Error al obtener los usuarios:', error);
+      }
+    });
+
   }
 
   /**
@@ -45,18 +56,14 @@ export class EliminarUsuarioComponent {
    * @memberof EliminarUsuarioComponent
    */
   verUsuariosPorNickname(): void {
-    // Obtener el id del usuario
-    const idUsuario = this.usuarioForm.get('idUsuario')?.value;
-    // Si existe el id del usuario
-    if (idUsuario) {
-      // Obtener el usuario por id
-      this.usuarioServicio.getUsuarioPorNickname(idUsuario).subscribe(
+    const nickname = this.usuarioForm.get('nickname')?.value;
+    if (nickname) {
+      this.usuarioServicio.getUsuarioPorNickname(nickname).subscribe(
         usuario => {
           this.usuario = usuario;
           this.mostrarTabla = true;
           this.usuarioCargado = true;
         },
-        // Manejo de errores
         error => {
           Swal.fire({
             position: "center",
@@ -76,14 +83,10 @@ export class EliminarUsuarioComponent {
    * @memberof EliminarUsuarioComponent
    */
   eliminarUsuario(): void {
-    // Obtener el id del usuario
-    const idUsuario = this.usuarioForm.get('idUsuario')?.value;
-    // Si existe el id del usuario
-    if (idUsuario) {
-      // Eliminar el usuario
-      this.usuarioServicio.deleteUsuario(idUsuario).subscribe(
+    const nickname = this.usuarioForm.get('nickname')?.value;
+    if (nickname) {
+      this.usuarioServicio.deleteUsuario(nickname).subscribe(
         response => {
-          // Mostrar mensaje de éxito
           Swal.fire({
             position: "center",
             icon: "success",
@@ -92,18 +95,14 @@ export class EliminarUsuarioComponent {
             timer: 1500
           });
 
-          // Reiniciar las variables
           this.usuarioForm.reset();
 
-          // Reiniciar el usuario
           this.usuario = null;
 
-          // Reiniciar la tabla
           this.mostrarTabla = false;
 
         },
         error => {
-          // Mostrar mensaje de error
           Swal.fire({
             position: "center",
             icon: "error",
@@ -123,7 +122,6 @@ export class EliminarUsuarioComponent {
    * @memberof EliminarUsuarioComponent
    */
   isValidFieldUsuarioForm( field: string): boolean | null{
-    // Comprobar si el campo es inválido
     return this.usuarioForm.controls[field].errors
     && this.usuarioForm.controls[field].touched
   }
@@ -136,16 +134,12 @@ export class EliminarUsuarioComponent {
    */
   getFieldErrorUsuarioForm(field: string): string | null{
 
-    // Si el campo no existe
     const control = this.usuarioForm?.get(field);
 
-    // Si no hay control
     if (!control) return null;
 
-    // Obtener los errores
     const errors = control.errors || {};
 
-    // Si el field es idUsuario y hay un error de usuarioNotFound
     if (field === 'idUsuario' && errors['usuarioNotFound']) {
       return `No existe ningún usuario con ese id`;
     }

@@ -1,3 +1,10 @@
+<div class="loading-overlay" *ngIf="isLoading">
+  <div class="spinner-container">
+    <div class="spinner"></div>
+    <h2>Loading...</h2>
+  </div>
+</div>
+
 <div class="titulo">
 
   <div class="overlay">
@@ -6,7 +13,7 @@
 
       <div class="row align-items-center justify-content-center">
 
-        <div class="col-11 col-md-11 col-lg-11  text-center">
+        <div class="col-11 col-md-11 col-lg-8 text-center">
 
           <video autoplay loop muted playsinline>
             <source src="/assets/images/inicio.mp4" type="video/mp4">

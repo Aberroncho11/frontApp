@@ -1,8 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { UsuarioServicio } from '../../../services/usuario.service';
-import { UsuarioGetPorNicknameDTO } from '../../../interfaces/usuario/usuarioGetPorIdDTO.interface';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { UsuarioPutDTO } from '../../../interfaces/usuario/usuarioPutDTO.interface';
 import { UsuarioDTO } from '../../../interfaces/usuario/usuarioDTO.interface';
@@ -12,19 +11,24 @@ import { UsuarioDTO } from '../../../interfaces/usuario/usuarioDTO.interface';
   templateUrl: './modificar-usuario.component.html',
   styleUrls: ['./modificar-usuario.component.css']
 })
-export class ModificarUsuarioComponent {
 
-  public usuarioForm: FormGroup;
+export class ModificarUsuarioComponent implements OnInit {
 
-  public usuarioIdForm: FormGroup;
+  public usuarioForm!: FormGroup;
 
-  public usuario: UsuarioGetPorNicknameDTO | null = null;
+  public usuarioIdForm!: FormGroup;
+
+  public usuario: UsuarioDTO | null = null;
 
   public usuariosLista: UsuarioDTO[] = [];
 
   public mostrarTabla: boolean = false;
 
-  constructor(private usuarioServicio: UsuarioServicio, private fb: FormBuilder) {
+  private usuarioServicio = inject(UsuarioServicio);
+
+  private fb = inject(FormBuilder);
+
+  ngOnInit() {
 
     this.usuarioForm = this.fb.group({
       perfil: [0, [Validators.required]],
@@ -49,9 +53,10 @@ export class ModificarUsuarioComponent {
         this.usuariosLista = usuarios;
       },
       error: (error) => {
-        console.error('Error al obtener los artículos:', error);
+        console.error('Error al obtener los usuarios:', error);
       }
     });
+
   }
 
   /**
@@ -66,30 +71,30 @@ export class ModificarUsuarioComponent {
   }
 
   /**
-   * Método para ver un usuario por id
-   * @returns void
-   * @memberof ModificarUsuarioComponent
-   */
+ * Método para ver un usuario por id
+ * @returns void
+ * @memberof ModificarUsuarioComponent
+ */
   verUsuariosPorNickname(): void {
     this.usuarioServicio.getUsuarioPorNickname(this.usuarioIdForm.get('nickname')?.value)
+      .subscribe({
+        next: usuario => {
+          this.usuario = usuario;
 
-    .subscribe(usuario => {
+          this.usuarioForm.patchValue({
+            perfil: usuario.perfil,
+            password: usuario.password,
+            email: usuario.email,
+            estadoUsuario: usuario.estadoUsuario,
+            nickname: usuario.nickname,
+          });
 
-      this.usuario = usuario;
-
-      this.usuarioForm.patchValue({
-        perfil: usuario.perfil,
-        password: usuario.password,
-        email: usuario.email,
-        estadoUsuario: usuario.estadoUsuario,
-        nickname: usuario.nickname,
+          this.mostrarTabla = true;
+        },
+        error: error => {
+          console.error('Error al obtener el usuario:', error);
+        }
       });
-
-      this.mostrarTabla = true;
-
-    }, error => {
-      console.error('Error al obtener el artículo:', error);
-    });
   }
 
   /**
@@ -98,34 +103,36 @@ export class ModificarUsuarioComponent {
    * @memberof ModificarUsuarioComponent
    */
   modificarUsuario(): void {
-
-    if(this.usuarioForm.invalid){
+    if (this.usuarioForm.invalid) {
       this.usuarioForm.markAllAsTouched();
       return;
     }
 
     this.usuarioServicio.updateUsuario(this.currentUsuario, this.usuarioIdForm.get('nickname')?.value)
-    .subscribe(response => {
-      Swal.fire({
-        position: "center",
-        icon: "success",
-        title: "Usuario correctamente editado",
-        showConfirmButton: false,
-        timer: 1500
+      .subscribe({
+        next: response => {
+          Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "Usuario correctamente editado",
+            showConfirmButton: false,
+            timer: 1500
+          });
+
+          this.usuarioForm.reset();
+
+          this.usuarioForm.reset({
+            idProfile: 0,
+          });
+
+          this.mostrarTabla = false;
+        },
+        error: error => {
+          console.error('Error al modificar usuario:', error);
+        }
       });
-
-      this.usuarioForm.reset();
-
-      this.usuarioForm.reset({
-        idProfile: 0,
-      });
-
-      this.mostrarTabla = false;
-
-    }, error => {
-      console.error('Error al modificar usuario:', error);
-    });
   }
+
 
   /**
    * Método para obtener el id del usuario

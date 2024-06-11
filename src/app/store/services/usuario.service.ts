@@ -4,7 +4,6 @@ import { Observable, catchError, map, of, tap } from 'rxjs';
 import { UsuarioDTO } from '../interfaces/usuario/usuarioDTO.interface';
 import { environment } from '../../environments/environments';
 import { UsuarioPostDTO } from '../interfaces/usuario/usuarioPostDTO.interface';
-import { UsuarioGetPorNicknameDTO } from '../interfaces/usuario/usuarioGetPorIdDTO.interface';
 import { UsuarioPutDTO } from '../interfaces/usuario/usuarioPutDTO.interface';
 import { JwtHelperService } from '@auth0/angular-jwt';
 
@@ -85,9 +84,9 @@ export class UsuarioServicio{
    * @returns Observable<UsuarioGetPorIdDTO>
    * @memberof UsuarioServicio
    */
-  getUsuarioPorNickname(nickname: string):Observable<UsuarioGetPorNicknameDTO> {
+  getUsuarioPorNickname(nickname: string):Observable<UsuarioDTO> {
 
-    return this.http.get<UsuarioGetPorNicknameDTO>(`${this.baseUrl}/verUsuarioPorNickname/${nickname}`);
+    return this.http.get<UsuarioDTO>(`${this.baseUrl}/verUsuarioPorNickname/${nickname}`);
   }
 
   /**

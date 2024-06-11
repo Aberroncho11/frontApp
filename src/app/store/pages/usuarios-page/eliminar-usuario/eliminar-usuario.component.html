@@ -18,10 +18,13 @@
             <form [formGroup]="usuarioForm">
 
               <div class="mb-3">
-                <label for="idUsuario" class="form-label">Id</label>
-                <input type="number" id="idUsuario" class="form-control" formControlName="idUsuario" placeholder="Id usuario">
-                <span *ngIf="isValidFieldUsuarioForm('idUsuario')" class="form-text text-danger">
-                  {{getFieldErrorUsuarioForm('idUsuario')}}
+                <label for="nickname" class="form-label">Id</label>
+                <select id="nickname" class="form-select" formControlName="nickname" aria-label="Nickname">
+                  <option value="">Selecciona un Nickname</option>
+                  <option *ngFor="let usuario of usuariosLista" [value]="usuario.nickname">{{ usuario.nickname }}</option>
+                </select>
+                <span *ngIf="isValidFieldUsuarioForm('nickname')" class="form-text text-danger">
+                  {{getFieldErrorUsuarioForm('nickname')}}
                 </span>
               </div>
 
@@ -33,35 +36,29 @@
 
           </div>
 
-          <div class="mt-4" *ngIf="mostrarTabla">
+          <div class="row mt-4 d-flex justify-content-center" *ngIf="mostrarTabla">
 
-            <table class="table table-striped">
+            <div class="card col-6 mb-5">
 
-              <thead>
+              <div class="card-body w-50">
 
-                <tr>
-                  <th>Perfil</th>
-                  <th>Contraseña</th>
-                  <th>Email</th>
-                  <th>Nickname</th>
-                </tr>
+                <h5 class="card-title">Id usuario: {{ usuario?.idUsuario }}</h5>
 
-              </thead>
+                <p class="card-text"><strong>Perfil:</strong> {{ usuario?.perfil }}</p>
 
-              <tbody>
+                <p class="card-text"><strong>Password:</strong> {{ usuario?.password }}</p>
 
-                <tr>
-                  <td class="align-middle">{{ usuario?.perfil }}</td>
-                  <td class="align-middle">{{ usuario?.password }}</td>
-                  <td class="align-middle">{{ usuario?.email }}</td>
-                  <td class="align-middle">{{ usuario?.nickname }}</td>
-                </tr>
+                <p class="card-text"><strong>Email:</strong> {{ usuario?.email }}</p>
 
-              </tbody>
+                <p class="card-text"><strong>Nickname:</strong> {{ usuario?.nickname }}</p>
 
-            </table>
+                <p class="card-text"><strong>Estado:</strong> {{ usuario?.estadoUsuario}}</p>
 
-            <div class="mb-3 d-grid gap-2 d-md-flex justify-content-md-center">
+              </div>
+
+            </div>
+
+            <div class="mt-2 d-grid gap-2 d-md-flex justify-content-md-center">
               <button *ngIf="usuarioCargado" class="btn btn-dark" (click)="eliminarUsuario()">Eliminar Usuario</button>
             </div>
 

@@ -40,12 +40,12 @@
 
                 <div class="mb-3">
                   <label for="perfil" class="form-label">Perfil</label>
-                  <input
-                    type="number"
-                    id="perfil"
-                    formControlName="perfil"
-                    class="form-control"
-                    placeholder="Perfil">
+                  <select class="form-select" formControlName="perfil" aria-label="Selecciona un perfil">
+                    <option value="">Selecciona un perfil</option>
+                    <option value="1">Administrador</option>
+                    <option value="2">Gestor</option>
+                    <option value="3">Operador</option>
+                  </select>
                   <span *ngIf="isValidField('perfil')" class="form-text text-danger">
                     {{getFieldError('perfil')}}
                   </span>

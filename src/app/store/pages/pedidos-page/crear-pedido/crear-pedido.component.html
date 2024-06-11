@@ -67,12 +67,14 @@
               <label class="form-label">Agregar artículo</label>
               <div class="input-group mb-3" [formGroup]="newArticuloForm">
                   <div class="me-3">
-                      <select class="form-select" formControlName="articuloId" aria-label="Seleccionar artículo" (change)="onArticuloIdChange()">
-                          <option *ngFor="let articulo of articulosLista" [value]="articulo.idArticulo">{{ articulo.idArticulo }}</option>
+                      <select class="form-select" formControlName="nombre" aria-label="Seleccionar artículo" (change)="onArticuloNombreChange()">
+                          <option value="">Selecciona un artículo</option>
+                          <option *ngFor="let articulo of articulosLista" [value]="articulo.nombre">{{ articulo.nombre }}</option>
                       </select>
                   </div>
                   <div class="me-3">
                       <select class="form-select" formControlName="cantidad" aria-label="Seleccionar cantidad">
+                          <option value="">Selecciona una cantidad</option>
                           <option *ngFor="let num of cantidadOptions" [value]="num" >{{ num }}</option>
                       </select>
                   </div>
@@ -90,7 +92,7 @@
 
                 <div class="input-group mb-3" *ngFor="let articulo of articulos.controls; let i = index" [formGroupName]="i">
 
-                  <input type="number" formControlName="articuloId" class="form-control me-2" placeholder="Id artículo" readonly>
+                  <input type="string" formControlName="nombre" class="form-control me-2" placeholder="Nombre" readonly>
                   <input type="number" formControlName="cantidad" class="form-control me-2" placeholder="Cantidad" readonly>
                   <button (click)="onDeleteArticulo(i)" class="btn btn-danger" type="button">Eliminar</button>
 

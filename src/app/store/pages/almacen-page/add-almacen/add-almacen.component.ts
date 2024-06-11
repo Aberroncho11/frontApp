@@ -21,8 +21,8 @@ export class AddAlmacenComponent {
 
     // Inicializar el formulario
     this.almacenForm = this.fb.group({
-      idEstanteria: [0, [Validators.required, Validators.min(1)], CustomValidators.estanteriaExistente(this.almacenServicio)],
-      cantidad: [0, [Validators.required, Validators.min(1)]],
+      idEstanteria: ['', [Validators.required, Validators.min(1)], CustomValidators.estanteriaExistente(this.almacenServicio)],
+      cantidad: ['', [Validators.required, Validators.min(1)]],
     });
 
     // Suscribirse a los cambios del campo idEstanteria

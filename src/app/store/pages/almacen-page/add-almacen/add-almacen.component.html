@@ -18,13 +18,10 @@
             <form [formGroup]="almacenForm" (ngSubmit)="addAlmacen()">
 
               <div class="mb-3">
-                <label for="idEstanteria" class="form-label">Nombre artículo</label>
-                <input
-                type="number"
-                id="idEstanteria"
-                formControlName="idEstanteria"
-                class="form-control"
-                placeholder="Id estanteria">
+                <label for="idEstanteria" class="form-label">Nombre</label>
+                <select id="nombre" class="form-select" formControlName="nombre" aria-label="Nombre">
+                  <option value="">Selecciona un Nombre</option>
+                </select>
                 <span *ngIf="isValidField('idEstanteria')" class="form-text text-danger">
                   {{ getFieldError('idEstanteria') }}
                 </span>

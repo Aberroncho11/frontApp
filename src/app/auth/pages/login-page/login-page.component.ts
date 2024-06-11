@@ -19,6 +19,8 @@ export class LoginPageComponent implements OnInit{
 
   public loginForm! : FormGroup;
 
+  public isLoading: boolean = false;
+
   public Toast = Swal.mixin({
     toast: true,
     position: "top-end",
@@ -31,15 +33,16 @@ export class LoginPageComponent implements OnInit{
     }
   });
 
+  // Inicializador
   ngOnInit(): void {
 
     this.loginForm = this.fb.group({
 
-      email: ['andujarpuertagabriel@gmail.com', [
+      email: ['', [
         Validators.required,
         Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com|es)$/)]],
 
-      password: ['Aberroncho11', [
+      password: ['', [
         Validators.required,
         Validators.minLength(6),
         Validators.maxLength(20)]]
@@ -64,13 +67,19 @@ export class LoginPageComponent implements OnInit{
    * @memberof LoginPageComponent
    */
   login(){
+    if (this.loginForm.invalid) {
+      this.loginForm.markAllAsTouched();
+      return;
+    }
+
+    this.isLoading = true;
 
     const {email, password} = this.loginForm.value;
 
     this.authService.login(email, password)
-
     .subscribe({
       next: () => {
+        this.isLoading = false;
         this.Toast.fire({
           icon: 'success',
           title: 'Loguedo correctamente'
@@ -79,6 +88,7 @@ export class LoginPageComponent implements OnInit{
       },
 
       error: (errorResponse) => {
+        this.isLoading = false;
         switch (errorResponse) {
           case `No existe un usuario con el email ${email}`:
             Swal.fire('Error de inicio de sesión', errorResponse, 'error');

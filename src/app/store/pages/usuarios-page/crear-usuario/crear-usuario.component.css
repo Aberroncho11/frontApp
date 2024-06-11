@@ -35,6 +35,17 @@ p.lead {
   color: #333;
 }
 
+.form-select{
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  background-color: rgba(255, 255, 255, 0.8);
+  color: #333;
+}
+
+.form-select::placeholder {
+  color: #666;
+}
+
 .form-control::placeholder {
   color: #666;
 }
