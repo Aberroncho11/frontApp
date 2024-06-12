@@ -33,21 +33,21 @@ export class AppComponent {
     * @returns boolean
     * @memberof AppComponent
   */
-  public authStatusChangedEffect = effect(() => {
+  // public authStatusChangedEffect = effect(() => {
 
-    switch( this.authService.authStatus() ) {
+  //   switch( this.authService.authStatus() ) {
 
-      case AuthStatus.checking:
-        return;
+  //     case AuthStatus.checking:
+  //       return;
 
-      case AuthStatus.authenticated:
-        this.router.navigateByUrl('/store');
-        return;
+  //     case AuthStatus.authenticated:
+  //       this.router.navigateByUrl('/store');
+  //       return;
 
-      case AuthStatus.notAuthenticated:
-        this.router.navigateByUrl('/auth/login');
-        return;
-    }
-  });
+  //     case AuthStatus.notAuthenticated:
+  //       this.router.navigateByUrl('/auth/login');
+  //       return;
+  //   }
+  // });
 
 }

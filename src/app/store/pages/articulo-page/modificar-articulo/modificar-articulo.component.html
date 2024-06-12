@@ -128,12 +128,12 @@
 
                 <div class="mb-3">
                   <label for="estadoArticulo" class="form-label">Estado</label>
-                  <input
-                  type="text"
-                  id="estadoArticulo"
-                  formControlName="estadoArticulo"
-                  class="form-control"
-                  placeholder="Estado">
+                  <select id="estadoArticulo" class="form-select" formControlName="estadoArticulo" aria-label="estadoArticulo">
+                    <option value="">Selecciona un Estado</option>
+                    <option value="Disponible">Disponible</option>
+                    <option value="Pendiente de eliminar">Pendiente de eliminar</option>
+                    <option value="Eliminado">Eliminado</option>
+                  </select>
                   <span *ngIf="isValidFieldArticuloForm('estadoArticulo')" class="form-text text-danger">
                     {{getFieldErrorArticuloForm('estadoArticulo')}}
                   </span>
@@ -158,7 +158,7 @@
                 </div>
 
                 <button type="button" class="btn btn-danger me-2" *ngIf="mostrarFoto" (click)="eliminarFoto()">Eliminar Foto</button>
-                <button type="submit" class="btn btn-dark btn-block" [disabled]="articuloForm.invalid">Modificar Artículo</button>
+                <button type="submit" class="btn btn-dark btn-block">Modificar Artículo</button>
 
               </form>
 

@@ -80,12 +80,34 @@
             </div>
 
             <div class="mb-3">
+              <label for="idEstanteria" class="form-label">Id estanteria</label>
+              <select id="idEstanteria" class="form-select" formControlName="idEstanteria" aria-label="Id estanteria" type="number" aria-placeholder="Selecciona una estanteria">
+                <option value="">Selecciona una estanteria</option>
+                <option *ngFor="let estanteria of estanteriasLista" [value]="estanteria.idEstanteria">{{ estanteria.idEstanteria }}</option>
+              </select>
+              <span *ngIf="isValidField('idEstanteria')" class="form-text text-danger">
+                {{getFieldError('idEstanteria')}}
+              </span>
+            </div>
+
+            <div class="mb-3">
+              <label for="cantidad" class="form-label">Cantidad</label>
+                <input type="number" id="cantidad" formControlName="cantidad" class="form-control" placeholder="Cantidad">
+                <span *ngIf="isValidField('idEstanteria')" class="form-text text-danger">
+                  {{getFieldError('idEstanteria')}}
+              </span>
+            </div>
+
+
+            <div class="mb-3">
               <label for="foto" class="form-label">Foto</label>
               <input type="file" id="foto" (change)="onFileChange($event)" #fileInput class="form-control">
               <div *ngIf="isValidField('foto')" class="form-text text-danger">
                 {{getFieldError('foto')}}
               </div>
             </div>
+
+
 
             <button type="submit" class="btn btn-dark w-100" [disabled]="articuloForm.invalid">Crear Artículo</button>
 
