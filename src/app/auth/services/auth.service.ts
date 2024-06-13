@@ -4,6 +4,7 @@ import { Observable, catchError, map, throwError } from 'rxjs';
 import { AuthStatus, LoginResponse, User } from '../interfaces';
 import { environment } from '../../environments/environments';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -17,10 +18,14 @@ export class AuthService {
   private jwtHelper: JwtHelperService
 
   private _currentUser = signal<User|null>(null);
+
   private _authStatus = signal<AuthStatus>(AuthStatus.checking);
 
   public currentUser = computed( () => this._currentUser() )
+
   public authStatus = computed( () => this._authStatus() )
+
+  private router = inject(Router);
 
   constructor() {
     this.jwtHelper = new JwtHelperService();
@@ -104,6 +109,7 @@ export class AuthService {
     localStorage.removeItem('token');
     this._currentUser.set(null);
     this._authStatus.set(AuthStatus.notAuthenticated);
+    this.router.navigate(['auth/login']);
   }
 
 }

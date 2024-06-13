@@ -27,10 +27,11 @@ export class EliminarUsuarioComponent implements OnInit{
 
   public usuariosLista: UsuarioDTO[] = [];
 
+  // Inicializador
   ngOnInit() {
 
     this.usuarioForm = this.fb.group({
-      nickname: ['', [ Validators.required ], CustomValidators.usuarioExistente(this.usuarioServicio)],
+      nickname: ['', [ Validators.required ]],
     });
 
     this.usuarioForm.get('nickname')?.valueChanges.pipe(
@@ -65,6 +66,7 @@ export class EliminarUsuarioComponent implements OnInit{
           this.usuarioCargado = true;
         },
         error => {
+          console.error('Error al obtener los usuarios:', error);
           Swal.fire({
             position: "center",
             icon: "error",
@@ -103,6 +105,7 @@ export class EliminarUsuarioComponent implements OnInit{
 
         },
         error => {
+          console.error('Error al eliminar el usuario:', error);
           Swal.fire({
             position: "center",
             icon: "error",

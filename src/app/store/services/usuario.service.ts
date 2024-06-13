@@ -29,25 +29,12 @@ export class UsuarioServicio{
    * @memberof UsuarioServicio
    */
   checkEmail(email: string): Observable<boolean> {
-    // Retornar si el email existe
     return this.http.get<boolean>(`${this.baseUrl}/checkEmail/${email}`).pipe(
       tap(exists => console.log('Email exists:', exists)),
       catchError(error => {
         console.error('Error checking email:', error);
-        return of(false); // Manejar el error adecuadamente según tu caso
+        return of(false);
       })
-    );
-  }
-
-  /**
-   * Método para verificar si el email ya existe
-   * @param email
-   * @returns Observable<boolean>
-   * @memberof UsuarioServicio
-   */
-  checkEmailNotExists(email: string): Observable<boolean> {
-    return this.http.get<{ exists: boolean }>(`${this.baseUrl}/checkEmail/${email}`).pipe(
-      map(response => response.exists)
     );
   }
 
@@ -58,12 +45,11 @@ export class UsuarioServicio{
    * @memberof UsuarioServicio
    */
   checkNickname(nickname: string): Observable<boolean> {
-    // Retornar si el nickname existe
     return this.http.get<boolean>(`${this.baseUrl}/checkNickname/${nickname}`).pipe(
       tap(exists => console.log('Nickname exists:', exists)),
       catchError(error => {
         console.error('Error checking nickname:', error);
-        return of(false); // Manejar el error adecuadamente según tu caso
+        return of(false);
       })
     );
   }
@@ -74,7 +60,6 @@ export class UsuarioServicio{
    * @memberof UsuarioServicio
    */
   getUsuarios():Observable<UsuarioDTO[]> {
-    // Retornar usuarios
     return this.http.get<UsuarioDTO[]>(`${ this.baseUrl }/verUsuarios`);
   }
 
@@ -112,14 +97,12 @@ export class UsuarioServicio{
    */
   addUsuario( usuario: UsuarioPostDTO ): Observable<any> {
 
-    // Crear un nuevo formulario
     const formData: FormData = new FormData();
     formData.append('perfil', usuario.perfil.toString());
     formData.append('password', usuario.password);
     formData.append('email', usuario.email);
     formData.append('nickname', usuario.nickname);
 
-    // Retornar usuario por id
     return this.http.post<any>(`${ this.baseUrl }/crearUsuario`, formData );
   }
 
@@ -132,7 +115,6 @@ export class UsuarioServicio{
    */
   updateUsuario( usuario: UsuarioPutDTO, nickanme: string ): Observable<UsuarioPutDTO> {
 
-    // Crear un nuevo formulario
     const formData: FormData = new FormData();
     formData.append('perfil', usuario.perfil.toString());
     formData.append('password', usuario.password);
@@ -140,7 +122,6 @@ export class UsuarioServicio{
     formData.append('estadoUsuario', usuario.estadoUsuario);
     formData.append('nickname', usuario.nickname);
 
-    // Retornar usuario por id
     return this.http.put<UsuarioPutDTO>(`${ this.baseUrl }/modificarUsuario/${ nickanme }`, formData );
   }
 
@@ -152,7 +133,6 @@ export class UsuarioServicio{
    */
   deleteUsuario( idUsuario: number ): Observable<boolean> {
 
-    // Eliminar usuario
     return this.http.delete(`${ this.baseUrl }/eliminarUsuario/${ idUsuario }`)
       .pipe(
         map( resp => true ),

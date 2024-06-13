@@ -13,8 +13,6 @@ export class AppComponent {
 
   private authService = inject( AuthService );
 
-  private router = inject( Router );
-
   /*
     * Método para verificar si la autenticación ha terminado
     * @returns boolean
@@ -28,26 +26,5 @@ export class AppComponent {
     return true;
   });
 
-  /*
-    * Método para verificar si la autenticación ha terminado
-    * @returns boolean
-    * @memberof AppComponent
-  */
-  public authStatusChangedEffect = effect(() => {
-
-    switch( this.authService.authStatus() ) {
-
-      case AuthStatus.checking:
-        return;
-
-      case AuthStatus.authenticated:
-        this.router.navigateByUrl('/store');
-        return;
-
-      case AuthStatus.notAuthenticated:
-        this.router.navigateByUrl('/auth/login');
-        return;
-    }
-  });
 
 }

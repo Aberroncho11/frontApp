@@ -1,51 +1,65 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { UsuarioServicio } from '../../../services/usuario.service';
 import { UsuarioPostDTO } from '../../../interfaces/usuario/usuarioPostDTO.interface';
+import { CustomValidators } from '../../../../validators/validadores';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({
   selector: 'crear-usuario',
   templateUrl: './crear-usuario.component.html',
   styleUrls: ['./crear-usuario.component.css']
 })
-export class CrearUsuarioComponent {
+export class CrearUsuarioComponent implements OnInit {
 
-  // Formulario de Usuario
-  public usuarioForm: FormGroup;
+  public usuarioForm!: FormGroup;
 
-  // Constructor
-  constructor(private usuarioServicio: UsuarioServicio, private fb: FormBuilder) {
-    // Inicializar el formulario
+  private usuarioServicio = inject(UsuarioServicio);
+
+  private fb = inject(FormBuilder);
+
+  // Inicializador
+  ngOnInit()
+  {
     this.usuarioForm = this.fb.group({
       perfil: ['', [Validators.required]],
-      password: ['', [Validators.required]],
-      email: ['', [Validators.required]],
-      nickname: ['', [Validators.required]]
+      password: ['', [Validators.required, CustomValidators.passwordValidator, Validators.maxLength(20)]],
+      email: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/),
+        CustomValidators.emailExistsValidator(this.usuarioServicio), Validators.maxLength(30)]],
+      nickname: ['', [Validators.required, CustomValidators.nicknameExistsValidator(this.usuarioServicio)], Validators.minLength(4), Validators.maxLength(20)],
+    });
+
+    const campos = ['perfil', 'password', 'email', 'nickname'];
+
+    campos.forEach(campo => {
+
+      this.usuarioForm.get(campo)?.valueChanges.pipe(
+        debounceTime(1000),
+        distinctUntilChanged()
+      ).subscribe();
+
     });
   }
 
-  // Getter para obtener los valores del formulario
+  // Getter
   get currentUsuario(): UsuarioPostDTO {
     return this.usuarioForm.value as UsuarioPostDTO;
   }
 
   /**
    * Método para crear un usuario
-   * @returns void
    * @memberof CrearUsuarioComponent
    */
-  crearUsuario(): void {
+  crearUsuario(){
     if (this.usuarioForm.invalid) {
       this.usuarioForm.markAllAsTouched();
       return;
     }
 
-    // Añadimos el usuario
     this.usuarioServicio.addUsuario(this.currentUsuario)
       .subscribe(
         () => {
-          // Mostramos un mensaje de éxito
           Swal.fire({
             position: "center",
             icon: "success",
@@ -54,7 +68,6 @@ export class CrearUsuarioComponent {
             timer: 1500
           });
 
-          // Reseteamos el formulario
           this.usuarioForm.reset();
 
           this.usuarioForm.reset({
@@ -62,12 +75,11 @@ export class CrearUsuarioComponent {
           });
 
         },
-        // En caso de error
         error => {
           console.error('Error al crear usuario:', error);
           Swal.fire({
             icon: "error",
-            title: "Oops...",
+            title: "Error",
             text: "Error al crear el usuario",
           });
         }
@@ -81,7 +93,6 @@ export class CrearUsuarioComponent {
    * @memberof CrearUsuarioComponent
    */
   isValidField(field: string): boolean | null {
-    // Comprobamos si el campo ha sido tocado y si tiene errores
     return this.usuarioForm.controls[field].errors &&
     this.usuarioForm.controls[field].touched;
   }
@@ -89,23 +100,44 @@ export class CrearUsuarioComponent {
   /**
    *
    * @param field
-   * @returns
+   * @returns string | null
+   * @memberof CrearUsuarioComponent
    */
   getFieldError(field: string): string | null {
-    // Comprobamos si el campo tiene errores
+
     const control = this.usuarioForm.get(field);
-    // Si no hay control
+
     if (!control) return null;
-    // Obtenemos los errores
+
     const errors = control.errors || {};
-    // Recorremos los errores
-    for (const key of Object.keys(errors)) {
-      switch (key) {
-        // Comprobamos el tipo de error
+
+    for (const errorName of Object.keys(errors)) {
+      switch (errorName) {
         case 'required':
           return 'Este campo es requerido';
-        case 'email':
-          return 'Correo electrónico inválido';
+        case 'minLength':
+          return `Este campo debe tener al menos ${errors['minLength'].requiredLength} caracteres`;
+        case 'maxLength':
+          return `Este campo debe tener máximo ${errors['maxLength'].requiredLength} caracteres`;
+        case 'pattern':
+          const patternError = control.getError('pattern');
+          const pattern = patternError?.requiredPattern;
+          switch (pattern) {
+            case /^[1-3]$/:
+              return 'El perfil debe ser 1, 2 o 3';
+            case /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/:
+              return 'Correo electrónico inválido';
+            default:
+              return 'El valor ingresado no es válido';
+          }
+        case 'invalidPassword':
+          return 'La contraseña debe contener al menos una letra mayúscula, una letra minúscula y un número';
+        case 'emailExists':
+          return 'El correo electrónico ya está en uso';
+        case 'nicknameExists':
+          return 'El nickname ya está en uso';
+        default:
+          return 'Error de validación';
       }
     }
     return null;

@@ -6,45 +6,49 @@ import { UsuarioServicio } from '../store/services/usuario.service';
 
 export class CustomValidators {
 
-  // Validador de correo electrónico
+  /**
+   * Método para validar un código postal
+   * @param control
+   * @returns {Observable<ValidationErrors | null>}
+   * @memberof CustomValidators
+   */
   static postalCodeValidator: ValidatorFn = (control: AbstractControl) => {
-    // Expresión regular para validar el código postal
     const postalCodePattern = /^[0-5][0-9]{4}$/;
-    // Si el código postal no cumple con la expresión regular
     if (!postalCodePattern.test(control.value)) {
       return { invalidPostalCode: true };
     }
     return null;
   };
 
-  // Validador de número de teléfono
+  /**
+   * Método para validar un número de teléfono
+   * @param control
+   * @returns {Observable<ValidationErrors | null>}
+   * @memberof CustomValidators
+   */
   static phoneNumberValidator: ValidatorFn = (control: AbstractControl) => {
-    // Expresión regular para validar el número de teléfono
     const phoneNumberPattern = /^[0-9]{9}$/;
-    // Si el número de teléfono no cumple con la expresión regular
     if (!phoneNumberPattern.test(control.value)) {
       return { invalidPhoneNumber: true };
     }
     return null;
   };
 
-  // Validador de contraseña
+  /**
+   * Método para validar un DNI
+   * @param control
+   * @returns {Observable<ValidationErrors | null>}
+   * @memberof CustomValidators
+   */
   static passwordValidator: ValidatorFn = (control: AbstractControl): Observable<ValidationErrors | null> => {
-    // Retornar un observable
     return new Observable((observer) => {
-      // Obtener la contraseña
       const password = control.value;
-      // Validar si la contraseña tiene al menos una mayúscula, una minúscula y un número
       const hasUpperCase = /[A-Z]/.test(password);
-      // Validar si la contraseña tiene al menos una minúscula
       const hasLowerCase = /[a-z]/.test(password);
-      // Validar si la contraseña tiene al menos un número
       const hasNumber = /\d/.test(password);
 
-        // Si la contraseña no cumple con los requisitos
         if (!hasUpperCase || !hasLowerCase || !hasNumber) {
           observer.next({ invalidPassword: true });
-        // Si la contraseña cumple con los requisitos
         } else {
           observer.next(null);
         }
@@ -53,30 +57,12 @@ export class CustomValidators {
     });
   };
 
-
-  // Validador de existencia de estantería
-  static estanteriaExistente(almacenServicio: AlmacenServicio): (control: AbstractControl) => Observable<ValidationErrors | null> {
-    // Retornar un observable
-    return (control: AbstractControl): Observable<ValidationErrors | null> => {
-      // Obtener el id de la estantería
-      const idEstanteria = control.value;
-      // Si no hay id de estantería o no es un número
-      if (!idEstanteria || isNaN(idEstanteria)) {
-        return of(null);
-      }
-
-      // Obtener la estantería por id
-      return almacenServicio.getEstanteriaPorId(idEstanteria).pipe(
-        map(() => null),
-        catchError(() => {
-          // Si no existe la estantería
-          console.error(`La estanteria con el id ${idEstanteria} no existe`);
-          return of({ 'estanteriaNotFound': true })
-        })
-      );
-    };
-  }
-
+  /**
+   * Método para validar si un email existe
+   * @param usuarioServicio
+   * @returns {Observable<ValidationErrors | null>}
+   * @memberof CustomValidators
+   */
   static emailExistsValidator(usuarioServicio: UsuarioServicio): AsyncValidatorFn {
     return (control: AbstractControl) => {
       const email = control.value;
@@ -90,21 +76,12 @@ export class CustomValidators {
     };
   }
 
-  static emailNotExistsValidator(usuarioServicio: UsuarioServicio): AsyncValidatorFn {
-    return (control: AbstractControl): Observable<ValidationErrors | null> => {
-      const email = control.value;
-      if (!email) {
-        return of(null);
-      }
-      return usuarioServicio.checkEmailNotExists(email).pipe(
-        map(exists => (exists ? { emailExists: true } : null)),
-        catchError(() => of(null))
-      );
-    };
-  }
-
-
-
+  /**
+   * Método para validar si un nickname existe
+   * @param usuarioServicio
+   * @returns {Observable<ValidationErrors | null>}
+   * @memberof CustomValidators
+   */
   static nicknameExistsValidator(usuarioServicio: UsuarioServicio): AsyncValidatorFn {
     return (control: AbstractControl) => {
       const nickname = control.value;
@@ -118,44 +95,20 @@ export class CustomValidators {
     };
   }
 
-
   /**
-   * Validador de existencia de artículo y unicidad del nombre
-   * @param articuloServicio Servicio para verificar la existencia del artículo
-   * @returns ValidatorFn Una función de validación para el formulario
+   *
+   * @param articuloServicio
+   * @returns {Observable<ValidationErrors | null>}
    */
-  static articuloExistente(articuloServicio: ArticuloServicio): ValidatorFn {
-    return (control: AbstractControl): ValidationErrors | null => {
+  static nnombreExistsValidator(articuloServicio: ArticuloServicio): AsyncValidatorFn {
+    return (control: AbstractControl) => {
       const nombre = control.value;
       if (!nombre) {
-        return null;
-      }
-
-      return articuloServicio.getArticuloPorNombre(nombre).pipe(
-        map(() => ({ 'uniqueName': true }))
-      );
-    };
-  }
-
-  // Validador de existencia de usuario
-  static usuarioExistente(usuarioServicio: UsuarioServicio): (control: AbstractControl) => Observable<ValidationErrors | null> {
-    // Retornar un observable
-    return (control: AbstractControl): Observable<ValidationErrors | null> => {
-      // Obtener el id del usuario
-      const idUsuario = control.value;
-      // Si no hay id de usuario o no es un número
-      if (!idUsuario || isNaN(idUsuario)) {
         return of(null);
       }
-
-      // Obtener el usuario por id
-      return usuarioServicio.getUsuarioPorNickname(idUsuario).pipe(
-        map(() => null),
-        // Si no existe el usuario
-        catchError(() => {
-          console.error(`El usuario con el id ${idUsuario} no existe`);
-          return of({ 'usuarioNotFound': true })
-        })
+      return articuloServicio.getArticuloPorNombre(nombre).pipe(
+        map(exists => (exists ? { nombreExists: true } : null)),
+        catchError(() => of(null))
       );
     };
   }

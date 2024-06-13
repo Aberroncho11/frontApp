@@ -19,8 +19,6 @@ export class LoginPageComponent implements OnInit{
 
   public loginForm! : FormGroup;
 
-  public isLoading: boolean = false;
-
   public Toast = Swal.mixin({
     toast: true,
     position: "top-end",
@@ -72,14 +70,12 @@ export class LoginPageComponent implements OnInit{
       return;
     }
 
-    this.isLoading = true;
 
     const {email, password} = this.loginForm.value;
 
     this.authService.login(email, password)
     .subscribe({
       next: () => {
-        this.isLoading = false;
         this.Toast.fire({
           icon: 'success',
           title: 'Loguedo correctamente'
@@ -88,7 +84,6 @@ export class LoginPageComponent implements OnInit{
       },
 
       error: (errorResponse) => {
-        this.isLoading = false;
         switch (errorResponse) {
           case `No existe un usuario con el email ${email}`:
             Swal.fire('Error de inicio de sesión', errorResponse, 'error');

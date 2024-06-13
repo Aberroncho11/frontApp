@@ -5,6 +5,7 @@ import { UsuarioServicio } from '../../../services/usuario.service';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { UsuarioPutDTO } from '../../../interfaces/usuario/usuarioPutDTO.interface';
 import { UsuarioDTO } from '../../../interfaces/usuario/usuarioDTO.interface';
+import { CustomValidators } from '../../../../validators/validadores';
 
 @Component({
   selector: 'modificar-usuario',
@@ -28,11 +29,12 @@ export class ModificarUsuarioComponent implements OnInit {
 
   private fb = inject(FormBuilder);
 
+  // Inicializador
   ngOnInit() {
 
     this.usuarioForm = this.fb.group({
-      perfil: [0, [Validators.required]],
-      password: ['', [Validators.required]],
+      perfil: ['', [Validators.required]],
+      password: ['', [Validators.required, [Validators.required, CustomValidators.passwordValidator, Validators.maxLength(20)]]],
       email: ['', [Validators.required]],
       estadoUsuario: ['', [Validators.required]],
       nickname: ['', [Validators.required]]
@@ -43,7 +45,7 @@ export class ModificarUsuarioComponent implements OnInit {
     });
 
     this.usuarioIdForm.get('nickname')?.valueChanges.pipe(
-      debounceTime(1000),
+      debounceTime(100),
       distinctUntilChanged(),
     ).subscribe();
 

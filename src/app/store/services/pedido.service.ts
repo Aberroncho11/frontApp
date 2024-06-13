@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable, catchError, map, of } from 'rxjs';
 import { environment } from '../../environments/environments';
 import { PedidoDTO } from '../interfaces/pedido/pedidoDTO.interface';
@@ -10,11 +10,9 @@ import { PedidoPostDTO } from '../interfaces/pedido/pedidoPostDTO.interface';
 })
 export class PedidoServicio {
 
-  // Url base
   private baseUrl: string = environment.baseUrl;
 
-  // Constructor
-  constructor(private http: HttpClient) { }
+  private http = inject(HttpClient);
 
   /**
    * Método para obtener todos los pedidos
@@ -22,7 +20,6 @@ export class PedidoServicio {
    * @memberof PedidoServicio
    */
   getPedidos():Observable<PedidoDTO[]> {
-    // Retornar pedidos
     return this.http.get<PedidoDTO[]>(`${ this.baseUrl }/verPedidos`);
   }
 
@@ -33,7 +30,6 @@ export class PedidoServicio {
    * @memberof PedidoServicio
    */
   addPedido( pedido: PedidoPostDTO ): Observable<PedidoPostDTO> {
-    // Retornar pedido por id
     return this.http.post<PedidoPostDTO>(`${ this.baseUrl }/crearPedido`, pedido );
   }
 }

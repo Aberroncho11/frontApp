@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environments';
 import { AlmacenDTO } from '../interfaces/almacen/almacenDTO.interface';
@@ -9,11 +9,9 @@ import { AlmacenDTO } from '../interfaces/almacen/almacenDTO.interface';
 })
 export class AlmacenServicio {
 
-  // Url base
   private baseUrl: string = environment.baseUrl;
 
-  // Constructor
-  constructor(private http: HttpClient) { }
+  private http = inject(HttpClient);
 
   /**
    * Método para obtener todos los almacenes
@@ -23,7 +21,6 @@ export class AlmacenServicio {
    */
   getEstanteriaPorId( idEstanteria: number): Observable<any>{
 
-    // Retornar estanteria por id
     return this.http.get<any>(`${this.baseUrl}/verEstanteriaPorId/${idEstanteria}`);
   }
 
@@ -34,7 +31,6 @@ export class AlmacenServicio {
    */
   addAlmacen( almacen: AlmacenDTO): Observable<AlmacenDTO>{
 
-    // Añadir a estanteria
     return this.http.patch<AlmacenDTO>(`${ this.baseUrl }/addAlmacen`, almacen );
   }
 

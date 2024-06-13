@@ -40,7 +40,7 @@ export class ModificarArticuloComponent implements OnInit{
   ngOnInit() {
 
     this.articuloForm = this.fb.group({
-      nombre: ['', [ Validators.required, Validators.minLength(4), Validators.maxLength(20), CustomValidators.articuloExistente(this.articuloServicio)]],
+      nombre: ['', [ Validators.required, Validators.minLength(4), Validators.maxLength(20)]],
       descripcion: ['', [ Validators.required, Validators.minLength(20), Validators.maxLength(50) ]],
       fabricante: ['', [ Validators.required, Validators.minLength(6), Validators.maxLength(20) ]],
       peso: ['', [Validators.required]],
