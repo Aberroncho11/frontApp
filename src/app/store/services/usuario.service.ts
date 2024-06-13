@@ -29,13 +29,7 @@ export class UsuarioServicio{
    * @memberof UsuarioServicio
    */
   checkEmail(email: string): Observable<boolean> {
-    return this.http.get<boolean>(`${this.baseUrl}/checkEmail/${email}`).pipe(
-      tap(exists => console.log('Email exists:', exists)),
-      catchError(error => {
-        console.error('Error checking email:', error);
-        return of(false);
-      })
-    );
+    return this.http.get<boolean>(`${this.baseUrl}/checkEmail/${email}`);
   }
 
   /**
@@ -45,13 +39,7 @@ export class UsuarioServicio{
    * @memberof UsuarioServicio
    */
   checkNickname(nickname: string): Observable<boolean> {
-    return this.http.get<boolean>(`${this.baseUrl}/checkNickname/${nickname}`).pipe(
-      tap(exists => console.log('Nickname exists:', exists)),
-      catchError(error => {
-        console.error('Error checking nickname:', error);
-        return of(false);
-      })
-    );
+    return this.http.get<boolean>(`${this.baseUrl}/checkNickname/${nickname}`);
   }
 
   /**
@@ -88,6 +76,23 @@ export class UsuarioServicio{
     }
     return of(null);
   }
+
+    /**
+   * Método para obtener el usuario a partir del token
+   * @returns Observable<number | null>
+   * @memberof UsuarioServicio
+   */
+    getNicknameFromToken(): Observable<string | null> {
+      const token = localStorage.getItem('token');
+      if (token) {
+        const decodedToken = this.jwtHelper.decodeToken(token);
+        console.log(decodedToken)
+        var nickname = String(decodedToken['Nickname']);
+        return of(nickname);
+      }
+      return of(null);
+    }
+
 
   /**
    * Método para agregar un usuario

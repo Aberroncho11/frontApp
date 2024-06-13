@@ -42,6 +42,10 @@ p.lead {
   color: #333;
 }
 
+span{
+  position: absolute;
+}
+
 .form-select::placeholder {
   color: #666;
 }
@@ -52,10 +56,6 @@ p.lead {
 
 .form-text {
   text-shadow: none;
-}
-
-.invalid-feedback {
-  color: #ff6b6b;
 }
 
 @keyframes fadeIn {

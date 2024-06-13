@@ -20,7 +20,7 @@ export class ModificarArticuloComponent implements OnInit{
 
   public articuloForm!: FormGroup;
 
-  public articuloIdForm!: FormGroup;
+  public articuloNombreForm!: FormGroup;
 
   public file: File | null = null;
 
@@ -40,7 +40,7 @@ export class ModificarArticuloComponent implements OnInit{
   ngOnInit() {
 
     this.articuloForm = this.fb.group({
-      nombre: ['', [ Validators.required, Validators.minLength(4), Validators.maxLength(20)]],
+      nombre: ['', [ Validators.required, Validators.minLength(4), Validators.maxLength(20)], [CustomValidators.nombreExistsValidator(this.articuloServicio)]],
       descripcion: ['', [ Validators.required, Validators.minLength(20), Validators.maxLength(50) ]],
       fabricante: ['', [ Validators.required, Validators.minLength(6), Validators.maxLength(20) ]],
       peso: ['', [Validators.required]],
@@ -51,7 +51,7 @@ export class ModificarArticuloComponent implements OnInit{
       foto: ['']
     });
 
-    this.articuloIdForm = this.fb.group({
+    this.articuloNombreForm = this.fb.group({
       nombre: ['', [ Validators.required ]],
     });
 
@@ -66,7 +66,7 @@ export class ModificarArticuloComponent implements OnInit{
 
     });
 
-    this.articuloIdForm.get('nombre')?.valueChanges.pipe(
+    this.articuloNombreForm.get('nombre')?.valueChanges.pipe(
       debounceTime(1000),
       distinctUntilChanged(),
     ).subscribe();
@@ -111,7 +111,7 @@ export class ModificarArticuloComponent implements OnInit{
    */
   verArticulosPorNombre(): void {
 
-    this.articuloServicio.getArticuloPorNombre(this.articuloIdForm.get('nombre')?.value)
+    this.articuloServicio.getArticuloPorNombre(this.articuloNombreForm.get('nombre')?.value)
     .subscribe({
       next: (articulo) => {
 
@@ -150,7 +150,6 @@ export class ModificarArticuloComponent implements OnInit{
 
   /**
    * Método que se encarga de modificar un artículo
-   * @returns void
    * @memberof ModificarArticuloComponent
    */
   modificarArticulo(): void {
@@ -160,8 +159,9 @@ export class ModificarArticuloComponent implements OnInit{
       return;
     }
 
-    this.articuloServicio.updateArticulo(this.currentArticulo, this.articuloIdForm.get('nombre')?.value)
-      .subscribe(response => {
+    this.articuloServicio.updateArticulo(this.currentArticulo, this.articuloNombreForm.get('nombre')?.value)
+    .subscribe({
+      next: () => {
         Swal.fire({
           position: "center",
           icon: "success",
@@ -171,26 +171,25 @@ export class ModificarArticuloComponent implements OnInit{
         });
 
         this.articuloForm.reset();
-
-        this.articuloIdForm.reset();
+        this.articuloNombreForm.reset();
 
         if (this.fileInput && this.fileInput.nativeElement) {
           this.fileInput.nativeElement.value = '';
         }
 
+        this.articuloNombreForm.get('nombre')?.setValue('');
         this.mostrarFoto = false;
-
         this.mostrarArticulo = false;
-
-      }, error => {
+      },
+      error: (error) => {
         console.error('Error al crear artículo:', error);
-      });
+      }
+    });
   }
 
 
   /**
    * Método que se encarga de eliminar una foto
-   * @returns void
    * @memberof ModificarArticuloComponent
    */
   eliminarFoto(): void {
@@ -200,10 +199,12 @@ export class ModificarArticuloComponent implements OnInit{
       const filename = this.fotoBorrar.substring(this.fotoBorrar.lastIndexOf('/') + 1);
 
       this.articuloServicio.borrarFoto(filename).subscribe({
-        next: (response) => {
-          console.log('Foto borrada exitosamente:', response);
+        next: () => {
+
           this.articuloForm.get('foto')?.setValue(null);
+
           this.file = null;
+
           this.mostrarFoto = false;
         },
         error: (err) => {
@@ -251,8 +252,8 @@ export class ModificarArticuloComponent implements OnInit{
       }
     }
 
-    if (field === 'nombre' && errors['uniqueName'] === true) {
-      return `Ya existe un artículo con ese nombre`;
+    if (field === 'nombre' && this.articuloForm.get('nombre')?.value != this.articulo?.nombre && errors['nombreExists']) {
+      return 'El nombre ya existe';
     }
 
     return null;
@@ -264,10 +265,10 @@ export class ModificarArticuloComponent implements OnInit{
    * @returns boolean | null
    * @memberof ModificarArticuloComponent
    */
-  isValidFieldArticuloIdForm( field: string ): boolean | null{
+  isValidFieldArticuloNombreForm( field: string ): boolean | null{
 
-    return this.articuloIdForm.controls[field].errors
-    && this.articuloIdForm.controls[field].touched
+    return this.articuloNombreForm.controls[field].errors
+    && this.articuloNombreForm.controls[field].touched
   }
 
   /**
@@ -278,9 +279,9 @@ export class ModificarArticuloComponent implements OnInit{
    */
   getFieldErrorArticuloNombreForm(field: string): string | null{
 
-    if(!this.articuloIdForm?.get(field)) return null;
+    if(!this.articuloNombreForm?.get(field)) return null;
 
-    const errors = this.articuloIdForm.controls[field].errors || {};
+    const errors = this.articuloNombreForm.controls[field].errors || {};
 
     for (const key of Object.keys(errors)) {
       switch(key) {

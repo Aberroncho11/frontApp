@@ -39,13 +39,28 @@ export class EliminarUsuarioComponent implements OnInit{
       distinctUntilChanged(),
     ).subscribe();
 
-    this.usuarioServicio.getUsuarios()
-    .subscribe({
-      next: (usuarios: UsuarioDTO[]) => {
-        this.usuariosLista = usuarios;
+    this.usuarioServicio.getNicknameFromToken().subscribe({
+      next: (nicknameFromToken) => {
+        if (nicknameFromToken) {
+          this.usuarioServicio.getUsuarios().subscribe({
+            next: (usuarios: UsuarioDTO[]) => {
+              usuarios.forEach(usuario => {
+                console.log(nicknameFromToken);
+                if (usuario.nickname !== nicknameFromToken) {
+                  this.usuariosLista.push(usuario);
+                }
+              });
+            },
+            error: (error) => {
+              console.error('Error al obtener los usuarios:', error);
+            }
+          });
+        } else {
+          console.error('No se pudo obtener el nickname del token.');
+        }
       },
       error: (error) => {
-        console.error('Error al obtener los usuarios:', error);
+        console.error('Error al obtener el nickname del token:', error);
       }
     });
 
@@ -137,14 +152,15 @@ export class EliminarUsuarioComponent implements OnInit{
    */
   getFieldErrorUsuarioForm(field: string): string | null{
 
-    const control = this.usuarioForm?.get(field);
+    if(!this.usuarioForm?.get(field)) return null;
 
-    if (!control) return null;
+    const errors = this.usuarioForm.controls[field].errors || {};
 
-    const errors = control.errors || {};
-
-    if (field === 'idUsuario' && errors['usuarioNotFound']) {
-      return `No existe ningún usuario con ese id`;
+    for (const key of Object.keys(errors)) {
+      switch(key) {
+        case 'required':
+          return 'Este campo es requerido';
+      }
     }
 
     return null;

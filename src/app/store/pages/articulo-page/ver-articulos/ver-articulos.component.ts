@@ -32,24 +32,23 @@ export class VerArticulosComponent {
     return this.articulos.slice(startIndex, endIndex);
   }
 
+  /**
+   * Muestra los artículos
+   * @memberof VerArticulosComponent
+   */
   verArticulos(): void {
-
     this.articuloServicio.getArticulos()
-      .subscribe(
-        (articulos: ArticuloAlmacenDTO[]) => {
-
+      .subscribe({
+        next: (articulos: ArticuloAlmacenDTO[]) => {
           this.articulos = articulos;
-
           this.totalItems = articulos.length;
-
           this.mostrarTabla = true;
         },
-        error => {
+        error: (error) => {
           console.error('Error al obtener los artículos:', error);
-
           let errorMsg = error.error.message;
 
-          if(errorMsg == "No hay artículos"){
+          if (errorMsg === "No hay artículos") {
             errorMsg = "No hay artículos en la base de datos";
           }
 
@@ -59,12 +58,12 @@ export class VerArticulosComponent {
             text: errorMsg
           });
         }
-      );
+      });
   }
+
 
   /**
    * Oculta la tabla de artículos
-   * @returns void
    * @memberof VerArticulosComponent
    */
   ocultarTabla(): void {
@@ -77,7 +76,6 @@ export class VerArticulosComponent {
   /**
    * Cambia la página de la tabla de artículos
    * @param event
-   * @returns void
    * @memberof VerArticulosComponent
    */
   onPageChange(event: any): void {

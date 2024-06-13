@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environments';
-import { AlmacenDTO } from '../interfaces/almacen/almacenDTO.interface';
+import { AlmacenAddDTO } from '../interfaces/almacen/almacenAddDTO.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -19,14 +19,9 @@ export class AlmacenServicio {
    * @returns Observable<any>
    * @memberof AlmacenServicio
    */
-  getEstanteriaPorId( idEstanteria: number): Observable<any>{
+  getEstanteriaPorArticulo( articuloAlmacen: number): Observable<any>{
 
-    return this.http.get<any>(`${this.baseUrl}/verEstanteriaPorId/${idEstanteria}`);
-  }
-
-  meterArticuloEnEstanteria( idArticulo: number, idEstanteria: number): Observable<any>{
-    // Meter articulo en estanteria
-    return this.http.patch<any>(`${this.baseUrl}/addArticuloAEstanteria/${idArticulo}/${idEstanteria}`, {});
+    return this.http.get<any>(`${this.baseUrl}/verEstanteriaPorArticulo/${articuloAlmacen}`);
   }
 
   /**
@@ -34,9 +29,9 @@ export class AlmacenServicio {
    * @returns Observable<AlmacenDTO[]>
    * @memberof AlmacenServicio
    */
-  addAlmacen( almacen: AlmacenDTO): Observable<AlmacenDTO>{
+  addAlmacen( almacen: AlmacenAddDTO ): Observable<AlmacenAddDTO>{
 
-    return this.http.patch<AlmacenDTO>(`${ this.baseUrl }/addAlmacen`, almacen );
+    return this.http.patch<AlmacenAddDTO>(`${ this.baseUrl }/addAlmacen`, almacen );
   }
 
 }

@@ -8,6 +8,7 @@ import { ArticuloServicio } from '../../../services/articulo.service';
 import { PedidoPostDTO } from '../../../interfaces/pedido/pedidoPostDTO.interface';
 import { CustomValidators } from '../../../../validators/validadores';
 import { ArticuloAlmacenDTO } from '../../../interfaces/articulo/articuloAlmacenDTO.interface';
+import { ArticuloDTO } from '../../../interfaces/articulo/articuloDTO.interface';
 
 @Component({
   selector: 'crear-pedido',
@@ -22,7 +23,7 @@ export class CrearPedidoComponent implements OnInit{
 
   public swalWithBootstrapButtons = Swal.mixin({
     customClass: {
-      confirmButton: "btn btn-success",
+      confirmButton: "btn btn-success me-2",
       cancelButton: "btn btn-danger"
     },
     buttonsStyling: false
@@ -55,8 +56,9 @@ export class CrearPedidoComponent implements OnInit{
     });
 
     this.newArticuloForm = this.fb.group({
-      nombre: [''],
-      cantidad: ['']
+      nombreArticulo: ['', [Validators.required] ],
+      cantidad: ['', [Validators.required] ],
+      articuloId: ['']
     });
 
     this.articuloServicio.getArticulos()
@@ -90,7 +92,7 @@ export class CrearPedidoComponent implements OnInit{
 
     });
 
-    const camposNewArticuloForm = ['nombre', 'cantidad'];
+    const camposNewArticuloForm = ['nombreArticulo', 'cantidad'];
 
     camposNewArticuloForm.forEach(campo => {
 
@@ -114,13 +116,22 @@ export class CrearPedidoComponent implements OnInit{
     return this.pedidoForm.get('articulos') as FormArray;
   }
 
+  /**
+   * Método para comprobar si eñ nombre cambia
+   * @member CrearPedidoComponent
+   */
   onArticuloNombreChange(): void {
-    var nombre = this.newArticuloForm.get('nombre')?.value;
+    var nombre = this.newArticuloForm.get('nombreArticulo')?.value;
     if (nombre) {
         this.updateCantidadDisponible(nombre);
     }
   }
 
+  /**
+   * Método para actualizar la cantidad disponible
+   * @param nombre
+   * @member CrearPedidoComponent
+   */
   updateCantidadDisponible(nombre: string): void {
     const articuloSeleccionado = this.articulosLista.find(articulo => articulo.nombre == nombre);
     if (articuloSeleccionado) {
@@ -149,6 +160,8 @@ export class CrearPedidoComponent implements OnInit{
           ...this.pedidoForm.value,
           usuarioId: userId
         };
+
+        console.log(pedidoData);
 
         this.swalWithBootstrapButtons.fire({
           title: "¿Estás seguro de crear el pedido?",
@@ -219,28 +232,27 @@ export class CrearPedidoComponent implements OnInit{
       return;
     }
 
-    const nombre = this.newArticuloForm.get('nombre')?.value;
+    const nombre = this.newArticuloForm.get('nombreArticulo')?.value;
 
     const cantidad = this.newArticuloForm.get('cantidad')?.value;
 
     this.articuloServicio.getArticuloPorNombre(nombre).subscribe(
-      articulo => {
-        if (articulo) {
+      (articulo: ArticuloDTO) => {
 
           this.articulos.push(this.fb.group({
-            nombre: [nombre, Validators.required],
+            articuloId: [String(articulo.idArticulo), Validators.required],
+            nombreArticulo: [nombre, Validators.required],
             cantidad: [cantidad, Validators.required]
           }));
 
+          console.log(this.articulos);
+
           this.newArticuloForm.reset();
 
-        } else {
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: `No existe ningún artículo con el nombre ${nombre}`,
-          });
-        }
+          this.newArticuloForm.get('nombreArticulo')?.setValue('');
+
+          this.newArticuloForm.get('cantidad')?.setValue('');
+
       },
       error => {
         Swal.fire({
@@ -303,6 +315,41 @@ export class CrearPedidoComponent implements OnInit{
     if (field === 'telefono' && control.hasError('phoneNumberValidator')) {
       return 'Número de teléfono inválido';
     }
+    return null;
+
+  }
+
+  /**
+   * Método para comprobar si un campo es válido
+   * @param {string} field
+   * @returns {boolean | null}
+   * @memberof CrearPedidoComponent
+   */
+  isValidFieldNewArticulo(field: string): boolean | null {
+    const control = this.newArticuloForm.controls[field];
+    return control?.errors !== null && control?.touched;
+  }
+
+  /**
+   * Método para obtener el mensaje de error de un campo
+   * @param {string} field
+   * @returns {string | null}
+   * @memberof CrearPedidoComponent
+   */
+  getFieldErrorNewArticulo(field: string): string | null {
+
+    const control = this.newArticuloForm.controls[field];
+    if (!control) return null;
+
+    const errors = control.errors || {};
+
+    for (const key of Object.keys(errors)) {
+      switch (key) {
+        case 'required':
+          return 'Este campo es requerido';
+      }
+    }
+
     return null;
 
   }

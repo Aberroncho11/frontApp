@@ -1,6 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
 import { PedidoDTO } from '../../../interfaces/pedido/pedidoDTO.interface';
 import { PedidoServicio } from '../../../services/pedido.service';
+import Swal from 'sweetalert2';
+import { ProductoDTO } from '../../../interfaces/producto/productoDTO.interface';
 
 @Component({
   selector: 'ver-pedidos',
@@ -9,46 +11,61 @@ import { PedidoServicio } from '../../../services/pedido.service';
 })
 export class VerPedidosComponent {
 
-  // Array de artículos
   public pedidos: PedidoDTO[] = [];
 
-  // Variable para mostrar la tabla
+  public producto: ProductoDTO[] = [];
+
   public mostrarTabla: boolean = false;
 
-  // Variable para el tamaño de la página
   public pageSize = 9;
 
-  // Variable para el total de artículos
   public totalItems = 0;
 
-  // Variable para la página actual
   public currentPage = 0;
 
-  // Constructor
   constructor(private pedidoServicio: PedidoServicio) {}
 
   /**
    * Método para obtener los pedidos
-   * @returns void
    * @memberof VerPedidosComponent
    * @description Método para obtener los pedidos
    */
   verPedidos(): void {
-    this.pedidoServicio.getPedidos()
-      .subscribe(
-        (pedidos: PedidoDTO[]) => {
-          // Asignar los artículos obtenidos
-          this.pedidos = pedidos;
-          // Asignar el total de artículos
-          this.totalItems = pedidos.length;
-          // Mostrar la tabla
-          this.mostrarTabla = true;
-        },
-        // Manejo de errores
-        (error) => {
-          console.error('Error al obtener los pedidos:', error);
+    this.pedidoServicio.getPedidos().subscribe({
+      next: (pedidos: PedidoDTO[]) => {
+
+        this.pedidos = pedidos;
+
+        pedidos.forEach(pedido => {
+          pedido.producto.forEach(producto => {
+            this.producto.push(producto);
+          });
+        });
+
+        this.totalItems = pedidos.length;
+
+        this.mostrarTabla = true;
+      },
+      error: (error) => {
+        console.error('Error al obtener los pedidos:', error);
+
+        if(error.message = "No hay pedidos"){
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No hay pedidos registrados.'
+          })
         }
-      );
+        else{
+          Swal.fire({
+            icon: 'error',
+            title: 'Error al obtener los pedidos',
+            text: 'Ha ocurrido un error al obtener los pedidos. Por favor, inténtelo de nuevo más tarde.'
+          })
+        }
+
+      }
+    });
   }
 
   /**
@@ -67,7 +84,6 @@ export class VerPedidosComponent {
   /**
    * Método para cambiar de página
    * @param event
-   * @returns void
    * @memberof VerPedidosComponent
    * @description Método para cambiar de página
    */

@@ -15,44 +15,44 @@
 
           <form [formGroup]="usuarioForm" (ngSubmit)="crearUsuario()" class="mt-4 article-form">
 
-            <div class="mb-3">
+            <div class="mb-5">
               <label for="perfil" class="form-label">Id perfil</label>
-              <select class="form-select" formControlName="perfil" aria-label="Selecciona un perfil">
+              <select class="form-select" formControlName="perfil" aria-label="Selecciona un perfil" aria-placeholder="Selecciona un perfil">
                 <option value="">Selecciona un perfil</option>
                 <option value="1">Administrador</option>
                 <option value="2">Gestor</option>
                 <option value="3">Operador</option>
               </select>
-              <div *ngIf="isValidField('perfil')" class="invalid-feedback">
+              <span *ngIf="isValidField('perfil')" class="form-text text-danger">
                 {{ getFieldError('perfil') }}
-              </div>
+              </span>
             </div>
 
-            <div class="mb-3">
+            <div class="mb-5">
               <label for="password" class="form-label">Password</label>
               <input type="text" id="password" formControlName="password" class="form-control" placeholder="Password">
-              <div *ngIf="isValidField('password')" class="invalid-feedback">
+              <span *ngIf="isValidField('password')" class="form-text text-danger">
                 {{ getFieldError('password') }}
-              </div>
+              </span>
             </div>
 
-            <div class="mb-3">
+            <div class="mb-5">
               <label for="email" class="form-label">Email</label>
               <input type="text" id="email" formControlName="email" class="form-control" placeholder="Email">
-              <div *ngIf="isValidField('email')" class="invalid-feedback">
+              <span *ngIf="isValidField('email')" class="form-text text-danger">
                 {{ getFieldError('email') }}
-              </div>
+              </span>
             </div>
 
-            <div class="mb-3">
+            <div class="mb-5">
               <label for="nickname" class="form-label">Nickname</label>
               <input type="text" id="nickname" formControlName="nickname" class="form-control" placeholder="Nickname">
-              <div *ngIf="isValidField('nickname')" class="invalid-feedback">
+              <span *ngIf="isValidField('nickname')" class="form-text text-danger">
                 {{ getFieldError('nickname') }}
-              </div>
+              </span>
             </div>
 
-            <button type="submit" class="btn btn-dark w-100" [disabled]="usuarioForm.invalid">Crear Usuario</button>
+            <button type="submit" class="btn btn-dark w-100 " [disabled]="usuarioForm.invalid">Crear Usuario</button>
 
           </form>
 

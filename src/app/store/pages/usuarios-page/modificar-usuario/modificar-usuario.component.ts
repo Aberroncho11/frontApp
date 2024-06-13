@@ -34,14 +34,25 @@ export class ModificarUsuarioComponent implements OnInit {
 
     this.usuarioForm = this.fb.group({
       perfil: ['', [Validators.required]],
-      password: ['', [Validators.required, [Validators.required, CustomValidators.passwordValidator, Validators.maxLength(20)]]],
-      email: ['', [Validators.required]],
+      password: ['', [Validators.required, CustomValidators.passwordValidator, Validators.maxLength(20)]],
+      email: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/), Validators.maxLength(30)], [CustomValidators.emailExistsValidator(this.usuarioServicio)]],
       estadoUsuario: ['', [Validators.required]],
-      nickname: ['', [Validators.required]]
+      nickname: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(20)], [CustomValidators.nicknameExistsValidator(this.usuarioServicio)]],
     });
 
     this.usuarioIdForm = this.fb.group({
       nickname: ['', [ Validators.required ]],
+    });
+
+    const campos = ['perfil', 'password', 'email', 'nickname'];
+
+    campos.forEach(campo => {
+
+      this.usuarioForm.get(campo)?.valueChanges.pipe(
+        debounceTime(1000),
+        distinctUntilChanged()
+      ).subscribe();
+
     });
 
     this.usuarioIdForm.get('nickname')?.valueChanges.pipe(
@@ -49,13 +60,28 @@ export class ModificarUsuarioComponent implements OnInit {
       distinctUntilChanged(),
     ).subscribe();
 
-    this.usuarioServicio.getUsuarios()
-    .subscribe({
-      next: (usuarios: UsuarioDTO[]) => {
-        this.usuariosLista = usuarios;
+    this.usuarioServicio.getNicknameFromToken().subscribe({
+      next: (nicknameFromToken) => {
+        if (nicknameFromToken) {
+          this.usuarioServicio.getUsuarios().subscribe({
+            next: (usuarios: UsuarioDTO[]) => {
+              usuarios.forEach(usuario => {
+                console.log(nicknameFromToken);
+                if (usuario.nickname !== nicknameFromToken) {
+                  this.usuariosLista.push(usuario);
+                }
+              });
+            },
+            error: (error) => {
+              console.error('Error al obtener los usuarios:', error);
+            }
+          });
+        } else {
+          console.error('No se pudo obtener el nickname del token.');
+        }
       },
       error: (error) => {
-        console.error('Error al obtener los usuarios:', error);
+        console.error('Error al obtener el nickname del token:', error);
       }
     });
 
@@ -160,12 +186,26 @@ export class ModificarUsuarioComponent implements OnInit {
     const errors = this.usuarioForm.controls[field].errors || {};
 
     for (const key of Object.keys(errors)) {
-      switch(key) {
+      switch (key) {
         case 'required':
           return 'Este campo es requerido';
         case 'minlength':
-          return `Mínimo ${errors['minlength'].requiredLength} caracteres`;
+          return `La longitud mínima deber ser de ${errors['minlength'].requiredLength} caracteres`;
+        case 'maxlength':
+          return `La longitud máxima debe ser de ${errors['maxlength'].requiredLength} caracteres`;
+        case 'pattern':
+          return 'Correo electrónico inválido';
+        case 'invalidPassword':
+          return 'La contraseña debe contener al menos una letra mayúscula, una letra minúscula y un número';
       }
+    }
+
+    if (field === 'nickname' && this.usuarioForm.get('nickname')?.value != this.usuario?.nickname && errors['nicknameExists']) {
+      return 'El nickname ya existe';
+    }
+
+    if (field === 'email' && this.usuarioForm.get('email')?.value != this.usuario?.email && errors['emailExists']) {
+      return 'El email ya existe';
     }
 
     return null;
@@ -194,9 +234,12 @@ export class ModificarUsuarioComponent implements OnInit {
 
      const errors = this.usuarioIdForm.controls[field].errors || {};
 
-    if (field === 'idUsuario' && errors['usuarioNotFound']) {
-      return `No existe ningún usuario con ese id`;
-    }
+      for (const key of Object.keys(errors)) {
+        switch(key) {
+          case 'required':
+            return 'Este campo es requerido';
+        }
+      }
 
     return null;
   }

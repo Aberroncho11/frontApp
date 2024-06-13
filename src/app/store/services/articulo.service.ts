@@ -28,7 +28,7 @@ export class ArticuloServicio{
 
   /**
    * Método para obtener un articulo por id
-   * @param idArticulo
+   * @param nombre
    * @returns Observable<ArticuloDTO>
    * @memberof ArticuloServicio
    */
@@ -36,8 +36,33 @@ export class ArticuloServicio{
     return this.http.get<ArticuloDTO>(`${this.baseUrl}/verArticuloPorNombre/${nombre}`);
   }
 
+  /**
+   * Método para obtener un articulo por id
+   * @param idArticulo
+   * @returns Observable<ArticuloDTO>
+   * @memberof ArticuloServicio
+   */
+  getArticuloPorId(idArticulo: number):Observable<ArticuloDTO> {
+    return this.http.get<ArticuloDTO>(`${this.baseUrl}/verArticuloPorId/${idArticulo}`);
+  }
+
+
+  /**
+   * Método para verificar si el nombre ya existe
+   * @param nombre
+   * @returns Observable<boolean>
+   * @memberof ArticuloServicio
+   */
+  checkNombre(nombre: string): Observable<boolean> {
+    return this.http.get<boolean>(`${this.baseUrl}/checkNombre/${nombre}`);
+  }
+
   getEstanteriasVacias(): Observable<AlmacenDTO[]> {
     return this.http.get<AlmacenDTO[]>(`${this.baseUrl}/verEstanteriasVacias`);
+  }
+
+  getEstanteriasConArticulos(): Observable<AlmacenDTO[]> {
+    return this.http.get<AlmacenDTO[]>(`${this.baseUrl}/verEstanteriasConArticulos`);
   }
 
   /**
@@ -57,23 +82,16 @@ export class ArticuloServicio{
     formData.append('Ancho', articulo.ancho.toString());
     formData.append('Precio', articulo.precio.toString());
 
-<<<<<<< HEAD
-=======
     formData.append('IdEstanteria', almacen.idEstanteria.toString());
     formData.append('Cantidad', almacen.cantidad.toString());
 
     // Si hay foto
->>>>>>> f03d08c574775c7539a261ca246daa280e009f81
     if (articulo.foto) {
       formData.append('Foto', articulo.foto, articulo.foto.name);
     }
 
-<<<<<<< HEAD
     return this.http.post<any>(`${ this.baseUrl }/crearArticulo`, formData );
-=======
-    // Retornar el articulo
-    return this.http.post<any>(`${ this.baseUrl }/crearArticulo`, formData,  );
->>>>>>> f03d08c574775c7539a261ca246daa280e009f81
+
   }
 
   /**
@@ -83,9 +101,11 @@ export class ArticuloServicio{
    * @returns Observable<ArticuloPutDTO>
    * @memberof ArticuloServicio
    */
-  updateArticulo( articulo: ArticuloPutDTO, idArticulo: number ): Observable<ArticuloPutDTO> {
+  updateArticulo( articulo: ArticuloPutDTO, nombre: string ): Observable<ArticuloPutDTO> {
 
     const formData: FormData = new FormData();
+    formData.append('Descripcion', articulo.descripcion);
+    formData.append('Nombre', articulo.nombre);
     formData.append('Descripcion', articulo.descripcion);
     formData.append('Fabricante', articulo.fabricante);
     formData.append('Peso', articulo.peso);
@@ -98,7 +118,7 @@ export class ArticuloServicio{
       formData.append('Foto', articulo.foto, articulo.foto.name);
     }
 
-    return this.http.put<ArticuloPutDTO>(`${ this.baseUrl }/modificarArticulo/${ idArticulo }`, formData );
+    return this.http.put<ArticuloPutDTO>(`${ this.baseUrl }/modificarArticulo/${ nombre }`, formData );
   }
 
   /**

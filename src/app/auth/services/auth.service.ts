@@ -27,8 +27,6 @@ export class AuthService {
 
   public authStatus = computed( () => this._authStatus() )
 
-  private router = inject(Router);
-
   constructor() {
     this.jwtHelper = new JwtHelperService();
     this.checkAuthStatus();

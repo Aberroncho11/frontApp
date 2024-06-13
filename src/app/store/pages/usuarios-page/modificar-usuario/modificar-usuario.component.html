@@ -17,7 +17,7 @@
 
               <form [formGroup]="usuarioIdForm" (ngSubmit)="verUsuariosPorNickname()">
 
-                <div class="mb-3">
+                <div class="mb-5">
                   <label for="nickname" class="form-label">Nickname</label>
                   <select id="nickname" class="form-select" formControlName="nickname" aria-label="Nickname">
                     <option value="">Selecciona un Nickname</option>
@@ -28,7 +28,7 @@
                   </span>
                 </div>
 
-                <button type="submit" class="btn btn-dark btn-block" (click)="verUsuariosPorNickname()" [disabled]="usuarioIdForm.invalid"> Empezar a modificar</button>
+                <button type="submit" class="btn btn-dark btn-block" [disabled]="usuarioIdForm.invalid"> Empezar a modificar</button>
 
               </form>
 
@@ -38,7 +38,7 @@
 
               <form [formGroup]="usuarioForm" (ngSubmit)="modificarUsuario()">
 
-                <div class="mb-3">
+                <div class="mb-5">
                   <label for="perfil" class="form-label">Perfil</label>
                   <select class="form-select" formControlName="perfil" aria-label="Selecciona un perfil">
                     <option value="">Selecciona un perfil</option>
@@ -51,7 +51,7 @@
                   </span>
                 </div>
 
-                <div class="mb-3">
+                <div class="mb-5">
                   <label for="password" class="form-label">Password</label>
                   <input
                     type="text"
@@ -64,7 +64,7 @@
                   </span>
                 </div>
 
-                <div class="mb-3">
+                <div class="mb-5">
                   <label for="email" class="form-label">Email</label>
                   <input
                     type="text"
@@ -77,7 +77,7 @@
                   </span>
                 </div>
 
-                <div class="mb-3">
+                <div class="mb-5">
                   <label for="estadoUsuario" class="form-label">Estado</label>
                   <input
                     type="text"
@@ -90,7 +90,7 @@
                   </span>
                 </div>
 
-                <div class="mb-3">
+                <div class="mb-5">
                   <label for="nickname" class="form-label">Nickname</label>
                   <input
                   type="text"

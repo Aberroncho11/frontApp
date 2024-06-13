@@ -35,6 +35,10 @@ p.lead {
   color: #333;
 }
 
+span{
+  position: absolute;
+}
+
 .form-control::placeholder, .form-select::placeholder {
   color: #666;
 }

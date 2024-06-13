@@ -11,5 +11,5 @@ export interface PedidoDTO {
   direccion:          string;
   provincia:          string;
   estadoPedido:       string;
-  productos:          ProductoDTO[]
+  producto:          ProductoDTO[]
 }

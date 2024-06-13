@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { AlmacenDTO } from '../../../interfaces/almacen/almacenDTO.interface';
+import { CustomValidators } from '../../../../validators/validadores';
 
 @Component({
   selector: 'crear-articulo',
@@ -29,7 +30,7 @@ export class CrearArticuloComponent implements OnInit{
   ngOnInit() {
 
     this.articuloForm = this.fb.group({
-      nombre: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(20)]],
+      nombre: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(20)], [CustomValidators.nombreExistsValidator(this.articuloServicio)]],
       descripcion: ['', [Validators.required, Validators.minLength(20), Validators.maxLength(50)]],
       fabricante: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(20)]],
       peso: ['', [Validators.required]],
@@ -41,6 +42,7 @@ export class CrearArticuloComponent implements OnInit{
       foto: [''],
     });
 
+    // Escuchar cambios en los campos
     const campos = ['nombre', 'descripcion', 'fabricante', 'peso', 'altura', 'ancho', 'precio', 'idEstanteria', 'cantidad'];
 
     campos.forEach(campo => {
@@ -52,6 +54,7 @@ export class CrearArticuloComponent implements OnInit{
 
     });
 
+    // Obtener las estanterias vacias
     this.articuloServicio.getEstanteriasVacias()
     .subscribe({
       next: (estanterias: AlmacenDTO[]) => {
@@ -85,7 +88,6 @@ export class CrearArticuloComponent implements OnInit{
   /**
    * Método que se encarga de cambiar el valor de la variable file
    * @param event
-   * @returns void
    * @memberof CrearArticuloComponent
    */
   onFileChange(event: any) {
@@ -95,7 +97,6 @@ export class CrearArticuloComponent implements OnInit{
 
   /**
    * Método que se encarga de crear un artículo
-   * @returns void
    * @memberof CrearArticuloComponent
    */
   crearArticulo(): void {
@@ -105,10 +106,9 @@ export class CrearArticuloComponent implements OnInit{
       return;
     }
 
-    console.log(this.currentArticulo)
-
     this.articuloServicio.addArticulo(this.currentArticulo, this.currentEstanteria)
-      .subscribe(response => {
+    .subscribe({
+      next: () => {
         Swal.fire({
           position: 'center',
           icon: 'success',
@@ -124,15 +124,17 @@ export class CrearArticuloComponent implements OnInit{
         }
 
         this.articuloForm.get('idEstanteria')?.setValue('');
-
-      }, error => {
+      },
+      error: (error) => {
         console.error('Error al crear artículo:', error);
         Swal.fire({
           icon: "error",
           title: "Oops...",
           text: "Error al crear el artículo",
         });
-      });
+      }
+    });
+
   }
 
   /**
@@ -168,6 +170,10 @@ export class CrearArticuloComponent implements OnInit{
         case 'maxlength':
           return `La longitud máxima debe ser de ${errors['maxlength'].requiredLength} caracteres`;
       }
+    }
+
+    if (field === 'nombre' && errors['nombreExists']) {
+      return 'El nombre ya existe';
     }
 
     return null;

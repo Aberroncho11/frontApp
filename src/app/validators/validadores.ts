@@ -35,26 +35,21 @@ export class CustomValidators {
   };
 
   /**
-   * Método para validar un DNI
+   * Método para validar la contraseña
    * @param control
    * @returns {Observable<ValidationErrors | null>}
    * @memberof CustomValidators
    */
-  static passwordValidator: ValidatorFn = (control: AbstractControl): Observable<ValidationErrors | null> => {
-    return new Observable((observer) => {
-      const password = control.value;
-      const hasUpperCase = /[A-Z]/.test(password);
-      const hasLowerCase = /[a-z]/.test(password);
-      const hasNumber = /\d/.test(password);
+  static passwordValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+    const password = control.value;
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasNumber = /\d/.test(password);
 
-        if (!hasUpperCase || !hasLowerCase || !hasNumber) {
-          observer.next({ invalidPassword: true });
-        } else {
-          observer.next(null);
-        }
-        observer.complete();
-
-    });
+    if (!hasUpperCase || !hasLowerCase || !hasNumber) {
+      return { invalidPassword: true };
+    }
+    return null;
   };
 
   /**
@@ -64,7 +59,7 @@ export class CustomValidators {
    * @memberof CustomValidators
    */
   static emailExistsValidator(usuarioServicio: UsuarioServicio): AsyncValidatorFn {
-    return (control: AbstractControl) => {
+    return (control: AbstractControl): Observable<ValidationErrors | null> => {
       const email = control.value;
       if (!email) {
         return of(null);
@@ -83,7 +78,7 @@ export class CustomValidators {
    * @memberof CustomValidators
    */
   static nicknameExistsValidator(usuarioServicio: UsuarioServicio): AsyncValidatorFn {
-    return (control: AbstractControl) => {
+    return (control: AbstractControl): Observable<ValidationErrors | null> => {
       const nickname = control.value;
       if (!nickname) {
         return of(null);
@@ -96,17 +91,17 @@ export class CustomValidators {
   }
 
   /**
-   *
+   * Método para validar si un nombre de almacén existe
    * @param articuloServicio
    * @returns {Observable<ValidationErrors | null>}
    */
-  static nnombreExistsValidator(articuloServicio: ArticuloServicio): AsyncValidatorFn {
-    return (control: AbstractControl) => {
+  static nombreExistsValidator(articuloServicio: ArticuloServicio): AsyncValidatorFn {
+    return (control: AbstractControl): Observable<ValidationErrors | null> => {
       const nombre = control.value;
       if (!nombre) {
         return of(null);
       }
-      return articuloServicio.getArticuloPorNombre(nombre).pipe(
+      return articuloServicio.checkNombre(nombre).pipe(
         map(exists => (exists ? { nombreExists: true } : null)),
         catchError(() => of(null))
       );

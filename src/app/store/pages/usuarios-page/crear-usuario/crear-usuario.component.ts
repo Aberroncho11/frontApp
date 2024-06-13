@@ -25,9 +25,8 @@ export class CrearUsuarioComponent implements OnInit {
     this.usuarioForm = this.fb.group({
       perfil: ['', [Validators.required]],
       password: ['', [Validators.required, CustomValidators.passwordValidator, Validators.maxLength(20)]],
-      email: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/),
-        CustomValidators.emailExistsValidator(this.usuarioServicio), Validators.maxLength(30)]],
-      nickname: ['', [Validators.required, CustomValidators.nicknameExistsValidator(this.usuarioServicio)], Validators.minLength(4), Validators.maxLength(20)],
+      email: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/), Validators.maxLength(30)], [CustomValidators.emailExistsValidator(this.usuarioServicio)]],
+      nickname: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(20)], [CustomValidators.nicknameExistsValidator(this.usuarioServicio)]],
     });
 
     const campos = ['perfil', 'password', 'email', 'nickname'];
@@ -74,6 +73,8 @@ export class CrearUsuarioComponent implements OnInit {
             idProfile: 0
           });
 
+          this.usuarioForm.value('perfil')?.setValue('');
+
         },
         error => {
           console.error('Error al crear usuario:', error);
@@ -105,41 +106,33 @@ export class CrearUsuarioComponent implements OnInit {
    */
   getFieldError(field: string): string | null {
 
-    const control = this.usuarioForm.get(field);
+    if (!this.usuarioForm.controls[field]) return null;
 
-    if (!control) return null;
+    const errors = this.usuarioForm.controls[field].errors || {};
 
-    const errors = control.errors || {};
-
-    for (const errorName of Object.keys(errors)) {
-      switch (errorName) {
+    for (const key of Object.keys(errors)) {
+      switch (key) {
         case 'required':
           return 'Este campo es requerido';
-        case 'minLength':
-          return `Este campo debe tener al menos ${errors['minLength'].requiredLength} caracteres`;
-        case 'maxLength':
-          return `Este campo debe tener máximo ${errors['maxLength'].requiredLength} caracteres`;
+        case 'minlength':
+          return `La longitud mínima deber ser de ${errors['minlength'].requiredLength} caracteres`;
+        case 'maxlength':
+          return `La longitud máxima debe ser de ${errors['maxlength'].requiredLength} caracteres`;
         case 'pattern':
-          const patternError = control.getError('pattern');
-          const pattern = patternError?.requiredPattern;
-          switch (pattern) {
-            case /^[1-3]$/:
-              return 'El perfil debe ser 1, 2 o 3';
-            case /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/:
-              return 'Correo electrónico inválido';
-            default:
-              return 'El valor ingresado no es válido';
-          }
+          return 'Correo electrónico inválido';
         case 'invalidPassword':
           return 'La contraseña debe contener al menos una letra mayúscula, una letra minúscula y un número';
-        case 'emailExists':
-          return 'El correo electrónico ya está en uso';
-        case 'nicknameExists':
-          return 'El nickname ya está en uso';
-        default:
-          return 'Error de validación';
       }
     }
+
+    if (field === 'nickname' && errors['nicknameExists']) {
+      return 'El nickname ya existe';
+    }
+
+    if (field === 'email' && errors['emailExists']) {
+      return 'El email ya existe';
+    }
+
     return null;
   }
 }

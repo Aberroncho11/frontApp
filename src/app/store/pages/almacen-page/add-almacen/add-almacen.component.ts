@@ -1,40 +1,66 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { AlmacenServicio } from '../../../services/almacen.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AlmacenDTO } from '../../../interfaces/almacen/almacenDTO.interface';
 import Swal from 'sweetalert2';
-import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
-import { CustomValidators } from '../../../../validators/validadores';
+import { debounceTime, distinctUntilChanged, switchMap, takeUntil } from 'rxjs';
+import { ArticuloDTO } from '../../../interfaces/articulo/articuloDTO.interface';
+import { ArticuloServicio } from '../../../services/articulo.service';
+import { AlmacenAddDTO } from '../../../interfaces/almacen/almacenAddDTO.interface';
 
 @Component({
   selector: 'add-almacen',
   templateUrl: './add-almacen.component.html',
   styleUrls: ['./add-almacen.component.css']
 })
-export class AddAlmacenComponent {
+export class AddAlmacenComponent implements OnInit{
 
-  // Formulario de Almacen
-  public almacenForm: FormGroup;
+  public almacenForm!: FormGroup;
 
-  // Constructor
-  constructor(private almacenServicio: AlmacenServicio, private fb: FormBuilder) {
+  public articulosLista: ArticuloDTO[] =  [];
 
-    // Inicializar el formulario
+  private almacenServicio = inject(AlmacenServicio);
+
+  private fb = inject(FormBuilder);
+
+  private articuloServicio = inject(ArticuloServicio);
+
+  public idArticulo!: number;
+
+  ngOnInit() {
+
     this.almacenForm = this.fb.group({
-      idEstanteria: ['', [Validators.required, Validators.min(1)]],
+      nombre: ['', [Validators.required, Validators.min(1)]],
       cantidad: ['', [Validators.required, Validators.min(1)]],
     });
 
-    // Suscribirse a los cambios del campo idEstanteria
-    this.almacenForm.get('idEstanteria')?.valueChanges.pipe(
-      debounceTime(1000),
-      distinctUntilChanged(),
-    ).subscribe();
-  }
+    const campos = ['idEstanteria', 'cantidad'];
 
-  // Getter para obtener los valores del formulario
-  get Almacen(): AlmacenDTO {
-    return this.almacenForm.value as AlmacenDTO;
+    campos.forEach(campo => {
+
+      this.almacenForm.get(campo)?.valueChanges.pipe(
+        debounceTime(1000),
+        distinctUntilChanged()
+      ).subscribe();
+
+    });
+
+    this.articuloServicio.getEstanteriasConArticulos()
+    .subscribe({
+      next: (estanterias: AlmacenDTO[]) => {
+        estanterias.forEach(estanteria => {
+          this.articuloServicio.getArticuloPorId(estanteria.articuloAlmacen)
+          .subscribe({
+            next: (articulo: ArticuloDTO) => {
+              this.articulosLista.push(articulo);
+            }
+          })
+        });
+      },
+      error: (error) => {
+        console.error('Error al obtener los artículos:', error);
+      }
+    });
   }
 
   /**
@@ -43,43 +69,50 @@ export class AddAlmacenComponent {
    * @memberof AddAlmacenComponent
    */
   addAlmacen(): void {
-
-    // Comprobamos si el formulario es válido
     if (this.almacenForm.invalid) {
-      // Marcamos todos los campos como tocados
       this.almacenForm.markAllAsTouched();
       return;
     }
 
-    // Añadimos el artículo al almacén
-    this.almacenServicio.addAlmacen(this.Almacen)
-      .subscribe(
-        () => {
-          // Mostramos un mensaje de éxito
-          Swal.fire({
-            position: "center",
-            icon: "success",
-            title: "Añadido al almacén correctamente",
-            showConfirmButton: false,
-            timer: 1500
-          });
-          // Reseteamos el formulario
-          this.almacenForm.reset({
-            idEstanteria: 0,
-            cantidad: 0
-          });
+    const nombre = this.almacenForm.get('nombre')?.value;
+    const cantidad = this.almacenForm.get('cantidad')?.value;
 
-        },
-        // Manejamos el error
-        error => {
-          console.error('Error al añadir al almacén:', error);
-          Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: 'Hubo un error al agregar al almacén. Por favor, inténtalo de nuevo más tarde.',
-          });
-        }
-      );
+    this.articuloServicio.getArticuloPorNombre(nombre).pipe(
+      switchMap((articulo: ArticuloDTO) => {
+        console.log(articulo.idArticulo);
+        return this.almacenServicio.getEstanteriaPorArticulo(articulo.idArticulo).pipe(
+          switchMap((estanteria: AlmacenDTO) => {
+            const almacen: AlmacenAddDTO = {
+              cantidad: cantidad,
+              articuloAlmacen: estanteria.articuloAlmacen
+            };
+            return this.almacenServicio.addAlmacen(almacen);
+          })
+        );
+      })
+    ).subscribe({
+      next: () => {
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Añadido al almacén correctamente",
+          showConfirmButton: false,
+          timer: 1500
+        });
+        this.almacenForm.reset({
+          nombre: '',
+          cantidad: 0
+        });
+      },
+      error: error => {
+        console.error('Error al añadir al almacén:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Hubo un error al agregar al almacén. Por favor, inténtalo de nuevo más tarde.',
+        });
+      }
+    });
   }
 
   /**
@@ -89,7 +122,6 @@ export class AddAlmacenComponent {
    * @memberof AddAlmacenComponent
    */
   isValidField(field: string): boolean | null {
-    // Comprobamos si el campo es válido
     return this.almacenForm.controls[field].errors
     && this.almacenForm.controls[field].touched;
   }
@@ -102,28 +134,17 @@ export class AddAlmacenComponent {
    */
   getFieldError(field: string): string | null {
 
-    // Obtenemos el control del campo
     const control = this.almacenForm?.get(field);
-    // Comprobamos si el control existe
     if (!control) return null;
 
-    // Obtenemos los errores del control
     const errors = control.errors || {};
-    // Iteramos sobre los errores
     for (const key of Object.keys(errors)) {
       switch (key) {
-        // Comprobamos el tipo de error
         case 'required':
           return 'Este campo es requerido';
-        // Comprobamos el tipo de error
         case 'min':
           return 'El valor debe ser mayor que 0';
       }
-    }
-
-    // Comprobamos si el campo es idEstanteria y si hay un error de estanteriaNotFound
-    if (field === 'idEstanteria' && errors['estanteriaNotFound']) {
-      return 'No existe ninguna estantería con ese id';
     }
 
     return null;

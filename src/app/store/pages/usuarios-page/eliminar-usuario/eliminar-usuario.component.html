@@ -18,7 +18,7 @@
             <form [formGroup]="usuarioForm">
 
               <div class="mb-3">
-                <label for="nickname" class="form-label">Id</label>
+                <label for="nickname" class="form-label">Nickname</label>
                 <select id="nickname" class="form-select" formControlName="nickname" aria-label="Nickname">
                   <option value="">Selecciona un Nickname</option>
                   <option *ngFor="let usuario of usuariosLista" [value]="usuario.nickname">{{ usuario.nickname }}</option>

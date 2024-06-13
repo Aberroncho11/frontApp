@@ -15,7 +15,7 @@
 
           <form [formGroup]="pedidoForm" (ngSubmit)="crearPedido()" class="mt-4 article-form">
 
-            <div class="mb-3">
+            <div class="mb-5">
               <label for="codigoPostal" class="form-label">Código postal</label>
               <input type="text" id="codigoPostal" formControlName="codigoPostal" class="form-control" placeholder="Código postal">
               <span class="form-text text-danger" *ngIf="pedidoForm.get('codigoPostal')?.invalid && pedidoForm.get('codigoPostal')?.touched">
@@ -23,7 +23,7 @@
               </span>
             </div>
 
-            <div class="mb-3">
+            <div class="mb-5">
               <label for="ciudad" class="form-label">Ciudad</label>
               <input type="text" id="ciudad" formControlName="ciudad" class="form-control" placeholder="Ciudad">
               <span class="form-text text-danger" *ngIf="isValidField('ciudad')">
@@ -31,7 +31,7 @@
               </span>
             </div>
 
-            <div class="mb-3">
+            <div class="mb-5">
               <label for="telefono" class="form-label">Teléfono</label>
               <input type="text" id="telefono" formControlName="telefono" class="form-control" placeholder="Teléfono">
               <span class="form-text text-danger" *ngIf="pedidoForm.get('telefono')?.invalid && pedidoForm.get('telefono')?.touched">
@@ -39,7 +39,7 @@
               </span>
             </div>
 
-            <div class="mb-3">
+            <div class="mb-5">
               <label for="contacto" class="form-label">Contacto</label>
               <input type="text" id="contacto" formControlName="contacto" class="form-control" placeholder="Contacto personal">
               <span class="form-text text-danger" *ngIf="isValidField('contacto')">
@@ -47,7 +47,7 @@
               </span>
             </div>
 
-            <div class="mb-3">
+            <div class="mb-5">
               <label for="direccion" class="form-label">Dirección</label>
               <input type="text" id="direccion" formControlName="direccion" class="form-control" placeholder="Dirección">
               <span class="form-text text-danger" *ngIf="isValidField('direccion')">
@@ -55,7 +55,7 @@
               </span>
             </div>
 
-            <div class="mb-3">
+            <div class="mb-5">
               <label for="provincia" class="form-label">Provincia</label>
               <input type="text" id="provincia" formControlName="provincia" class="form-control" placeholder="Provincia">
               <span class="form-text text-danger" *ngIf="isValidField('provincia')">
@@ -63,20 +63,26 @@
               </span>
             </div>
 
-            <div class="mb-3">
+            <div class="mb-5">
               <label class="form-label">Agregar artículo</label>
-              <div class="input-group mb-3" [formGroup]="newArticuloForm">
+              <div class="input-group mb-5" [formGroup]="newArticuloForm">
                   <div class="me-3">
-                      <select class="form-select" formControlName="nombre" aria-label="Seleccionar artículo" (change)="onArticuloNombreChange()">
+                      <select class="form-select" formControlName="nombreArticulo" aria-label="Seleccionar artículo" (change)="onArticuloNombreChange()">
                           <option value="">Selecciona un artículo</option>
                           <option *ngFor="let articulo of articulosLista" [value]="articulo.nombre">{{ articulo.nombre }}</option>
                       </select>
+                      <span class="form-text text-danger" *ngIf="isValidFieldNewArticulo('nombreArticulo')">
+                        {{ getFieldErrorNewArticulo('nombreArticulo') }}
+                      </span>
                   </div>
                   <div class="me-3">
                       <select class="form-select" formControlName="cantidad" aria-label="Seleccionar cantidad">
                           <option value="">Selecciona una cantidad</option>
                           <option *ngFor="let num of cantidadOptions" [value]="num" >{{ num }}</option>
                       </select>
+                      <span class="form-text text-danger" *ngIf="isValidFieldNewArticulo('cantidad')">
+                        {{ getFieldErrorNewArticulo('cantidad') }}
+                      </span>
                   </div>
               </div>
               <button class="btn btn-dark" type="button" (click)="onAddToArticulos()" [disabled]="newArticuloForm.invalid">Agregar artículo</button>
@@ -84,13 +90,13 @@
 
 
 
-            <div class="mb-3">
+            <div class="mb-5">
 
               <label class="form-label">Artículos</label>
 
               <div formArrayName="articulos">
 
-                <div class="input-group mb-3" *ngFor="let articulo of articulos.controls; let i = index" [formGroupName]="i">
+                <div class="input-group mb-5" *ngFor="let articulo of articulos.controls; let i = index" [formGroupName]="i">
 
                   <input type="string" formControlName="nombre" class="form-control me-2" placeholder="Nombre" readonly>
                   <input type="number" formControlName="cantidad" class="form-control me-2" placeholder="Cantidad" readonly>

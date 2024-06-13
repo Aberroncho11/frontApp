@@ -10,24 +10,31 @@
 
           <h2 class="text-center">AÑADIR A ALMACÉN</h2>
 
-          <p class="text-center">Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae distinctio soluta, aliquam sed quae ab molestias, illo ipsum accusamus eligendi placeat quos molestiae possimus cum! Repellat natus ullam placeat sunt!
-            Cum facere illo eius hic dolorem dignissimos reprehenderit natus commodi, molestiae corporis saepe ipsam voluptatem sit itaque qui ut dicta, laborum esse aspernatur velit doloribus voluptas. Nam corrupti maiores soluta?</p>
+          <p class="text-center">
+            Bienvenido a nuestra sección de gestión de inventario. Aquí
+            puedes añadir artículos a nuestro almacén de manera rápida y sencilla.
+            Mantén tus registros actualizados y asegúrate de que siempre haya suficiente
+            stock para satisfacer la demanda. Nuestro sistema está diseñado para ofrecerte una
+             experiencia fluida y eficiente, facilitando el seguimiento y la administración de tus
+             productos. ¡Gestiona tu almacén con facilidad y precisión!
+          </p>
 
-          <div class="mt-4">
+          <div class="mt-3">
 
             <form [formGroup]="almacenForm" (ngSubmit)="addAlmacen()">
 
-              <div class="mb-3">
-                <label for="idEstanteria" class="form-label">Nombre</label>
+              <div class="mb-5">
+                <label for="nombre" class="form-label">Nombre</label>
                 <select id="nombre" class="form-select" formControlName="nombre" aria-label="Nombre">
                   <option value="">Selecciona un Nombre</option>
+                  <option *ngFor="let articulo of articulosLista" [value]="articulo.nombre">{{ articulo.nombre }}</option>
                 </select>
-                <span *ngIf="isValidField('idEstanteria')" class="form-text text-danger">
-                  {{ getFieldError('idEstanteria') }}
+                <span *ngIf="isValidField('nombre')" class="form-text text-danger">
+                  {{ getFieldError('nombre') }}
                 </span>
               </div>
 
-              <div class="mb-3">
+              <div class="mb-5">
                 <label for="cantidad" class="form-label">Cantidad</label>
                 <input
                 type="text"

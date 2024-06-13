@@ -10,11 +10,11 @@
             <form [formGroup]="articuloForm">
               <div class="mb-3">
                 <label for="nombre" class="form-label">Nombre</label>
-                <select id="nombre" class="form-select" formControlName="nombre" aria-label="Id" (change)="onArticuloChange()">
+                <select id="nombre" class="form-select" formControlName="nombre" aria-label="Nombre" (change)="onArticuloChange()">
                   <option value="">Selecciona un Nombre</option>
                   <option *ngFor="let articulo of articulosLista" [value]="articulo.nombre">{{ articulo.nombre }}</option>
                 </select>
-                <span *ngIf="isValidFieldArticuloForm('nombre')" class="form-text text-danger">
+                <span *ngIf="isValidFieldArticuloForm('nombre')" class="form-text text-danger mt-2">
                   {{getFieldErrorArticuloForm('nombre')}}
                 </span>
               </div>

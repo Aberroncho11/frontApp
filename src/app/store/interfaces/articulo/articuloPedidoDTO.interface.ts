@@ -4,4 +4,5 @@
 export interface ArticuloPedidoDTO {
   articuloId: number;
   cantidad:  number;
+  articuloNombre: string;
 }

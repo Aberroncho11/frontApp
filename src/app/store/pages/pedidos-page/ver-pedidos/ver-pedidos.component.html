@@ -54,7 +54,7 @@
 
                       <ul class="list-group">
 
-                        <li *ngFor="let producto of pedido.productos" class="list-group-item">Artículo #{{ producto.articuloId }} - Cantidad: {{ producto.cantidad }}</li>
+                        <li *ngFor="let producto of producto" class="list-group-item"><strong>Artículo:</strong> #{{ producto.nombreArticulo }} - Cantidad: {{ producto.cantidad }}</li>
 
                       </ul>
 

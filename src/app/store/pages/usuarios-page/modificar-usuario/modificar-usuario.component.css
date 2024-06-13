@@ -43,6 +43,10 @@ p.lead {
   color: #333;
 }
 
+span{
+  position: absolute;
+}
+
 .form-select{
   border-radius: 0.5rem;
   padding: 0.75rem;

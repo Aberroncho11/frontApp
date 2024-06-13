@@ -63,8 +63,7 @@ p.lead {
 }
 
 .list-group-item {
-  font-size: 0.9em;
-  color: #777;
+  color: #000000;
   border: none;
   padding: 5px 0;
 }

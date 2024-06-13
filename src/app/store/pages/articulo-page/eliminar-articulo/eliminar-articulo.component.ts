@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { ArticuloServicio } from '../../../services/articulo.service';
 import { ArticuloDTO } from '../../../interfaces/articulo/articuloDTO.interface';
 import Swal from 'sweetalert2';
@@ -11,7 +11,7 @@ import { debounceTime, distinctUntilChanged } from 'rxjs';
   templateUrl: './eliminar-articulo.component.html',
   styleUrls: ['./eliminar-articulo.component.css']
 })
-export class EliminarArticuloComponent {
+export class EliminarArticuloComponent implements OnInit {
 
   public file: File | null = null;
 
@@ -23,11 +23,16 @@ export class EliminarArticuloComponent {
 
   public nombre: string = '';
 
-  public articuloForm: FormGroup;
+  public articuloForm!: FormGroup;
 
   public articuloCargado: boolean = false;
 
-  constructor(private articuloServicio: ArticuloServicio, private fb: FormBuilder) {
+  private articuloServicio = inject(ArticuloServicio);
+
+  private fb = inject(FormBuilder);
+
+  // Inicializador
+  ngOnInit(): void {
 
     this.articuloForm = this.fb.group({
       nombre: ['', [Validators.required]],
@@ -41,7 +46,11 @@ export class EliminarArticuloComponent {
     this.articuloServicio.getArticulos()
     .subscribe({
       next: (articulos: ArticuloDTO[]) => {
-        this.articulosLista = articulos;
+        articulos.forEach(articulo => {
+          if(articulo.estadoArticulo == 'Disponible'){
+            this.articulosLista.push(articulo);
+          }
+        });
       },
       error: (error) => {
         console.error('Error al obtener los artículos:', error);
@@ -50,32 +59,44 @@ export class EliminarArticuloComponent {
 
   }
 
+  /**
+   * Método para obtener el nombre del articulo
+   * @memberof EliminarArticuloComponent
+   */
   onArticuloChange(): void {
     var nombre = this.articuloForm.get('nombre')?.value;
     this.nombre = nombre;
   }
 
+  /**
+   * Método para ver un articulo por nombre
+   * @memberof EliminarArticuloComponent
+   */
   verArticuloPorNombre(): void {
-    console.log(this.nombre)
-    this.articuloServicio.getArticuloPorNombre(this.nombre).subscribe(
-      articulo => {
+    console.log(this.nombre);
+    this.articuloServicio.getArticuloPorNombre(this.nombre).subscribe({
+      next: articulo => {
         console.log(articulo);
         this.articulo = articulo;
         this.mostrarTabla = true;
         this.articuloCargado = true;
       },
-      error => {
+      error: error => {
         Swal.fire({
           position: "center",
           icon: "error",
-          title: "Articulo no encontrado",
+          title: "Artículo no encontrado",
           showConfirmButton: false,
           timer: 1500
         });
       }
-    );
+    });
   }
 
+  /**
+   * Método para eliminar un articulo
+   * @memberof EliminarArticuloComponent
+   */
   eliminarArticulo(): void {
     Swal.fire({
       title: "¿Estás seguro?",
@@ -91,27 +112,24 @@ export class EliminarArticuloComponent {
           next: response => {
             let successMsg = response.message || "Operación realizada";
 
-            if (response.status === 200) {
-              Swal.fire({
+            Swal.fire({
                 position: "center",
                 icon: "success",
                 title: successMsg,
                 showConfirmButton: false,
                 timer: 1500
               });
-              this.articuloForm.reset();
-              this.articulo = null;
-              this.mostrarTabla = false;
-              this.articuloCargado = false;
-            } else {
-              Swal.fire({
-                position: "center",
-                icon: "error",
-                title: "Error",
-                text: successMsg,
-                showConfirmButton: true
-              });
-            }
+
+            this.articuloForm.reset();
+
+            this.articulo = null;
+
+            this.mostrarTabla = false;
+
+            this.articuloCargado = false;
+
+            this.articuloForm.get('nombre')?.setValue('');
+
           },
           error: error => {
             let errorMsg = 'Error al eliminar artículo';
@@ -131,6 +149,8 @@ export class EliminarArticuloComponent {
               errorTitle = "Error de eliminación";
             }
 
+            this.articuloForm.get('nombre')?.setValue('');
+
             Swal.fire({
               position: "center",
               icon: "error",
@@ -148,28 +168,33 @@ export class EliminarArticuloComponent {
     });
   }
 
-
-
-  isValidFieldArticuloForm( field: string): boolean | null{
+  /**
+   * Método para obtener el nombre del articulo
+   * @param field
+   * @returns boolean | null
+   * @memberof EliminarArticuloComponent
+   */
+  isValidFieldArticuloForm( field: string ): boolean | null{
 
     return this.articuloForm.controls[field].errors
     && this.articuloForm.controls[field].touched
   }
 
-  getFieldErrorArticuloForm(field: string): string | null{
+  /**
+   * Método para obtener el error de un campo del formulario
+   * @param field
+   * @returns string | null
+   * @memberof EliminarArticuloComponent
+   */
+  getFieldErrorArticuloForm( field: string ): string | null{
 
     if(!this.articuloForm?.get(field)) return null;
     const errors = this.articuloForm.controls[field].errors || {};
-    if (field === 'idArticulo' && errors['articuloNotFound']) {
-      return `No existe ningún artículo con ese id`;
-    }
 
     for (const key of Object.keys(errors)) {
       switch(key) {
         case 'required':
           return 'Este campo es requerido';
-        case 'min':
-          return 'El id del artículo debe ser mayor a 0'
       }
     }
 
