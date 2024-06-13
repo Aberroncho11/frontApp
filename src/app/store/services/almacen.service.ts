@@ -24,6 +24,11 @@ export class AlmacenServicio {
     return this.http.get<any>(`${this.baseUrl}/verEstanteriaPorId/${idEstanteria}`);
   }
 
+  meterArticuloEnEstanteria( idArticulo: number, idEstanteria: number): Observable<any>{
+    // Meter articulo en estanteria
+    return this.http.patch<any>(`${this.baseUrl}/addArticuloAEstanteria/${idArticulo}/${idEstanteria}`, {});
+  }
+
   /**
    * Método para obtener todos los almacenes
    * @returns Observable<AlmacenDTO[]>

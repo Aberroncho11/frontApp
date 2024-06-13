@@ -80,7 +80,7 @@ export class LoginPageComponent implements OnInit{
           icon: 'success',
           title: 'Loguedo correctamente'
         });
-        this.router.navigateByUrl('/store');
+        this.router.navigateByUrl('/store/inicio');
       },
 
       error: (errorResponse) => {

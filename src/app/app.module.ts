@@ -9,6 +9,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './shared/services/token.service';
 import { AuthModule } from './auth/auth.module';
+import { NotFoundComponent } from './not-found/not-found.component';
 @NgModule({
   providers: [
     {
@@ -19,6 +20,8 @@ import { AuthModule } from './auth/auth.module';
   ],
   declarations: [
     AppComponent,
+
+    NotFoundComponent,
 
   ],
   imports: [

@@ -57,10 +57,18 @@ const routes: Routes = [
       {
         path: 'addAlmacen', canActivate: [isAdminOrGestorGuard], component: AddAlmacenComponent
       },
+<<<<<<< HEAD
       {
         path: '', redirectTo: '/store/inicio', pathMatch: 'full'
       },
       {
+=======
+      {
+        path: '', redirectTo: '/store/inicio', pathMatch: 'full'
+      },
+      // Ruta por defecto
+      {
+>>>>>>> f03d08c574775c7539a261ca246daa280e009f81
         path: '**', redirectTo: '/404'
       }
     ]

@@ -4,6 +4,7 @@ import { ArticuloServicio } from '../../../services/articulo.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
+import { AlmacenDTO } from '../../../interfaces/almacen/almacenDTO.interface';
 
 @Component({
   selector: 'crear-articulo',
@@ -20,6 +21,8 @@ export class CrearArticuloComponent implements OnInit{
 
   private fb = inject(FormBuilder);
 
+  public estanteriasLista: AlmacenDTO[] = [];
+
   public file: File | null = null;
 
   // Inicializador
@@ -33,10 +36,12 @@ export class CrearArticuloComponent implements OnInit{
       altura: ['', [Validators.required]],
       ancho: ['', [Validators.required]],
       precio: ['', [Validators.required]],
+      idEstanteria: ['', [Validators.required]],
+      cantidad: ['', [Validators.required]],
       foto: [''],
     });
 
-    const campos = ['nombre', 'descripcion', 'fabricante', 'peso', 'altura', 'ancho', 'precio'];
+    const campos = ['nombre', 'descripcion', 'fabricante', 'peso', 'altura', 'ancho', 'precio', 'idEstanteria', 'cantidad'];
 
     campos.forEach(campo => {
 
@@ -46,20 +51,35 @@ export class CrearArticuloComponent implements OnInit{
       ).subscribe();
 
     });
+
+    this.articuloServicio.getEstanteriasVacias()
+    .subscribe({
+      next: (estanterias: AlmacenDTO[]) => {
+        this.estanteriasLista = estanterias;
+      },
+      error: (error) => {
+        console.error('Error al obtener las estanterias:', error);
+      }
+    });
   }
 
   // Getters
   get currentArticulo(): ArticuloPostDTO {
 
-    const articulo = this.articuloForm.value as ArticuloPostDTO;
+    const { idEstanteria, cantidad, ...articulo } = this.articuloForm.value;
 
     if (this.file) {
       articulo.foto = this.file;
-    } else {
-      delete articulo.foto;
     }
 
-    return articulo;
+    return articulo as ArticuloPostDTO;
+  }
+
+  get currentEstanteria(): AlmacenDTO {
+    return {
+      idEstanteria: this.articuloForm.value.idEstanteria,
+      cantidad: this.articuloForm.value.cantidad,
+    } as AlmacenDTO;
   }
 
   /**
@@ -87,7 +107,7 @@ export class CrearArticuloComponent implements OnInit{
 
     console.log(this.currentArticulo)
 
-    this.articuloServicio.addArticulo(this.currentArticulo)
+    this.articuloServicio.addArticulo(this.currentArticulo, this.currentEstanteria)
       .subscribe(response => {
         Swal.fire({
           position: 'center',
@@ -102,6 +122,8 @@ export class CrearArticuloComponent implements OnInit{
         if (this.fileInput && this.fileInput.nativeElement) {
           this.fileInput.nativeElement.value = '';
         }
+
+        this.articuloForm.get('idEstanteria')?.setValue('');
 
       }, error => {
         console.error('Error al crear artículo:', error);

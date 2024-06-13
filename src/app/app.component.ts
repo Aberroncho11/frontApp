@@ -26,5 +26,29 @@ export class AppComponent {
     return true;
   });
 
+<<<<<<< HEAD
+=======
+  /*
+    * Método para verificar si la autenticación ha terminado
+    * @returns boolean
+    * @memberof AppComponent
+  */
+  // public authStatusChangedEffect = effect(() => {
+
+  //   switch( this.authService.authStatus() ) {
+
+  //     case AuthStatus.checking:
+  //       return;
+
+  //     case AuthStatus.authenticated:
+  //       this.router.navigateByUrl('/store');
+  //       return;
+
+  //     case AuthStatus.notAuthenticated:
+  //       this.router.navigateByUrl('/auth/login');
+  //       return;
+  //   }
+  // });
+>>>>>>> f03d08c574775c7539a261ca246daa280e009f81
 
 }

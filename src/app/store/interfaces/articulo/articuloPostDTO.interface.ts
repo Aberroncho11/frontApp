@@ -9,5 +9,6 @@ export interface ArticuloPostDTO {
   altura:        string;
   ancho:         string;
   precio:        string;
+  idEstanteria:  number;
   foto?:         File;
 }

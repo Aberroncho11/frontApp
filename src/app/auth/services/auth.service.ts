@@ -15,6 +15,8 @@ export class AuthService {
 
   private http = inject(HttpClient);
 
+  private router = inject(Router);
+
   private jwtHelper: JwtHelperService
 
   private _currentUser = signal<User|null>(null);

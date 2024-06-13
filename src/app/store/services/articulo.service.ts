@@ -6,6 +6,7 @@ import { ArticuloAlmacenDTO } from '../interfaces/articulo/articuloAlmacenDTO.in
 import { ArticuloPostDTO } from '../interfaces/articulo/articuloPostDTO.interface';
 import { ArticuloDTO } from '../interfaces/articulo/articuloDTO.interface';
 import { ArticuloPutDTO } from '../interfaces/articulo/articuloPutDTO.interface';
+import { AlmacenDTO } from '../interfaces/almacen/almacenDTO.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -35,13 +36,17 @@ export class ArticuloServicio{
     return this.http.get<ArticuloDTO>(`${this.baseUrl}/verArticuloPorNombre/${nombre}`);
   }
 
+  getEstanteriasVacias(): Observable<AlmacenDTO[]> {
+    return this.http.get<AlmacenDTO[]>(`${this.baseUrl}/verEstanteriasVacias`);
+  }
+
   /**
    * Método para agregar un articulo
    * @param articulo
    * @returns Observable<any>
    * @memberof ArticuloServicio
    */
-  addArticulo( articulo: ArticuloPostDTO): Observable<any> {
+  addArticulo( articulo: ArticuloPostDTO, almacen: AlmacenDTO): Observable<any> {
 
     const formData: FormData = new FormData();
     formData.append('Nombre', articulo.nombre);
@@ -52,11 +57,23 @@ export class ArticuloServicio{
     formData.append('Ancho', articulo.ancho.toString());
     formData.append('Precio', articulo.precio.toString());
 
+<<<<<<< HEAD
+=======
+    formData.append('IdEstanteria', almacen.idEstanteria.toString());
+    formData.append('Cantidad', almacen.cantidad.toString());
+
+    // Si hay foto
+>>>>>>> f03d08c574775c7539a261ca246daa280e009f81
     if (articulo.foto) {
       formData.append('Foto', articulo.foto, articulo.foto.name);
     }
 
+<<<<<<< HEAD
     return this.http.post<any>(`${ this.baseUrl }/crearArticulo`, formData );
+=======
+    // Retornar el articulo
+    return this.http.post<any>(`${ this.baseUrl }/crearArticulo`, formData,  );
+>>>>>>> f03d08c574775c7539a261ca246daa280e009f81
   }
 
   /**
