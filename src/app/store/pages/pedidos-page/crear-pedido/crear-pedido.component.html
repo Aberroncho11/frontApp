@@ -1,3 +1,10 @@
+<div class="loading-overlay" *ngIf="isLoading">
+  <div class="spinner-container">
+    <div class="spinner"></div>
+    <h2>Loading...</h2>
+  </div>
+</div>
+
 <section id="pedidos">
 
   <div class="overlay flex justify-content-center align-content-center">
@@ -10,8 +17,7 @@
 
           <h2 class="text-center mb-4">CREAR PEDIDO</h2>
 
-          <p class="lead text-center">Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae distinctio soluta, aliquam sed quae ab molestias, illo ipsum accusamus eligendi placeat quos molestiae possimus cum! Repellat natus ullam placeat sunt!
-            Cum facere illo eius hic dolorem dignissimos reprehenderit natus commodi, molestiae corporis saepe ipsam voluptatem sit itaque qui ut dicta, laborum esse aspernatur velit doloribus voluptas. Nam corrupti maiores soluta?</p>
+          <p class="lead text-center">Por favor, complete el formulario a continuación para crear un nuevo pedido. Asegúrese de proporcionar toda la información necesaria para procesar su solicitud de manera efectiva y rápida. Si tiene alguna pregunta, no dude en contactarnos.</p>
 
           <form [formGroup]="pedidoForm" (ngSubmit)="crearPedido()" class="mt-4 article-form">
 
@@ -67,7 +73,7 @@
               <label class="form-label">Agregar artículo</label>
               <div class="input-group mb-5" [formGroup]="newArticuloForm">
                   <div class="me-3">
-                      <select class="form-select" formControlName="nombreArticulo" aria-label="Seleccionar artículo" (change)="onArticuloNombreChange()">
+                      <select class="form-select" formControlName="nombreArticulo" (change)="onArticuloNombreChange()">
                           <option value="">Selecciona un artículo</option>
                           <option *ngFor="let articulo of articulosLista" [value]="articulo.nombre">{{ articulo.nombre }}</option>
                       </select>
@@ -76,19 +82,24 @@
                       </span>
                   </div>
                   <div class="me-3">
-                      <select class="form-select" formControlName="cantidad" aria-label="Seleccionar cantidad">
-                          <option value="">Selecciona una cantidad</option>
-                          <option *ngFor="let num of cantidadOptions" [value]="num" >{{ num }}</option>
-                      </select>
+                      <input id="cantidad" type="number" formControlName="cantidad" class="form-control" placeholder="Cantidad">
                       <span class="form-text text-danger" *ngIf="isValidFieldNewArticulo('cantidad')">
                         {{ getFieldErrorNewArticulo('cantidad') }}
                       </span>
                   </div>
               </div>
+              <div class="input-group mb-5">
+                <div class="me-3">
+                  <label for="estadoArticulo" class="form-label">Estado</label>
+                  <input id="estadoArticulo" type="text" [value]="estado" class="form-control" placeholder="Estado" disabled>
+                </div>
+                <div class="me-3">
+                  <label for="cantidadDisponible" class="form-label">Cantidad disponible</label>
+                  <input id="cantidadDisponible" type="text" [value]="cantidad" class="form-control" placeholder="Cantidad disponible" disabled>
+                </div>
+              </div>
               <button class="btn btn-dark" type="button" (click)="onAddToArticulos()" [disabled]="newArticuloForm.invalid">Agregar artículo</button>
             </div>
-
-
 
             <div class="mb-5">
 
@@ -98,7 +109,7 @@
 
                 <div class="input-group mb-5" *ngFor="let articulo of articulos.controls; let i = index" [formGroupName]="i">
 
-                  <input type="string" formControlName="nombre" class="form-control me-2" placeholder="Nombre" readonly>
+                  <input type="string" formControlName="nombreArticulo" class="form-control me-2" placeholder="Nombre" readonly>
                   <input type="number" formControlName="cantidad" class="form-control me-2" placeholder="Cantidad" readonly>
                   <button (click)="onDeleteArticulo(i)" class="btn btn-danger" type="button">Eliminar</button>
 

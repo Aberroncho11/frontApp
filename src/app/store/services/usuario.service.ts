@@ -86,7 +86,6 @@ export class UsuarioServicio{
       const token = localStorage.getItem('token');
       if (token) {
         const decodedToken = this.jwtHelper.decodeToken(token);
-        console.log(decodedToken)
         var nickname = String(decodedToken['Nickname']);
         return of(nickname);
       }
@@ -122,7 +121,6 @@ export class UsuarioServicio{
 
     const formData: FormData = new FormData();
     formData.append('perfil', usuario.perfil.toString());
-    formData.append('password', usuario.password);
     formData.append('email', usuario.email);
     formData.append('estadoUsuario', usuario.estadoUsuario);
     formData.append('nickname', usuario.nickname);
@@ -136,9 +134,9 @@ export class UsuarioServicio{
    * @returns Observable<boolean>
    * @memberof UsuarioServicio
    */
-  deleteUsuario( idUsuario: number ): Observable<boolean> {
+  deleteUsuario( nickname: string ): Observable<boolean> {
 
-    return this.http.delete(`${ this.baseUrl }/eliminarUsuario/${ idUsuario }`)
+    return this.http.delete(`${ this.baseUrl }/eliminarUsuario/${ nickname }`)
       .pipe(
         map( resp => true ),
         catchError( err => of(false) ),

@@ -1,3 +1,10 @@
+<div class="loading-overlay" *ngIf="isLoading">
+  <div class="spinner-container">
+    <div class="spinner"></div>
+    <h2>Loading...</h2>
+  </div>
+</div>
+
 <section id="articulos">
 
   <div class="overlay flex justify-content-center align-content-center">
@@ -10,8 +17,8 @@
 
           <h2 class="text-center mb-4">MODIFICAR ARTÍCULO</h2>
 
-          <p class="lead text-center">Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae distinctio soluta, aliquam sed quae ab molestias, illo ipsum accusamus eligendi placeat quos molestiae possimus cum! Repellat natus ullam placeat sunt!
-            Cum facere illo eius hic dolorem dignissimos reprehenderit natus commodi, molestiae corporis saepe ipsam voluptatem sit itaque qui ut dicta, laborum esse aspernatur velit doloribus voluptas. Nam corrupti maiores soluta?</p>
+          <p class="lead text-center">Seleccione el nombre del artículo que desea modificar. Puede actualizar la información del artículo en el formulario a continuación. Asegúrese de revisar todos los campos antes de guardar los cambios.</p>
+
             <!-- Formulario para modificar un artículo -->
             <div class="mt-4 article-form">
 
@@ -116,16 +123,36 @@
 
                 <div class="mb-5">
                   <label for="estadoArticulo" class="form-label">Estado</label>
-                  <select id="estadoArticulo" class="form-select" formControlName="estadoArticulo" aria-label="estadoArticulo">
-                    <option value="">Selecciona un Estado</option>
+                  <select id="estadoArticulo" class="form-select" formControlName="estadoArticulo" (change)="onValueChangeEstado($event)">
+                    <option *ngIf="estadoEliminado" value="Eliminado">Eliminado</option>
+                    <option *ngIf="estadoPendiente" value="Pendiente de eliminar">Pendiente de eliminar</option>
                     <option value="Disponible">Disponible</option>
-                    <option value="Pendiente de eliminar">Pendiente de eliminar</option>
-                    <option value="Eliminado">Eliminado</option>
                   </select>
                   <span *ngIf="isValidFieldArticuloForm('estadoArticulo')" class="form-text text-danger">
                     {{getFieldErrorArticuloForm('estadoArticulo')}}
                   </span>
                 </div>
+
+                <form *ngIf="addArticuloAlmacen" [formGroup]="almacenForm">
+                  <div class="mb-5">
+                    <label for="idEstanteria" class="form-label">Estantería:</label>
+                    <select id="idEstanteria" formControlName="idEstanteria" class="form-select" aria-placeholder="Selecciona una esatanteria">
+                      <option value="">Selecciona una estanteria</option>
+                      <option *ngFor="let estanteria of estanteriasLista" [value]="estanteria.idEstanteria">{{ estanteria.idEstanteria }}</option>
+                    </select>
+                    <span *ngIf="isValidFieldAlmacenForm('idEstanteria')" class="form-text text-danger">
+                      {{ getFieldErrorAlmacenForm('idEstanteria') }}
+                    </span>
+                  </div>
+
+                  <div class="mb-5" >
+                    <label for="cantidad" class="form-label">Cantidad:</label>
+                    <input id="cantidad" type="number" formControlName="cantidad" min="1" class="form-control" placeholder="Cantidad">
+                    <span *ngIf="isValidFieldAlmacenForm('cantidad')" class="form-text text-danger">
+                      {{ getFieldErrorAlmacenForm('cantidad') }}
+                    </span>
+                  </div>
+                </form>
 
                 <div class="mb-5">
                   <label for="foto" class="form-label">Foto</label>
@@ -146,7 +173,7 @@
                 </div>
 
                 <button type="button" class="btn btn-danger me-2" *ngIf="mostrarFoto" (click)="eliminarFoto()">Eliminar Foto</button>
-                <button type="submit" class="btn btn-dark btn-block" [disabled]="articuloForm.invalid">Modificar Artículo</button>
+                <button type="submit" class="btn btn-dark btn-block" [disabled]="articuloForm.invalid" [disabled]="almacenForm.invalid">Modificar Artículo</button>
 
               </form>
 

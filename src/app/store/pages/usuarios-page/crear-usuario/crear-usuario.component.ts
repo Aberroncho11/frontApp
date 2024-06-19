@@ -19,15 +19,21 @@ export class CrearUsuarioComponent implements OnInit {
 
   private fb = inject(FormBuilder);
 
+  public isLoading = true;
+
   // Inicializador
   ngOnInit()
   {
     this.usuarioForm = this.fb.group({
       perfil: ['', [Validators.required]],
       password: ['', [Validators.required, CustomValidators.passwordValidator, Validators.maxLength(20)]],
-      email: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/), Validators.maxLength(30)], [CustomValidators.emailExistsValidator(this.usuarioServicio)]],
-      nickname: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(20)], [CustomValidators.nicknameExistsValidator(this.usuarioServicio)]],
+      email: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/), Validators.maxLength(30), ], [CustomValidators.emailExistsValidator(this.usuarioServicio)]],
+      nickname: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(20), Validators.pattern(/^(?!.* {2,}).*$/)], [CustomValidators.nicknameExistsValidator(this.usuarioServicio)]],
     });
+
+    setTimeout(() => {
+      document.querySelector('.loading-overlay')?.classList.add('hidden');
+      }, 500);
 
     const campos = ['perfil', 'password', 'email', 'nickname'];
 
@@ -56,35 +62,29 @@ export class CrearUsuarioComponent implements OnInit {
       return;
     }
 
-    this.usuarioServicio.addUsuario(this.currentUsuario)
-      .subscribe(
-        () => {
-          Swal.fire({
-            position: "center",
-            icon: "success",
-            title: "Usuario correctamente creado",
-            showConfirmButton: false,
-            timer: 1500
-          });
+    this.usuarioServicio.addUsuario(this.currentUsuario).subscribe({
+      next: () => {
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Usuario correctamente creado",
+          showConfirmButton: false,
+          timer: 1500
+        });
 
-          this.usuarioForm.reset();
+        this.usuarioForm.reset();
+        this.usuarioForm.get('perfil')?.setValue('');
 
-          this.usuarioForm.reset({
-            idProfile: 0
-          });
-
-          this.usuarioForm.value('perfil')?.setValue('');
-
-        },
-        error => {
-          console.error('Error al crear usuario:', error);
-          Swal.fire({
-            icon: "error",
-            title: "Error",
-            text: "Error al crear el usuario",
-          });
-        }
-      );
+      },
+      error: (error) => {
+        console.error('Error al crear usuario:', error);
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Error al crear el usuario",
+        });
+      }
+    });
   }
 
   /**
@@ -118,10 +118,14 @@ export class CrearUsuarioComponent implements OnInit {
           return `La longitud mínima deber ser de ${errors['minlength'].requiredLength} caracteres`;
         case 'maxlength':
           return `La longitud máxima debe ser de ${errors['maxlength'].requiredLength} caracteres`;
-        case 'pattern':
-          return 'Correo electrónico inválido';
         case 'invalidPassword':
           return 'La contraseña debe contener al menos una letra mayúscula, una letra minúscula y un número';
+        case 'pattern':
+          if (field === 'email') {
+            return 'Email inválido';
+          } else if (field === 'nickname') {
+            return 'No se permiten espacios en blanco consecutivos';
+          }
       }
     }
 

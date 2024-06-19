@@ -9,6 +9,8 @@ import { PedidoPostDTO } from '../../../interfaces/pedido/pedidoPostDTO.interfac
 import { CustomValidators } from '../../../../validators/validadores';
 import { ArticuloAlmacenDTO } from '../../../interfaces/articulo/articuloAlmacenDTO.interface';
 import { ArticuloDTO } from '../../../interfaces/articulo/articuloDTO.interface';
+import { AlmacenServicio } from '../../../services/almacen.service';
+import { AlmacenDTO } from '../../../interfaces/almacen/almacenDTO.interface';
 
 @Component({
   selector: 'crear-pedido',
@@ -23,8 +25,8 @@ export class CrearPedidoComponent implements OnInit{
 
   public swalWithBootstrapButtons = Swal.mixin({
     customClass: {
-      confirmButton: "btn btn-success me-2",
-      cancelButton: "btn btn-danger"
+      confirmButton: "btn btn-success me-3",
+      cancelButton: "btn btn-danger ms-3"
     },
     buttonsStyling: false
   });
@@ -35,51 +37,59 @@ export class CrearPedidoComponent implements OnInit{
 
   private articuloServicio = inject(ArticuloServicio);
 
+  private almacenServicio = inject(AlmacenServicio);
+
   private fb = inject(FormBuilder);
 
   public articulosLista: ArticuloAlmacenDTO[] = [];
 
-  public cantidadOptions: number[] = [];
+  private articulosOriginal: ArticuloAlmacenDTO[] = [];
 
+  public isLoading = true;
+
+  public cantidad: string = '';
+
+  public estado: string = '';
 
   // Inicializador
   ngOnInit() {
 
     this.pedidoForm = this.fb.group({
       codigoPostal: ['', [Validators.required, CustomValidators.postalCodeValidator]],
-      ciudad: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(20)]],
+      ciudad: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(20), Validators.pattern(/^(?!.* {2,}).*$/)]],
       telefono: ['', [Validators.required, CustomValidators.phoneNumberValidator]],
-      contacto: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(20)]],
-      direccion: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(40)]],
-      provincia: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(20)]],
+      contacto: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(20), Validators.pattern(/^(?!.* {2,}).*$/)]],
+      direccion: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(40), Validators.pattern(/^(?!.* {2,}).*$/)]],
+      provincia: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(20), Validators.pattern(/^(Álava|Albacete|Alicante|Almería|Asturias|Ávila|Badajoz|Baleares|Barcelona|Burgos|Cáceres|Cádiz|Cantabria|Castellón|Ciudad Real|Córdoba|Cuenca|Girona|Granada|Guadalajara|Gipuzkoa|Huelva|Huesca|Jaén|La Rioja|Las Palmas|León|Lleida|Lugo|Madrid|Málaga|Murcia|Navarra|Ourense|Palencia|Pontevedra|Salamanca|Segovia|Sevilla|Soria|Tarragona|Santa Cruz de Tenerife|Teruel|Toledo|Valencia|Valladolid|Bizkaia|Zamora|Zaragoza|Ceuta|Melilla)$/)]],
       articulos: this.fb.array([], Validators.required)
     });
 
     this.newArticuloForm = this.fb.group({
-      nombreArticulo: ['', [Validators.required] ],
-      cantidad: ['', [Validators.required] ],
+      nombreArticulo: ['',],
+      cantidad: ['',],
       articuloId: ['']
     });
+
+    setTimeout(() => {
+    document.querySelector('.loading-overlay')?.classList.add('hidden');
+    }, 500);
 
     this.articuloServicio.getArticulos()
     .subscribe({
       next: (articulos: ArticuloAlmacenDTO[]) => {
-
         articulos.forEach(articulo => {
           articulo.almacen.forEach(estanteria => {
             if (estanteria.cantidad > 0) {
               this.articulosLista.push(articulo);
             }
-            console.log(this.articulosLista)
           });
         });
+        this.articulosOriginal = [...this.articulosLista];
       },
       error: (error) => {
         console.error('Error al obtener los artículos:', error);
       }
     });
-
-
 
     const camposPedidoForm = ['codigoPostal', 'ciudad', 'telefono', 'contacto', 'direccion', 'provincia'];
 
@@ -107,12 +117,10 @@ export class CrearPedidoComponent implements OnInit{
 
   // Getters
   get pedido(): PedidoPostDTO {
-
     return this.pedidoForm.value as PedidoPostDTO;
   }
 
   get articulos(): FormArray {
-
     return this.pedidoForm.get('articulos') as FormArray;
   }
 
@@ -125,6 +133,10 @@ export class CrearPedidoComponent implements OnInit{
     if (nombre) {
         this.updateCantidadDisponible(nombre);
     }
+    else{
+      this.cantidad = '';
+      this.estado = '';
+    }
   }
 
   /**
@@ -133,22 +145,16 @@ export class CrearPedidoComponent implements OnInit{
    * @member CrearPedidoComponent
    */
   updateCantidadDisponible(nombre: string): void {
+
     const articuloSeleccionado = this.articulosLista.find(articulo => articulo.nombre == nombre);
     if (articuloSeleccionado) {
         var estanteria = articuloSeleccionado.almacen;
-        estanteria.forEach(estanteria => {
-          this.cantidadOptions = Array.from({ length: estanteria.cantidad }, (_, i) => i + 1);
-        });
+        this.cantidad = String(estanteria[0].cantidad);
+        this.estado = articuloSeleccionado.estadoArticulo;
     }
   }
 
-  /**
-   * Método para crear un pedido
-   * @returns void
-   * @memberof CrearPedidoComponent
-   */
   crearPedido(): void {
-
     if (this.pedidoForm.invalid) {
       this.pedidoForm.markAllAsTouched();
       return;
@@ -160,8 +166,6 @@ export class CrearPedidoComponent implements OnInit{
           ...this.pedidoForm.value,
           usuarioId: userId
         };
-
-        console.log(pedidoData);
 
         this.swalWithBootstrapButtons.fire({
           title: "¿Estás seguro de crear el pedido?",
@@ -176,8 +180,8 @@ export class CrearPedidoComponent implements OnInit{
 
           if (result.isConfirmed) {
 
-            this.pedidoServicio.addPedido(pedidoData)
-              .subscribe(response => {
+            this.pedidoServicio.addPedido(pedidoData).subscribe({
+              next: () => {
                 Swal.fire({
                   position: "center",
                   icon: "success",
@@ -190,14 +194,48 @@ export class CrearPedidoComponent implements OnInit{
 
                 this.articulos.clear();
 
-              }, error => {
-                console.error('Error al crear pedido:', error);
-                Swal.fire({
-                  icon: "error",
-                  title: "Oops...",
-                  text: "Error al crear el pedido",
+                this.articulosLista = [];
+
+                this.newArticuloForm.get('nombreArticulo')?.setValue('');
+
+                this.newArticuloForm.get('cantidad')?.setValue('');
+
+                this.articulosOriginal = [];
+
+                this.articuloServicio.getArticulos().subscribe({
+                  next: (articulos: ArticuloAlmacenDTO[]) => {
+                    articulos.forEach(articulo => {
+                      articulo.almacen.forEach(estanteria => {
+                        if (estanteria.cantidad > 0) {
+                          this.articulosLista.push(articulo);
+                        }
+                      });
+                    });
+                    this.articulosOriginal = [...this.articulosLista];
+                  },
+                  error: error => {
+                    console.error('Error al obtener los artículos:', error);
+                  }
                 });
-              });
+              },
+              error: error => {
+                console.error('Error al crear pedido:', error);
+                if(error.message = "Uno de los productos enviados no tiene suficiente cantidad y está pendiente de eliminar por lo que no se va a reponer, intente de nuevo con menos cantidad"){
+                  Swal.fire({
+                    icon: "error",
+                    title: "Error",
+                    text: "Uno de los productos enviados no tiene suficiente cantidad y está pendiente de eliminar por lo que no se va a reponer, intente de nuevo con menos cantidad",
+                  });
+                }
+                else{
+                  Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "Error al crear el pedido",
+                  });
+                }
+              }
+            });
 
           } else if (result.dismiss === Swal.DismissReason.cancel) {
             this.swalWithBootstrapButtons.fire({
@@ -220,13 +258,7 @@ export class CrearPedidoComponent implements OnInit{
     });
   }
 
-  /**
-   * Método para añadir un artículo al pedido
-   * @returns void
-   * @memberof CrearPedidoComponent
-   */
   onAddToArticulos(): void {
-
     if (this.newArticuloForm.invalid) {
       this.newArticuloForm.markAllAsTouched();
       return;
@@ -236,63 +268,83 @@ export class CrearPedidoComponent implements OnInit{
 
     const cantidad = this.newArticuloForm.get('cantidad')?.value;
 
-    this.articuloServicio.getArticuloPorNombre(nombre).subscribe(
-      (articulo: ArticuloDTO) => {
+    this.articuloServicio.getArticuloPorNombre(nombre).subscribe({
+      next: (articulo: ArticuloDTO) => {
+        this.almacenServicio.getEstanteriaPorArticulo(articulo.idArticulo).subscribe({
+          next: (almacen: AlmacenDTO) => {
+            if (articulo.estadoArticulo === 'Pendiente de eliminar' && cantidad > almacen.cantidad) {
+              Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: `Este artículo está Pendiente de eliminar por lo que no se añadirá más stock y la cantidad que has introducido es mayor que la que tiene. Vuelve a intentarlo con menos cantidad.`,
+              });
+            } else {
+              this.articulos.push(this.fb.group({
+                articuloId: [String(articulo.idArticulo), Validators.required],
+                nombreArticulo: [nombre, Validators.required],
+                cantidad: [cantidad, Validators.required]
+              }));
 
-          this.articulos.push(this.fb.group({
-            articuloId: [String(articulo.idArticulo), Validators.required],
-            nombreArticulo: [nombre, Validators.required],
-            cantidad: [cantidad, Validators.required]
-          }));
+              this.eliminarArticuloDeLista(nombre);
 
-          console.log(this.articulos);
+              this.newArticuloForm.reset();
 
-          this.newArticuloForm.reset();
+              this.newArticuloForm.get('nombreArticulo')?.setValue('');
 
-          this.newArticuloForm.get('nombreArticulo')?.setValue('');
+              this.newArticuloForm.get('cantidad')?.setValue('');
 
-          this.newArticuloForm.get('cantidad')?.setValue('');
+              this.cantidad = '';
 
+              this.estado = '';
+            }
+          },
+          error: (error) => {
+            console.error('Error al obtener el almacén:', error);
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'No se pudo obtener la información del almacén. Inténtalo de nuevo más tarde.',
+            });
+          }
+        });
       },
-      error => {
+      error: (error) => {
+        console.error('Error al obtener el artículo:', error);
         Swal.fire({
           icon: 'error',
           title: 'Error',
           text: `No existe ningún artículo con el nombre ${nombre}`,
         });
       }
-    );
+    });
   }
 
-  /**
-   * Método para eliminar un artículo del pedido
-   * @param {number} index
-   * @returns void
-   * @memberof CrearPedidoComponent
-   */
+  eliminarArticuloDeLista(nombre: string): void {
+    const index = this.articulosLista.findIndex(articulo => articulo.nombre === nombre);
+    if (index !== -1) {
+      this.articulosLista.splice(index, 1);
+    }
+  }
+
   onDeleteArticulo(index: number): void {
+    const articuloEliminado = this.articulos.at(index).value.nombreArticulo;
     this.articulos.removeAt(index);
+    this.reagregarArticuloALista(articuloEliminado);
   }
 
-  /**
-   * Método para comprobar si un campo es válido
-   * @param {string} field
-   * @returns {boolean | null}
-   * @memberof CrearPedidoComponent
-   */
+  reagregarArticuloALista(nombre: string): void {
+    const articuloOriginal = this.articulosOriginal.find(articulo => articulo.nombre === nombre);
+    if (articuloOriginal && !this.articulosLista.some(articulo => articulo.nombre === nombre)) {
+      this.articulosLista.push(articuloOriginal);
+    }
+  }
+
   isValidField(field: string): boolean | null {
     const control = this.pedidoForm.controls[field];
     return control?.errors !== null && control?.touched;
   }
 
-  /**
-   * Método para obtener el mensaje de error de un campo
-   * @param {string} field
-   * @returns {string | null}
-   * @memberof CrearPedidoComponent
-   */
   getFieldError(field: string): string | null {
-
     const control = this.pedidoForm.controls[field];
     if (!control) return null;
 
@@ -306,6 +358,12 @@ export class CrearPedidoComponent implements OnInit{
           return `Mínimo ${errors['minlength'].requiredLength} caracteres`;
         case 'maxlength':
           return `La longitud máxima debe ser de ${errors['maxlength'].requiredLength} caracteres`;
+        case 'pattern':
+          if (field === 'provincia') {
+            return 'Provincia inválida';
+          } else if (field === 'ciudad' || field === 'contacto' || field === 'direccion') {
+            return 'No se permiten espacios en blanco consecutivos';
+          }
       }
     }
 
@@ -316,28 +374,14 @@ export class CrearPedidoComponent implements OnInit{
       return 'Número de teléfono inválido';
     }
     return null;
-
   }
 
-  /**
-   * Método para comprobar si un campo es válido
-   * @param {string} field
-   * @returns {boolean | null}
-   * @memberof CrearPedidoComponent
-   */
   isValidFieldNewArticulo(field: string): boolean | null {
     const control = this.newArticuloForm.controls[field];
     return control?.errors !== null && control?.touched;
   }
 
-  /**
-   * Método para obtener el mensaje de error de un campo
-   * @param {string} field
-   * @returns {string | null}
-   * @memberof CrearPedidoComponent
-   */
   getFieldErrorNewArticulo(field: string): string | null {
-
     const control = this.newArticuloForm.controls[field];
     if (!control) return null;
 
@@ -351,7 +395,6 @@ export class CrearPedidoComponent implements OnInit{
     }
 
     return null;
-
   }
 
 }

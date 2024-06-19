@@ -3,7 +3,6 @@ import { ArticuloServicio } from '../../../services/articulo.service';
 import { ArticuloDTO } from '../../../interfaces/articulo/articuloDTO.interface';
 import Swal from 'sweetalert2';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { CustomValidators } from '../../../../validators/validadores';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({
@@ -31,12 +30,18 @@ export class EliminarArticuloComponent implements OnInit {
 
   private fb = inject(FormBuilder);
 
+  public isLoading = true;
+
   // Inicializador
   ngOnInit(): void {
 
     this.articuloForm = this.fb.group({
       nombre: ['', [Validators.required]],
     });
+
+    setTimeout(() => {
+      document.querySelector('.loading-overlay')?.classList.add('hidden');
+      }, 500);
 
     this.articuloForm.get('nombre')?.valueChanges.pipe(
       debounceTime(1000),
@@ -130,34 +135,32 @@ export class EliminarArticuloComponent implements OnInit {
 
             this.articuloForm.get('nombre')?.setValue('');
 
+            this.articulosLista = [];
+
+            this.articuloServicio.getArticulos()
+            .subscribe({
+              next: (articulos: ArticuloDTO[]) => {
+                articulos.forEach(articulo => {
+                  if(articulo.estadoArticulo == 'Disponible'){
+                    this.articulosLista.push(articulo);
+                  }
+                });
+              },
+              error: (error) => {
+                console.error('Error al obtener los artículos:', error);
+              }
+            });
+
           },
           error: error => {
-            let errorMsg = 'Error al eliminar artículo';
-
-            if (error && error.error && error.error.message) {
-              errorMsg = error.error.message;
-            }
-
-            let errorTitle = "Error";
-            if (errorMsg === "Artículo no encontrado") {
-              errorTitle = "Artículo no encontrado";
-            } else if (errorMsg === "Este artículo ya está en proceso de eliminarse") {
-              errorTitle = "Artículo en proceso de eliminación";
-            } else if (errorMsg === "No se puede eliminar el artículo porque forma parte de un pedido pendiente de stock") {
-              errorTitle = "Pedido pendiente de stock";
-            } else if (errorMsg === "No se pudo eliminar el artículo") {
-              errorTitle = "Error de eliminación";
-            }
+            console.error('Error al eliminar artículo:', error);
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: 'Hubo un error al eliminar el artículo. Por favor, inténtalo de nuevo más tarde.',
+            });
 
             this.articuloForm.get('nombre')?.setValue('');
-
-            Swal.fire({
-              position: "center",
-              icon: "error",
-              title: errorTitle,
-              text: errorMsg,
-              showConfirmButton: true
-            });
 
             this.articuloForm.reset();
 

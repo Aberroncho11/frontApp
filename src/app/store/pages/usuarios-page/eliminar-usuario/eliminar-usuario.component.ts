@@ -27,6 +27,8 @@ export class EliminarUsuarioComponent implements OnInit{
 
   public usuariosLista: UsuarioDTO[] = [];
 
+  public isLoading = true;
+
   // Inicializador
   ngOnInit() {
 
@@ -39,6 +41,10 @@ export class EliminarUsuarioComponent implements OnInit{
       distinctUntilChanged(),
     ).subscribe();
 
+    setTimeout(() => {
+      document.querySelector('.loading-overlay')?.classList.add('hidden');
+      }, 500);
+
     this.usuarioServicio.getNicknameFromToken().subscribe({
       next: (nicknameFromToken) => {
         if (nicknameFromToken) {
@@ -46,7 +52,7 @@ export class EliminarUsuarioComponent implements OnInit{
             next: (usuarios: UsuarioDTO[]) => {
               usuarios.forEach(usuario => {
                 console.log(nicknameFromToken);
-                if (usuario.nickname !== nicknameFromToken) {
+                if (usuario.nickname !== nicknameFromToken && usuario.estadoUsuario != 'Eliminado') {
                   this.usuariosLista.push(usuario);
                 }
               });
@@ -117,6 +123,8 @@ export class EliminarUsuarioComponent implements OnInit{
           this.usuario = null;
 
           this.mostrarTabla = false;
+
+          this.usuarioForm.get('nickname')?.setValue('');
 
         },
         error => {

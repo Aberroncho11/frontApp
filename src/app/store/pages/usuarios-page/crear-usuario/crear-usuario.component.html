@@ -1,3 +1,10 @@
+<div class="loading-overlay" *ngIf="isLoading">
+  <div class="spinner-container">
+    <div class="spinner"></div>
+    <h2>Loading...</h2>
+  </div>
+</div>
+
 <section id="usuario">
 
   <div class="overlay">
@@ -10,14 +17,13 @@
 
           <h2 class="text-center mb-4">CREAR USUARIO</h2>
 
-          <p class="lead text-center">Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae distinctio soluta, aliquam sed quae ab molestias, illo ipsum accusamus eligendi placeat quos molestiae possimus cum! Repellat natus ullam placeat sunt!
-            Cum facere illo eius hic dolorem dignissimos reprehenderit natus commodi, molestiae corporis saepe ipsam voluptatem sit itaque qui ut dicta, laborum esse aspernatur velit doloribus voluptas. Nam corrupti maiores soluta?</p>
+          <p class="lead text-center">Complete el formulario siguiente para crear un nuevo usuario. Asegúrese de proporcionar la información requerida de manera precisa. Si tiene alguna pregunta o necesita ayuda, no dude en contactarnos.</p>
 
           <form [formGroup]="usuarioForm" (ngSubmit)="crearUsuario()" class="mt-4 article-form">
 
             <div class="mb-5">
-              <label for="perfil" class="form-label">Id perfil</label>
-              <select class="form-select" formControlName="perfil" aria-label="Selecciona un perfil" aria-placeholder="Selecciona un perfil">
+              <label for="perfil" class="form-label">Perfil</label>
+              <select class="form-select" formControlName="perfil">
                 <option value="">Selecciona un perfil</option>
                 <option value="1">Administrador</option>
                 <option value="2">Gestor</option>

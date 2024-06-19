@@ -27,12 +27,18 @@ export class AddAlmacenComponent implements OnInit{
 
   public idArticulo!: number;
 
+  public isLoading = true;
+
   ngOnInit() {
 
     this.almacenForm = this.fb.group({
       nombre: ['', [Validators.required, Validators.min(1)]],
       cantidad: ['', [Validators.required, Validators.min(1)]],
     });
+
+    setTimeout(() => {
+      document.querySelector('.loading-overlay')?.classList.add('hidden');
+      }, 500);
 
     const campos = ['idEstanteria', 'cantidad'];
 
@@ -52,7 +58,9 @@ export class AddAlmacenComponent implements OnInit{
           this.articuloServicio.getArticuloPorId(estanteria.articuloAlmacen)
           .subscribe({
             next: (articulo: ArticuloDTO) => {
-              this.articulosLista.push(articulo);
+              if(articulo.estadoArticulo === 'Disponible'){
+                this.articulosLista.push(articulo);
+              }
             }
           })
         });
@@ -79,7 +87,6 @@ export class AddAlmacenComponent implements OnInit{
 
     this.articuloServicio.getArticuloPorNombre(nombre).pipe(
       switchMap((articulo: ArticuloDTO) => {
-        console.log(articulo.idArticulo);
         return this.almacenServicio.getEstanteriaPorArticulo(articulo.idArticulo).pipe(
           switchMap((estanteria: AlmacenDTO) => {
             const almacen: AlmacenAddDTO = {
@@ -99,10 +106,11 @@ export class AddAlmacenComponent implements OnInit{
           showConfirmButton: false,
           timer: 1500
         });
-        this.almacenForm.reset({
-          nombre: '',
-          cantidad: 0
-        });
+
+        this.almacenForm.reset();
+
+        this.almacenForm.get('nombre')?.setValue('');
+
       },
       error: error => {
         console.error('Error al añadir al almacén:', error);

@@ -1,19 +1,16 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { PedidoDTO } from '../../../interfaces/pedido/pedidoDTO.interface';
 import { PedidoServicio } from '../../../services/pedido.service';
 import Swal from 'sweetalert2';
-import { ProductoDTO } from '../../../interfaces/producto/productoDTO.interface';
 
 @Component({
   selector: 'ver-pedidos',
   templateUrl: './ver-pedidos.component.html',
   styleUrls: ['./ver-pedidos.component.css']
 })
-export class VerPedidosComponent {
+export class VerPedidosComponent implements OnInit{
 
   public pedidos: PedidoDTO[] = [];
-
-  public producto: ProductoDTO[] = [];
 
   public mostrarTabla: boolean = false;
 
@@ -23,7 +20,15 @@ export class VerPedidosComponent {
 
   public currentPage = 0;
 
-  constructor(private pedidoServicio: PedidoServicio) {}
+  public isLoading = true;
+
+  private pedidoServicio = inject(PedidoServicio);
+
+  ngOnInit() {
+    setTimeout(() => {
+      document.querySelector('.loading-overlay')?.classList.add('hidden');
+      }, 500);
+  }
 
   /**
    * Método para obtener los pedidos
@@ -35,12 +40,6 @@ export class VerPedidosComponent {
       next: (pedidos: PedidoDTO[]) => {
 
         this.pedidos = pedidos;
-
-        pedidos.forEach(pedido => {
-          pedido.producto.forEach(producto => {
-            this.producto.push(producto);
-          });
-        });
 
         this.totalItems = pedidos.length;
 

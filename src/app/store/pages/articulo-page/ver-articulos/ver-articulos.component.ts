@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { ArticuloServicio } from '../../../services/articulo.service';
 import { ArticuloAlmacenDTO } from '../../../interfaces/articulo/articuloAlmacenDTO.interface';
 import Swal from 'sweetalert2';
@@ -8,7 +8,7 @@ import Swal from 'sweetalert2';
   templateUrl: './ver-articulos.component.html',
   styleUrls: ['./ver-articulos.component.css'],
 })
-export class VerArticulosComponent {
+export class VerArticulosComponent implements OnInit{
 
   public articulos: ArticuloAlmacenDTO[] = [];
 
@@ -21,6 +21,14 @@ export class VerArticulosComponent {
   public totalItems = 0;
 
   public currentPage = 0;
+
+  public isLoading = true;
+
+  ngOnInit() {
+    setTimeout(() => {
+      document.querySelector('.loading-overlay')?.classList.add('hidden');
+      }, 500);
+  }
 
   // Getters
   get paginatedArticulos(): ArticuloAlmacenDTO[] {
@@ -47,10 +55,6 @@ export class VerArticulosComponent {
         error: (error) => {
           console.error('Error al obtener los artículos:', error);
           let errorMsg = error.error.message;
-
-          if (errorMsg === "No hay artículos") {
-            errorMsg = "No hay artículos en la base de datos";
-          }
 
           Swal.fire({
             icon: 'error',

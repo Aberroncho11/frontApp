@@ -1,3 +1,10 @@
+<div class="loading-overlay" *ngIf="isLoading">
+  <div class="spinner-container">
+    <div class="spinner"></div>
+    <h2>Loading...</h2>
+  </div>
+</div>
+
 <section id="usuario">
 
   <div class="overlay">
@@ -10,8 +17,7 @@
 
           <h2 class="text-center mb-4">ELIMINAR USUARIO</h2>
 
-          <p class="lead text-center">Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae distinctio soluta, aliquam sed quae ab molestias, illo ipsum accusamus eligendi placeat quos molestiae possimus cum! Repellat natus ullam placeat sunt!
-            Cum facere illo eius hic dolorem dignissimos reprehenderit natus commodi, molestiae corporis saepe ipsam voluptatem sit itaque qui ut dicta, laborum esse aspernatur velit doloribus voluptas. Nam corrupti maiores soluta?</p>
+          <p class="lead text-center">Seleccione el usuario que desea eliminar. A continuación, se mostrarán los detalles del usuario seleccionado. Confirme la eliminación haciendo clic en el botón correspondiente.</p>
 
           <div class="article-box mt-4">
 
@@ -46,8 +52,6 @@
 
                 <p class="card-text"><strong>Perfil:</strong> {{ usuario?.perfil }}</p>
 
-                <p class="card-text"><strong>Password:</strong> {{ usuario?.password }}</p>
-
                 <p class="card-text"><strong>Email:</strong> {{ usuario?.email }}</p>
 
                 <p class="card-text"><strong>Nickname:</strong> {{ usuario?.nickname }}</p>
@@ -59,7 +63,7 @@
             </div>
 
             <div class="mt-2 d-grid gap-2 d-md-flex justify-content-md-center">
-              <button *ngIf="usuarioCargado" class="btn btn-dark" (click)="eliminarUsuario()">Eliminar Usuario</button>
+              <button *ngIf="usuarioCargado" class="btn btn-danger" (click)="eliminarUsuario()">Eliminar Usuario</button>
             </div>
 
           </div>

@@ -1,3 +1,10 @@
+<div class="loading-overlay" *ngIf="isLoading">
+  <div class="spinner-container">
+    <div class="spinner"></div>
+    <h2>Loading...</h2>
+  </div>
+</div>
+
 <section id="articulos">
 
   <div class="overlay flex justify-content-center align-content-center">
@@ -10,8 +17,7 @@
 
           <h2 class="text-center mb-4">CREAR ARTÍCULO</h2>
 
-          <p class="lead text-center">Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae distinctio soluta, aliquam sed quae ab molestias, illo ipsum accusamus eligendi placeat quos molestiae possimus cum! Repellat natus ullam placeat sunt!
-            Cum facere illo eius hic dolorem dignissimos reprehenderit natus commodi, molestiae corporis saepe ipsam voluptatem sit itaque qui ut dicta, laborum esse aspernatur velit doloribus voluptas. Nam corrupti maiores soluta?</p>
+          <p class="lead text-center">Aquí puedes crear un nuevo artículo para nuestro catálogo. Por favor, completa el formulario a continuación con la información requerida.</p>
 
           <form [formGroup]="articuloForm" (ngSubmit)="crearArticulo()" class="mt-4 article-form">
 

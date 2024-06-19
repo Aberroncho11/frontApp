@@ -1,11 +1,17 @@
+<div class="loading-overlay" *ngIf="isLoading">
+  <div class="spinner-container">
+    <div class="spinner"></div>
+    <h2>Loading...</h2>
+  </div>
+</div>
+
 <section id="articulos">
   <div class="overlay">
     <div class="container px-5">
       <div class="row justify-content-center">
         <div class="col-lg-10">
           <h2 class="text-center mb-4">ELIMINAR ARTÍCULO</h2>
-          <p class="lead text-center">Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae distinctio soluta, aliquam sed quae ab molestias, illo ipsum accusamus eligendi placeat quos molestiae possimus cum! Repellat natus ullam placeat sunt!
-            Cum facere illo eius hic dolorem dignissimos reprehenderit natus commodi, molestiae corporis saepe ipsam voluptatem sit itaque qui ut dicta, laborum esse aspernatur velit doloribus voluptas. Nam corrupti maiores soluta?</p>
+          <p class="lead text-center">Seleccione el nombre del artículo que desea eliminar. Una vez seleccionado, puede revisar los detalles del artículo antes de proceder con su eliminación.</p>
           <div class="article-box mt-4">
             <form [formGroup]="articuloForm">
               <div class="mb-3">
@@ -39,7 +45,7 @@
               </div>
             </div>
             <div class="mb-3 d-grid gap-2 d-md-flex justify-content-md-center">
-              <button *ngIf="articuloCargado" class="btn btn-dark mt-3" (click)="eliminarArticulo()">Eliminar Artículo</button>
+              <button *ngIf="articuloCargado" class="btn btn-danger mt-3" (click)="eliminarArticulo()">Eliminar Artículo</button>
             </div>
           </div>
         </div>

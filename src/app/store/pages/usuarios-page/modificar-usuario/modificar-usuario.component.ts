@@ -29,22 +29,33 @@ export class ModificarUsuarioComponent implements OnInit {
 
   private fb = inject(FormBuilder);
 
+  public email: string = '';
+
+  public nickname: string = '';
+
+  public estadoEliminado: boolean = false;
+
+  public isLoading = true;
+
   // Inicializador
   ngOnInit() {
 
     this.usuarioForm = this.fb.group({
       perfil: ['', [Validators.required]],
-      password: ['', [Validators.required, CustomValidators.passwordValidator, Validators.maxLength(20)]],
-      email: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/), Validators.maxLength(30)], [CustomValidators.emailExistsValidator(this.usuarioServicio)]],
+      email: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/), Validators.maxLength(30)]],
       estadoUsuario: ['', [Validators.required]],
-      nickname: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(20)], [CustomValidators.nicknameExistsValidator(this.usuarioServicio)]],
+      nickname: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(20), Validators.pattern(/^(?!.* {2,}).*$/)]],
     });
+
+    setTimeout(() => {
+      document.querySelector('.loading-overlay')?.classList.add('hidden');
+      }, 500);
 
     this.usuarioIdForm = this.fb.group({
       nickname: ['', [ Validators.required ]],
     });
 
-    const campos = ['perfil', 'password', 'email', 'nickname'];
+    const campos = ['perfil', 'email', 'nickname'];
 
     campos.forEach(campo => {
 
@@ -66,7 +77,6 @@ export class ModificarUsuarioComponent implements OnInit {
           this.usuarioServicio.getUsuarios().subscribe({
             next: (usuarios: UsuarioDTO[]) => {
               usuarios.forEach(usuario => {
-                console.log(nicknameFromToken);
                 if (usuario.nickname !== nicknameFromToken) {
                   this.usuariosLista.push(usuario);
                 }
@@ -104,20 +114,32 @@ export class ModificarUsuarioComponent implements OnInit {
  * @memberof ModificarUsuarioComponent
  */
   verUsuariosPorNickname(): void {
+
     this.usuarioServicio.getUsuarioPorNickname(this.usuarioIdForm.get('nickname')?.value)
       .subscribe({
         next: usuario => {
           this.usuario = usuario;
 
+          this.estadoEliminado = false;
+
           this.usuarioForm.patchValue({
             perfil: usuario.perfil,
-            password: usuario.password,
             email: usuario.email,
             estadoUsuario: usuario.estadoUsuario,
             nickname: usuario.nickname,
           });
 
+          if(usuario.estadoUsuario == 'Eliminado'){
+            this.estadoEliminado = true;
+          }
+
+          console.log(this.estadoEliminado);
+
           this.mostrarTabla = true;
+
+          this.email = usuario.email;
+
+          this.nickname = usuario.nickname;
         },
         error: error => {
           console.error('Error al obtener el usuario:', error);
@@ -136,9 +158,30 @@ export class ModificarUsuarioComponent implements OnInit {
       return;
     }
 
-    this.usuarioServicio.updateUsuario(this.currentUsuario, this.usuarioIdForm.get('nickname')?.value)
+    if(this.usuarioServicio.checkEmail( this.currentUsuario.email) && this.currentUsuario.email != this.email)
+    {
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: "Ya existe un usuario con ese email",
+        showConfirmButton: false,
+        timer: 1500
+      });
+    }
+    else if(this.usuarioServicio.checkNickname( this.currentUsuario.nickname) && this.currentUsuario.nickname != this.nickname)
+    {
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: "Ya existe un usuario con ese nickname",
+        showConfirmButton: false,
+        timer: 1500
+      });
+    }
+    else{
+      this.usuarioServicio.updateUsuario(this.currentUsuario, this.usuarioIdForm.get('nickname')?.value)
       .subscribe({
-        next: response => {
+        next: () => {
           Swal.fire({
             position: "center",
             icon: "success",
@@ -157,8 +200,16 @@ export class ModificarUsuarioComponent implements OnInit {
         },
         error: error => {
           console.error('Error al modificar usuario:', error);
+          Swal.fire({
+            position: "center",
+            icon: "error",
+            title: "Error al modificar usuario",
+            showConfirmButton: false,
+            timer: 1500
+          });
         }
       });
+    }
   }
 
 
@@ -193,19 +244,13 @@ export class ModificarUsuarioComponent implements OnInit {
           return `La longitud mínima deber ser de ${errors['minlength'].requiredLength} caracteres`;
         case 'maxlength':
           return `La longitud máxima debe ser de ${errors['maxlength'].requiredLength} caracteres`;
-        case 'pattern':
-          return 'Correo electrónico inválido';
-        case 'invalidPassword':
-          return 'La contraseña debe contener al menos una letra mayúscula, una letra minúscula y un número';
+          case 'pattern':
+            if (field === 'email') {
+              return 'Email inválido';
+            } else if (field === 'nickname') {
+              return 'No se permiten espacios en blanco consecutivos';
+            }
       }
-    }
-
-    if (field === 'nickname' && this.usuarioForm.get('nickname')?.value != this.usuario?.nickname && errors['nicknameExists']) {
-      return 'El nickname ya existe';
-    }
-
-    if (field === 'email' && this.usuarioForm.get('email')?.value != this.usuario?.email && errors['emailExists']) {
-      return 'El email ya existe';
     }
 
     return null;

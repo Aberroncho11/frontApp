@@ -57,10 +57,20 @@ export class ArticuloServicio{
     return this.http.get<boolean>(`${this.baseUrl}/checkNombre/${nombre}`);
   }
 
+  /**
+   * Método para obtener las estanterias vacias
+   * @returns Observable<AlmacenDTO[]>
+   * @memberof ArticuloServicio
+   */
   getEstanteriasVacias(): Observable<AlmacenDTO[]> {
     return this.http.get<AlmacenDTO[]>(`${this.baseUrl}/verEstanteriasVacias`);
   }
 
+  /**
+   * Método para obtener las estanterias con articulos
+   * @returns Observable<AlmacenDTO[]>
+   * @memberof ArticuloServicio
+   */
   getEstanteriasConArticulos(): Observable<AlmacenDTO[]> {
     return this.http.get<AlmacenDTO[]>(`${this.baseUrl}/verEstanteriasConArticulos`);
   }
@@ -101,7 +111,7 @@ export class ArticuloServicio{
    * @returns Observable<ArticuloPutDTO>
    * @memberof ArticuloServicio
    */
-  updateArticulo( articulo: ArticuloPutDTO, nombre: string ): Observable<ArticuloPutDTO> {
+  updateArticulo( articulo: ArticuloPutDTO, almacen: AlmacenDTO | null, nombre: string ): Observable<ArticuloPutDTO> {
 
     const formData: FormData = new FormData();
     formData.append('Descripcion', articulo.descripcion);
@@ -113,6 +123,11 @@ export class ArticuloServicio{
     formData.append('Ancho', articulo.ancho);
     formData.append('Precio', articulo.precio);
     formData.append('EstadoArticulo', articulo.estadoArticulo);
+
+    if (almacen) {
+      formData.append('IdEstanteria', almacen.idEstanteria.toString());
+      formData.append('Cantidad', almacen.cantidad.toString());
+    }
 
     if (articulo.foto) {
       formData.append('Foto', articulo.foto, articulo.foto.name);

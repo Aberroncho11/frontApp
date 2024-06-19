@@ -52,43 +52,43 @@ export class CustomValidators {
     return null;
   };
 
-  /**
+    /**
    * Método para validar si un email existe
    * @param usuarioServicio
    * @returns {Observable<ValidationErrors | null>}
    * @memberof CustomValidators
    */
-  static emailExistsValidator(usuarioServicio: UsuarioServicio): AsyncValidatorFn {
-    return (control: AbstractControl): Observable<ValidationErrors | null> => {
-      const email = control.value;
-      if (!email) {
-        return of(null);
-      }
-      return usuarioServicio.checkEmail(email).pipe(
-        map(exists => (exists ? { emailExists: true } : null)),
-        catchError(() => of(null))
-      );
-    };
-  }
+    static emailExistsValidator(usuarioServicio: UsuarioServicio): AsyncValidatorFn {
+      return (control: AbstractControl): Observable<ValidationErrors | null> => {
+        const email = control.value;
+        if (!email) {
+          return of(null);
+        }
+        return usuarioServicio.checkEmail(email).pipe(
+          map(exists => (exists ? { emailExists: true } : null)),
+          catchError(() => of(null))
+        );
+      };
+    }
 
-  /**
+    /**
    * Método para validar si un nickname existe
    * @param usuarioServicio
    * @returns {Observable<ValidationErrors | null>}
    * @memberof CustomValidators
    */
-  static nicknameExistsValidator(usuarioServicio: UsuarioServicio): AsyncValidatorFn {
-    return (control: AbstractControl): Observable<ValidationErrors | null> => {
-      const nickname = control.value;
-      if (!nickname) {
-        return of(null);
-      }
-      return usuarioServicio.checkNickname(nickname).pipe(
-        map(exists => (exists ? { nicknameExists: true } : null)),
-        catchError(() => of(null))
-      );
-    };
-  }
+    static nicknameExistsValidator(usuarioServicio: UsuarioServicio): AsyncValidatorFn {
+      return (control: AbstractControl): Observable<ValidationErrors | null> => {
+        const nickname = control.value;
+        if (!nickname) {
+          return of(null);
+        }
+        return usuarioServicio.checkNickname(nickname).pipe(
+          map(exists => (exists ? { nicknameExists: true } : null)),
+          catchError(() => of(null))
+        );
+      };
+    }
 
   /**
    * Método para validar si un nombre de almacén existe
@@ -101,7 +101,7 @@ export class CustomValidators {
       if (!nombre) {
         return of(null);
       }
-      return articuloServicio.checkNombre(nombre).pipe(
+      return articuloServicio.checkNombre(nombre.trim()).pipe(
         map(exists => (exists ? { nombreExists: true } : null)),
         catchError(() => of(null))
       );

@@ -26,13 +26,15 @@ export class CrearArticuloComponent implements OnInit{
 
   public file: File | null = null;
 
+  public isLoading = true;
+
   // Inicializador
   ngOnInit() {
 
     this.articuloForm = this.fb.group({
-      nombre: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(20)], [CustomValidators.nombreExistsValidator(this.articuloServicio)]],
-      descripcion: ['', [Validators.required, Validators.minLength(20), Validators.maxLength(50)]],
-      fabricante: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(20)]],
+      nombre: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(20), Validators.pattern(/^(?!.* {2,}).*$/)], [CustomValidators.nombreExistsValidator(this.articuloServicio)]],
+      descripcion: ['', [Validators.required, Validators.minLength(20), Validators.maxLength(50), Validators.pattern(/^(?!.* {2,}).*$/)]],
+      fabricante: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(20), Validators.pattern(/^(?!.* {2,}).*$/)]],
       peso: ['', [Validators.required]],
       altura: ['', [Validators.required]],
       ancho: ['', [Validators.required]],
@@ -42,7 +44,10 @@ export class CrearArticuloComponent implements OnInit{
       foto: [''],
     });
 
-    // Escuchar cambios en los campos
+    setTimeout(() => {
+      document.querySelector('.loading-overlay')?.classList.add('hidden');
+      }, 500);
+
     const campos = ['nombre', 'descripcion', 'fabricante', 'peso', 'altura', 'ancho', 'precio', 'idEstanteria', 'cantidad'];
 
     campos.forEach(campo => {
@@ -124,6 +129,20 @@ export class CrearArticuloComponent implements OnInit{
         }
 
         this.articuloForm.get('idEstanteria')?.setValue('');
+
+        this.estanteriasLista = [];
+
+        // Obtener las estanterias vacias
+        this.articuloServicio.getEstanteriasVacias()
+        .subscribe({
+          next: (estanterias: AlmacenDTO[]) => {
+            this.estanteriasLista = estanterias;
+          },
+          error: (error) => {
+            console.error('Error al obtener las estanterias:', error);
+          }
+        });
+
       },
       error: (error) => {
         console.error('Error al crear artículo:', error);
@@ -169,6 +188,8 @@ export class CrearArticuloComponent implements OnInit{
           return `La longitud mínima deber ser de ${errors['minlength'].requiredLength} caracteres`;
         case 'maxlength':
           return `La longitud máxima debe ser de ${errors['maxlength'].requiredLength} caracteres`;
+        case 'pattern':
+          return 'No se permiten espacios en blanco consecutivos';
       }
     }
 

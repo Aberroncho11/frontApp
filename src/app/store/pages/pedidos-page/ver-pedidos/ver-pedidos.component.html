@@ -1,3 +1,10 @@
+<div class="loading-overlay" *ngIf="isLoading">
+  <div class="spinner-container">
+    <div class="spinner"></div>
+    <h2>Loading...</h2>
+  </div>
+</div>
+
 <section id="pedidos">
 
   <div class="overlay">
@@ -11,8 +18,7 @@
           <h2 class="text-center mb-4">VER PEDIDOS</h2>
 
           <p class="lead text-center">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae distinctio soluta, aliquam sed quae ab molestias, illo ipsum accusamus eligendi placeat quos molestiae possimus cum! Repellat natus ullam placeat sunt!
-            Cum facere illo eius hic dolorem dignissimos reprehenderit natus commodi, molestiae corporis saepe ipsam voluptatem sit itaque qui ut dicta, laborum esse aspernatur velit doloribus voluptas. Nam corrupti maiores soluta?
+            Bienvenido a la sección de pedidos. Aquí puede visualizar todos los pedidos realizados hasta la fecha. Si desea ver más detalles sobre un pedido específico, haga clic en el botón correspondiente. Si tiene alguna duda, por favor, contáctenos.
           </p>
 
           <!--Botón ver pedidos-->
@@ -54,7 +60,8 @@
 
                       <ul class="list-group">
 
-                        <li *ngFor="let producto of producto" class="list-group-item"><strong>Artículo:</strong> #{{ producto.nombreArticulo }} - Cantidad: {{ producto.cantidad }}</li>
+                        <li class="list-group-item"><strong>Artículos</strong></li>
+                        <li *ngFor="let producto of pedido.producto" class="list-group-item"> {{ producto.nombreArticulo }} - Cantidad: {{ producto.cantidad }} </li>
 
                       </ul>
 

@@ -1,3 +1,10 @@
+<div class="loading-overlay" *ngIf="isLoading">
+  <div class="spinner-container">
+    <div class="spinner"></div>
+    <h2>Loading...</h2>
+  </div>
+</div>
+
 <section id="usuarios">
 
   <div class="overlay">
@@ -11,8 +18,7 @@
           <h2 class="text-center mb-4">VER USUARIOS</h2>
 
           <p class="lead text-center">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae distinctio soluta, aliquam sed quae ab molestias, illo ipsum accusamus eligendi placeat quos molestiae possimus cum! Repellat natus ullam placeat sunt!
-            Cum facere illo eius hic dolorem dignissimos reprehenderit natus commodi, molestiae corporis saepe ipsam voluptatem sit itaque qui ut dicta, laborum esse aspernatur velit doloribus voluptas. Nam corrupti maiores soluta?
+            A continuación se muestran todos los usuarios registrados en el sistema. Puedes ver sus detalles y estado actual.
           </p>
 
           <!--Botón ver pedidos-->
@@ -36,7 +42,7 @@
 
                       <h5 class="card-title">Usuario: {{ usuario.idUsuario }}</h5>
 
-                      <p class="card-text"><strong>Password:</strong> {{ usuario.password }}</p>
+                      <p class="card-text"><strong>Perfil:</strong> {{ usuario.perfil }}</p>
 
                       <p class="card-text"><strong>Email:</strong> {{ usuario.email }}</p>
 

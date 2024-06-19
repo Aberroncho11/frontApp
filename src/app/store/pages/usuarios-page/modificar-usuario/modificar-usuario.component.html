@@ -1,3 +1,10 @@
+<div class="loading-overlay" *ngIf="isLoading">
+  <div class="spinner-container">
+    <div class="spinner"></div>
+    <h2>Loading...</h2>
+  </div>
+</div>
+
 <section id="usuario">
 
   <div class="overlay">
@@ -10,8 +17,7 @@
 
           <h2 class="text-center mb-4">MODIFICAR USUARIO</h2>
 
-          <p class="lead text-center">Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae distinctio soluta, aliquam sed quae ab molestias, illo ipsum accusamus eligendi placeat quos molestiae possimus cum! Repellat natus ullam placeat sunt!
-            Cum facere illo eius hic dolorem dignissimos reprehenderit natus commodi, molestiae corporis saepe ipsam voluptatem sit itaque qui ut dicta, laborum esse aspernatur velit doloribus voluptas. Nam corrupti maiores soluta?</p>
+          <p class="lead text-center">Seleccione el usuario que desea modificar. A continuación, podrá actualizar la información del usuario seleccionado según sea necesario.</p>
 
             <div class="mt-4 article-form">
 
@@ -52,19 +58,6 @@
                 </div>
 
                 <div class="mb-5">
-                  <label for="password" class="form-label">Password</label>
-                  <input
-                    type="text"
-                    id="password"
-                    formControlName="password"
-                    class="form-control"
-                    placeholder="Password">
-                  <span *ngIf="isValidField('password')" class="form-text text-danger">
-                    {{getFieldError('password')}}
-                  </span>
-                </div>
-
-                <div class="mb-5">
                   <label for="email" class="form-label">Email</label>
                   <input
                     type="text"
@@ -79,12 +72,10 @@
 
                 <div class="mb-5">
                   <label for="estadoUsuario" class="form-label">Estado</label>
-                  <input
-                    type="text"
-                    id="estadoUsuario"
-                    formControlName="estadoUsuario"
-                    class="form-control"
-                    placeholder="Estado">
+                  <select id="estadoUsuario" class="form-select" formControlName="estadoUsuario">
+                    <option *ngIf="estadoEliminado" value="Eliminado">Eliminado</option>
+                    <option value="Disponible">Disponible</option>
+                  </select>
                   <span *ngIf="isValidField('estadoUsuario')" class="form-text text-danger">
                     {{getFieldError('estadoUsuario')}}
                   </span>

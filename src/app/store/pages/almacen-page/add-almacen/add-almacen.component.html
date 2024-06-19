@@ -1,3 +1,10 @@
+<div class="loading-overlay" *ngIf="isLoading">
+  <div class="spinner-container">
+    <div class="spinner"></div>
+    <h2>Loading...</h2>
+  </div>
+</div>
+
 <section id="almacen">
 
   <div class="overlay">
@@ -10,7 +17,7 @@
 
           <h2 class="text-center">AÑADIR A ALMACÉN</h2>
 
-          <p class="text-center">
+          <p class="lead text-center">
             Bienvenido a nuestra sección de gestión de inventario. Aquí
             puedes añadir artículos a nuestro almacén de manera rápida y sencilla.
             Mantén tus registros actualizados y asegúrate de que siempre haya suficiente
@@ -24,9 +31,9 @@
             <form [formGroup]="almacenForm" (ngSubmit)="addAlmacen()">
 
               <div class="mb-5">
-                <label for="nombre" class="form-label">Nombre</label>
-                <select id="nombre" class="form-select" formControlName="nombre" aria-label="Nombre">
-                  <option value="">Selecciona un Nombre</option>
+                <label for="nombre" class="form-label">Artículo</label>
+                <select id="nombre" class="form-select" formControlName="nombre" aria-placeholder="Selecciona un artículo">
+                  <option value="">Selecciona un artículo</option>
                   <option *ngFor="let articulo of articulosLista" [value]="articulo.nombre">{{ articulo.nombre }}</option>
                 </select>
                 <span *ngIf="isValidField('nombre')" class="form-text text-danger">

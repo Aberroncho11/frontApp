@@ -9,6 +9,8 @@ export interface ArticuloPutDTO {
   altura:          string;
   ancho:           string;
   precio:          string;
+  idEstanteria?:   number;
+  cantidad?:        number;
   estadoArticulo:  string;
   foto?:           File;
 }

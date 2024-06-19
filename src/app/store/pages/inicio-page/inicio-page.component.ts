@@ -28,7 +28,7 @@ export class InicioPageComponent implements OnInit{
 
     setTimeout(() => {
     document.querySelector('.loading-overlay')?.classList.add('hidden');
-  }, 500);
+    }, 500);
 
   }
 

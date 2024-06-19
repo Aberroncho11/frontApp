@@ -1,3 +1,10 @@
+<div class="loading-overlay" *ngIf="isLoading">
+  <div class="spinner-container">
+    <div class="spinner"></div>
+    <h2>Loading...</h2>
+  </div>
+</div>
+
 <section id="articulos">
 
   <div class="overlay">
@@ -10,8 +17,8 @@
 
           <h2 class="text-center mb-4">VER ARTÍCULOS</h2>
 
-          <p class="lead text-center">Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae distinctio soluta, aliquam sed quae ab molestias, illo ipsum accusamus eligendi placeat quos molestiae possimus cum! Repellat natus ullam placeat sunt!
-            Cum facere illo eius hic dolorem dignissimos reprehenderit natus commodi, molestiae corporis saepe ipsam voluptatem sit itaque qui ut dicta, laborum esse aspernatur velit doloribus voluptas. Nam corrupti maiores soluta?</p>
+          <p class="lead text-center">En esta sección, puede ver la lista completa de artículos disponibles en nuestro inventario. Cada tarjeta muestra información detallada del artículo, incluyendo su descripción, fabricante, peso, dimensiones, precio y estado. También puede ver la ubicación y cantidad en las estanterías. Haga clic en "Ver artículos" para cargar la lista completa.</p>
+
           <button class="btn btn-dark d-block mx-auto mb-3" *ngIf="!mostrarTabla" (click)="verArticulos()">Ver artículos</button>
           <button class="btn btn-dark d-block mx-auto mb-3" *ngIf="mostrarTabla" (click)="ocultarTabla()">Ocultar</button>
           <div *ngIf="mostrarTabla" class="mt-4">
@@ -25,8 +32,7 @@
 
                     <div class="card-body">
 
-                      <h5 class="card-title">ID Artículo: {{ articulo.idArticulo }}</h5>
-                      <p class="card-text"><strong>Nombre:</strong> {{ articulo.nombre }}</p>
+                      <h5 class="card-title"><strong> {{ articulo.nombre }} </strong></h5>
                       <p class="card-text"><strong>Descripción:</strong> {{ articulo.descripcion }}</p>
                       <p class="card-text"><strong>Fabricante:</strong> {{ articulo.fabricante }}</p>
                       <p class="card-text"><strong>Peso:</strong> {{ articulo.peso }} kg</p>
